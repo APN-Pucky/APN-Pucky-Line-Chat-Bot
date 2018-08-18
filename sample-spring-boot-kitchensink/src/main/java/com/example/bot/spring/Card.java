@@ -221,7 +221,17 @@ public class Card {
 				}
 			}
 			return ac;
+		}
 
+		public int getCostFromLowestMaterials() {
+			int cost = Data.getSPNeededToLevelTo(getLowest(),this);
+			if(c.materials.length == 0) {
+				return cost;
+			}
+			for(CardInstance ci : getMaterials()) {
+				cost += ci.getCostFromLowestMaterials();
+			}
+			return cost;
 		}
 
 		public boolean equals(CardInstance c) {

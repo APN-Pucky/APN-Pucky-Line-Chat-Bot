@@ -233,14 +233,14 @@ public class KitchenSinkController {
 		String text = args[0];
 		switch (text) {
 		case "help": {
-			this.replyText(replyToken, "TU line chat bot apn:\n" + 
-		"Usage: apn {option}\n" 
-					+"\nOptions:\n" 
-		+"\t - help: \n\t\t\t\t apn bot help\n"
-		+"\t - tuo: \n\t\t\t\t tuo version\n" 
-		+"\t - materials: \n\t\t\t\t displays materials for card\n" 
-		+"\t - roadmap: \n\t\t\t\t tu roadmap + link\n" 
-		);
+			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
+			for(String[] sa : new String[][]{
+				{"help","apn bot help"},
+				{"tuo","tuo version"},
+				{"materials","displays materials for card"},
+				{"roadmap","tu roadmap + link"},
+		}) rep += "\t - "+sa[0]+": \n\t\t\t\t "+sa[1]+"\n";
+		this.replyText(replyToken, rep);
 			break;
 		}
 		case "materials": {
@@ -256,7 +256,9 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Unkown card: '" + card_name + "'");
 				break;
 			}
-			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" + "Required Materials: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
+			this.replyText(replyToken, "Card: " + ci + "\n" +
+			"Fused by: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" +
+			"Required Materials (" + ci.getCostFromLowestMaterials() + "SP): \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
 			break;
 		}
 		/*case "card": {
