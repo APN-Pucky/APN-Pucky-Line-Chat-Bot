@@ -251,7 +251,7 @@ public class KitchenSinkController {
 			}
 			if(number > 20)number = 20;
 			String msg = "";
-			for(int i = 0; i < Data.distinct_cards.length && number > 0; i++)
+			for(int i = 1; i < Data.distinct_cards.length && number > 0; i++)
 			{
 				Card c = Data.distinct_cards[Data.distinct_cards.length-i];
 				if(c.fusion_level == 2)
