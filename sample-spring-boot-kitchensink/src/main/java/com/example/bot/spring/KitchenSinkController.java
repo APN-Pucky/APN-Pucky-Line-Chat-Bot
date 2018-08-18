@@ -244,9 +244,14 @@ public class KitchenSinkController {
 		this.replyText(replyToken, rep);
 			break;
 		}
+		case "xml": {
+			Data.init();
+			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
+			break;
+		}
 		case "update": {
 			Data.init();
-			this.replyText(replyToken, "load new dev-xml");
+			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
 			break;
 		}
 		case "new": {
