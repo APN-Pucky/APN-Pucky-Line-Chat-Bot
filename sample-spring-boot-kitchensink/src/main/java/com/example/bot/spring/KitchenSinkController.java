@@ -239,7 +239,14 @@ public class KitchenSinkController {
 		}
 		log.info("Got text message from {}: {}", replyToken, ptext);
 		//alias
-		for(String[] sa :  alias) for(String s : sa)ptext.replaceAll("apn " + s, "apn " + sa[0]);
+		for(String[] sa :  alias)
+		{
+			for(String s : sa)
+			{
+				ptext.replaceAll("apn " + s, "apn " + sa[0]);
+				log.info("Current ptext", replyToken, ptext);
+			}
+		}
 
 		String[] arr = ptext.split("apn ");
 		if (arr.length < 2) {
@@ -259,11 +266,10 @@ public class KitchenSinkController {
 			for(String[] sa : alias)
 			{
 				msg += "\t - "+sa[0]+": \n\t\t\t\t\t\t ";
-				for(int i = 1; i < sa.length;i++) msg += "'" + sa[1]+"'', ";
+				for(int i = 1; i < sa.length;i++) msg += "'" + sa[i]+"'', ";
 				msg += "\n";
 			}
-		this.replyText(replyToken, msg);
-			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
+			this.replyText(replyToken, msg);
 			break;
 		}
 		case "xml": {
@@ -438,8 +444,8 @@ public class KitchenSinkController {
 			this.reply(replyToken, new MessageWithQuickReplySupplier().get());
 			break;
 		default:
-			log.info("Returns echo message {}: {}", replyToken, text);
-			this.replyText(replyToken, text);
+			//log.info("Returns echo message {}: {}", replyToken, text);
+			this.replyText(replyToken, "Unknown command.");
 			break;
 		}
 	}
