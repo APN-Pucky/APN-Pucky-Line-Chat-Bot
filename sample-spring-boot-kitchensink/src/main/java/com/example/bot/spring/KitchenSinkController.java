@@ -239,8 +239,10 @@ public class KitchenSinkController {
 				{"tuo","tuo version"},
 				{"materials","displays materials for card"},
 				{"new","displays latest quads"},
+				{"xml","show the date of xmls"},
+				{"update","reload xmls"},
 				{"roadmap","tu roadmap + link"},
-		}) rep += "\t - "+sa[0]+": \n\t\t\t\t "+sa[1]+"\n";
+		}) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 		this.replyText(replyToken, rep);
 			break;
 		}

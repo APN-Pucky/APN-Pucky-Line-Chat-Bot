@@ -116,7 +116,11 @@ public class Data
 		if(!m.find())
 		{
 			Card c = getCardByName(name);
-			if(c == null)System.out.println("WTFFFFFFFFFFF!!!!!!!! --2--  " + name);
+			if(c == null)
+			{
+				System.out.println("WTFFFFFFFFFFF!!!!!!!! --2--  " + name);
+				return null;
+			}
 			return new CardInstance(c.getIDs()[c.getIDs().length-1],c);
 		}
 		String[] split = name.split("-");
