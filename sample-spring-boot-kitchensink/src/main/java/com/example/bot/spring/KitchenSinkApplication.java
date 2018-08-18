@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import org.json.JSONObject;
+
 @SpringBootApplication
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
@@ -30,6 +32,12 @@ public class KitchenSinkApplication {
     public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
+        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
+        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
+        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
+        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
+        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
+        new JSONObject();
     }
 
 }
