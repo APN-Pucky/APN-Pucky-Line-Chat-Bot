@@ -255,7 +255,7 @@ public class KitchenSinkController {
 			for(CardInstance c : ar) fuse +=c + ", ";
 			String lfuse = "[";
 			for(CardInstance c : acis) lfuse +=c + ", ";*/
-			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: " + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" + "Required Materials: " + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
+			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" + "Required Materials: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
 			break;
 		}
 		case "card": {
