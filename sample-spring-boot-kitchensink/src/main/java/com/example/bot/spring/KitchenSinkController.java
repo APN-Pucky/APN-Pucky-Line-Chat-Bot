@@ -18,12 +18,16 @@ package com.example.bot.spring;
 
 import java.io.IOException;
 
+import com.example.bot.spring.Card.CardType;
+import com.example.bot.spring.Card.CardCategory;
+import com.example.bot.spring.Card.CardInstance;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -236,6 +240,22 @@ public class KitchenSinkController {
 		+"\t tuo \t\t tuo version\n" 
 		+"\t roadmap \t\t tu roadmap + link\n" 
 		);
+			break;
+		}
+		case "materials": {
+			if(args.length < 2)
+			{
+				this.replyText(replyToken, "Please pass a card with: apn card {card}");
+				break;
+			}
+			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
+			ArrayList<CardInstance> acis = ci.getLowestMaterials();
+			CardInstance[] ar = ci.getMaterials();
+			String fuse = "";
+			for(CardInstance c : ar) fuse +=ar + ", ";
+			String lfuse = "";
+			for(CardInstance c : ar) lfuse +=ar + ", ";
+			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: " + fuse + "\n" + "Required Materials: " + lfuse + "\n");
 			break;
 		}
 		case "card": {
