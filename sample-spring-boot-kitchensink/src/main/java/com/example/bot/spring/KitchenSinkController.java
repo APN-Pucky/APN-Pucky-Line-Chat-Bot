@@ -241,8 +241,9 @@ public class KitchenSinkController {
 
     private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
-        String text = content.getText();
-
+        String text = content.getText().toLowerCase();
+        if(!text.startsWith("apn ")) return;
+        text = text.split("apn ")[1];
         log.info("Got text message from {}: {}", replyToken, text);
         switch (text) {
             case "profile": {
