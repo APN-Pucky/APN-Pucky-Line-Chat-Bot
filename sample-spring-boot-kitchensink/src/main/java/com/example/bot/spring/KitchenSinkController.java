@@ -219,12 +219,28 @@ public class KitchenSinkController {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
 
+	private static String[][] alias = new String[][]{
+		{"materials","mats","build","-m","-b"},
+	};
+	private static String[][] help = new String[][]{
+		{"help","apn bot help"},
+		{"tuo","tuo version"},
+		{"alias","enlist alias"},
+		{"materials","displays materials for card"},
+		{"new","displays latest quads"},
+		{"xml","show the date of xmls"},
+		{"update","reload xmls"},
+		{"roadmap","tu roadmap + link"},
+	};
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
 		String ptext = content.getText();//.toLowerCase();
 		if (!ptext.startsWith("apn ")) {
 			return;
 		}
 		log.info("Got text message from {}: {}", replyToken, ptext);
+		//alias
+		for(String[] sa :  alias) for(String s : sa)ptext.replaceAll("apn " + s, "apn " + sa[0]);
+
 		String[] arr = ptext.split("apn ");
 		if (arr.length < 2) {
 			return;
@@ -234,20 +250,23 @@ public class KitchenSinkController {
 		switch (text) {
 		case "help": {
 			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
-			for(String[] sa : new String[][]{
-				{"help","apn bot help"},
-				{"tuo","tuo version"},
-				{"materials","displays materials for card"},
-				{"new","displays latest quads"},
-				{"xml","show the date of xmls"},
-				{"update","reload xmls"},
-				{"roadmap","tu roadmap + link"},
-		}) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
+			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 		this.replyText(replyToken, rep);
 			break;
 		}
+		case "alias": {
+			String msg = "Alias list:\n\n";
+			for(String[] sa : alias)
+			{
+				msg += "\t - "+sa[0]+": \n\t\t\t\t\t\t ";
+				for(int i = 1; i < sa.length;i++) msg += "'" + sa[1]+"'', ";
+				msg += "\n";
+			}
+		this.replyText(replyToken, msg);
+			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
+			break;
+		}
 		case "xml": {
-			Data.init();
 			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
 			break;
 		}
@@ -286,7 +305,7 @@ public class KitchenSinkController {
 			CardInstance ci = Data.getCardInstanceByNameAndLevel(card_name);
 			if(ci == null || ci == CardInstance.NULL)
 			{
-				this.replyText(replyToken, "Unkown card: '" + card_name + "'");
+				this.replyText(replyToken, "Unknown card: '" + card_name + "'");
 				break;
 			}
 			this.replyText(replyToken, "Card: " + ci + "\n" +
