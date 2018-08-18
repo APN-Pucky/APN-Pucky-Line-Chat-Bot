@@ -225,6 +225,7 @@ public class KitchenSinkController {
 		if (arr.length < 2) {
 			return;
 		}
+		text = arr[1];
 		switch (text) {
 		case "tuo": {
 			String json = Wget.wGet("tuo.json",
