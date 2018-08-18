@@ -216,7 +216,7 @@ public class KitchenSinkController {
 	}
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		String ptext = content.getText().toLowerCase();
+		//String ptext = content.getText().toLowerCase();
 		if (!ptext.startsWith("apn ")) {
 			return;
 		}
@@ -230,10 +230,12 @@ public class KitchenSinkController {
 		switch (text) {
 		case "help": {
 			this.replyText(replyToken, "TU line chat bot apn:\n" + 
-		"Usage: apn {option}\n" + 
-					"\nOptions:\n" + 
-		"\t tuo \t\t tuo version\n" + 
-		"\t help \t\t apn bot help\n" );
+		"Usage: apn {option}\n" 
+					+"\nOptions:\n" 
+		+"\t help \t\t apn bot help\n"
+		+"\t tuo \t\t tuo version\n" 
+		+"\t roadmap \t\t tu roadmap + link\n" 
+		);
 			break;
 		}
 		case "card": {
