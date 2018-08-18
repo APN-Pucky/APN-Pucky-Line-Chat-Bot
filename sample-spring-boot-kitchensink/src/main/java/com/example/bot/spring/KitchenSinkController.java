@@ -238,9 +238,15 @@ public class KitchenSinkController {
 				{"help","apn bot help"},
 				{"tuo","tuo version"},
 				{"materials","displays materials for card"},
+				{"new","displays latest quads"},
 				{"roadmap","tu roadmap + link"},
 		}) rep += "\t - "+sa[0]+": \n\t\t\t\t "+sa[1]+"\n";
 		this.replyText(replyToken, rep);
+			break;
+		}
+		case "update": {
+			Data.init();
+			this.replyText(replyToken, "load new dev-xml");
 			break;
 		}
 		case "new": {
@@ -281,15 +287,16 @@ public class KitchenSinkController {
 			"Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
 			break;
 		}
-		/*case "card": {
+		case "card": {
 			if(args.length < 2)
 			{
 				this.replyText(replyToken, "Please pass a card with: apn card {card}");
 				break;
 			}
-			this.replyText(replyToken, "Card: " + Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]));
+			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
+			this.replyText(replyToken, "Card: " + ci.toString() + " [" +ci.getID() + "]");
 			break;
-		}*/
+		}
 		case "roadmap": {
 			this.replyText(replyToken, "Roadmap feature, soon tm");
 			break;
