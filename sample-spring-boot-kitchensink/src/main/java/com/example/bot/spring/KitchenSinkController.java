@@ -243,6 +243,21 @@ public class KitchenSinkController {
 		this.replyText(replyToken, rep);
 			break;
 		}
+		case "new": {
+			int number = 5;
+			if(!(args.length < 2))
+			{
+				number = Integer.parseInt(args[1]);
+			}
+			if(number > 20)number = 20;
+			String msg = "";
+			for(; number>0; number--)
+			{
+				msg += Data.distinct_cards[Data.distinct_cards.length-number].toString() + "\n";
+			}
+			this.replyText(replyToken,msg);
+			break;
+		}
 		case "materials": {
 			if(args.length < 2)
 			{
@@ -258,7 +273,7 @@ public class KitchenSinkController {
 			}
 			this.replyText(replyToken, "Card: " + ci + "\n" +
 			"Fused by: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" +
-			"Required Materials (" + ci.getCostFromLowestMaterials() + "SP): \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
+			"Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
 			break;
 		}
 		/*case "card": {
