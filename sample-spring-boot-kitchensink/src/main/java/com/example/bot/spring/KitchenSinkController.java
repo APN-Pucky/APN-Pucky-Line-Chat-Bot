@@ -216,19 +216,41 @@ public class KitchenSinkController {
 	}
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		String text = content.getText().toLowerCase();
-		if (!text.startsWith("apn ")) {
+		String ptext = content.getText().toLowerCase();
+		if (!ptext.startsWith("apn ")) {
 			return;
 		}
-		log.info("Got text message from {}: {}", replyToken, text);
-		String[] arr = text.split("apn ");
+		log.info("Got text message from {}: {}", replyToken, ptext);
+		String[] arr = ptext.split("apn ");
 		if (arr.length < 2) {
 			return;
 		}
-		text = arr[1];
+		String[] args = arr[1].split(" ");
+		String text = args[0];
 		switch (text) {
+		case "help": {
+			this.replyText(replyToken, "TU line chat bot apn:\n" + 
+		"Usage: apn {option}\n" + 
+					"\nOptions:\n" + 
+		"\t tuo \t\t tuo version\n" + 
+		"\t help \t\t apn bot help\n" );
+			break;
+		}
+		case "card": {
+			if(args.length < 2)
+			{
+				this.replyText(replyToken, "Please pass a card with: apn card {card}");
+				break;
+			}
+			this.replyText(replyToken, "Card: " + Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]));
+			break;
+		}
+		case "roadmap": {
+			this.replyText(replyToken, "Roadmap feature, soon tm");
+			break;
+		}
 		case "tuo": {
-			String json = Wget.wGet("tuo.json",
+			String json = Wget.wGet(
 					"https://api.github.com/repos/APN-Pucky/tyrant_optimize/releases/latest");
 			String tuojson = json.replaceAll("\n", "");
 			JSONObject tuo = new JSONObject(tuojson);

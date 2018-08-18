@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class Wget {
 
-	public static String wGet(String saveAsFile, String urlOfFile) {
+	public static String wGet(String urlOfFile) {
 		String ret = null;
 		InputStream httpIn = null;
 		OutputStream fileOutput = null;

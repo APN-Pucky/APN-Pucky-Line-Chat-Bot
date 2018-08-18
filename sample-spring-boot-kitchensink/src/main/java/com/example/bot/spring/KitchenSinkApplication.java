@@ -31,13 +31,8 @@ public class KitchenSinkApplication {
 
     public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
+        Data.init();
         SpringApplication.run(KitchenSinkApplication.class, args);
-        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
-        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
-        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
-        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
-        System.out.println("HERE I AM!!!!!!!!!!!!!!!!!!");
-        new JSONObject();
     }
 
 }
