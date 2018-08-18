@@ -251,11 +251,11 @@ public class KitchenSinkController {
 			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn materials ")[1]);
 			ArrayList<CardInstance> acis = ci.getLowestMaterials();
 			CardInstance[] ar = ci.getMaterials();
-			String fuse = "";
+			String fuse = "[";
 			for(CardInstance c : ar) fuse +=c + ", ";
-			String lfuse = "";
-			for(CardInstance c : ar) lfuse +=c + ", ";
-			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: " + fuse + "\n" + "Required Materials: " + lfuse + "\n");
+			String lfuse = "[";
+			for(CardInstance c : acis) lfuse +=c + ", ";
+			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: " + fuse + "]\n\n" + "Required Materials: " + lfuse + "]\n");
 			break;
 		}
 		case "card": {
