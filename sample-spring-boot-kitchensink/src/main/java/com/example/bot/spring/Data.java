@@ -276,20 +276,6 @@ public class Data
 		return decks;
 	}
 	
-	public static String getHashedDeckString(int[] ids)
-	{
-		java.util.Arrays.sort(ids); //TODO pre-check is sorted
-		int count = 0;
-		String inv = "";
-		for(int j=0;j< ids.length;)
-		{
-			count = Data.getCount(ids,ids[j]);
-			if(ids[j]!=0 )inv += Data.getNameAndLevelByID(ids[j]) + "#" + count + ", ";
-			j+=count;
-		}
-		return inv;
-	}
-	
 	public static String getInvString(int[] ids)
 	{
 		java.util.Arrays.sort(ids); //TODO pre-check is sorted

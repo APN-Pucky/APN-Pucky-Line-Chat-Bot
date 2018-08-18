@@ -236,29 +236,30 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "TU line chat bot apn:\n" + 
 		"Usage: apn {option}\n" 
 					+"\nOptions:\n" 
-		+"\t help \t\t apn bot help\n"
-		+"\t tuo \t\t tuo version\n" 
-		+"\t roadmap \t\t tu roadmap + link\n" 
+		+"\t - help: \n\t\t\t\t apn bot help\n"
+		+"\t - tuo: \n\t\t\t\t tuo version\n" 
+		+"\t - materials: \n\t\t\t\t displays materials for card\n" 
+		+"\t - roadmap: \n\t\t\t\t tu roadmap + link\n" 
 		);
 			break;
 		}
 		case "materials": {
 			if(args.length < 2)
 			{
-				this.replyText(replyToken, "Please pass a card with: apn card {card}");
+				this.replyText(replyToken, "Please pass a card with: apn materials {card}");
 				break;
 			}
-			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn materials ")[1]);
-			/*int[] acis = Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ");
-			int[] ar = Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ");
-			String fuse = "[";
-			for(CardInstance c : ar) fuse +=c + ", ";
-			String lfuse = "[";
-			for(CardInstance c : acis) lfuse +=c + ", ";*/
+			String card_name = ptext.split("apn materials ")[1];
+			CardInstance ci = Data.getCardInstanceByNameAndLevel(card_name);
+			if(ci == null || ci == CardInstance.NULL)
+			{
+				this.replyText(replyToken, "Unkown card: '" + card_name + "'");
+				break;
+			}
 			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ") + "]\n\n" + "Required Materials: \n[" + Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ") + "]\n");
 			break;
 		}
-		case "card": {
+		/*case "card": {
 			if(args.length < 2)
 			{
 				this.replyText(replyToken, "Please pass a card with: apn card {card}");
@@ -266,7 +267,7 @@ public class KitchenSinkController {
 			}
 			this.replyText(replyToken, "Card: " + Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]));
 			break;
-		}
+		}*/
 		case "roadmap": {
 			this.replyText(replyToken, "Roadmap feature, soon tm");
 			break;
