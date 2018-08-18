@@ -17,6 +17,7 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -79,6 +80,12 @@ import com.linecorp.bot.model.message.template.ImageCarouselTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
+import de.neuwirthinformatik.Alexander.TU.Data;
+import de.neuwirthinformatik.Alexander.TU.util.Wget;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import lombok.NonNull;
 import lombok.Value;
@@ -246,8 +253,19 @@ public class KitchenSinkController {
             return;
         }
         log.info("Got text message from {}: {}", replyToken, text);
-        text = text.split("apn ")[1];
+        String[] arr = text.split("apn ");
+        if (arr.length < 2) {
+        	return;
+        }
         switch (text) {
+        	case "tuo": {
+        		String json = Wget.wGet("tuo.json", "https://api.github.com/repos/APN-Pucky/tyrant_optimize/releases/latest");
+        		String tuojson=json.replaceAll("\n", "");
+        		JSONObject tuo = new JSONObject(tuojson);
+        		String tag_name = (tuo).getString("tag_name");	
+        		String commit = tuo.getString("name");
+        		this.replyText(replyToken, "TUO VERSION= " + tag_name + " - " + commit);
+        	}
             case "profile": {
                 String userId = event.getSource().getUserId();
                 if (userId != null) {
