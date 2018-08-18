@@ -216,7 +216,7 @@ public class KitchenSinkController {
 	}
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		//String ptext = content.getText().toLowerCase();
+		String ptext = content.getText();//.toLowerCase();
 		if (!ptext.startsWith("apn ")) {
 			return;
 		}
