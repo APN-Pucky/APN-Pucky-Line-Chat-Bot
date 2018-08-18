@@ -18,7 +18,7 @@ public class Wget {
 			// check the http connection before we do anything to the fs
 			httpIn = new BufferedInputStream(new URL(urlOfFile).openStream());
 			// prep saving the file
-			ret = StreamUtil.readFullyAsString(httpIn,"UTF-8");
+			ret = StreamUtil.readFullyAsString(httpIn, "UTF-8");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;

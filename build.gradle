@@ -66,7 +66,7 @@ subprojects {
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
     apply plugin: 'java'
-    apply plugin: 'checkstyle'
+    //apply plugin: 'checkstyle'
     apply plugin: 'io.franzbecker.gradle-lombok'
     if (new File("${project.rootDir}/.git").exists()) {
         logger.info("There's .git directory. Create git.properties.")
@@ -160,9 +160,9 @@ subprojects {
         }
     }
 
-    checkstyle {
-        configProperties = [projectDir: rootProject.projectDir]
-    }
+    //checkstyle {
+        //configProperties = [projectDir: rootProject.projectDir]
+    //}
 
     compileJava {
         options.compilerArgs << '-Xlint:all' << '-Xlint:deprecation' << '-Werror' << '-Xlint:-processing' << '-parameters'
