@@ -252,9 +252,9 @@ public class KitchenSinkController {
 			ArrayList<CardInstance> acis = ci.getLowestMaterials();
 			CardInstance[] ar = ci.getMaterials();
 			String fuse = "";
-			for(CardInstance c : ar) fuse +=ar + ", ";
+			for(CardInstance c : ar) fuse +=c + ", ";
 			String lfuse = "";
-			for(CardInstance c : ar) lfuse +=ar + ", ";
+			for(CardInstance c : ar) lfuse +=c + ", ";
 			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: " + fuse + "\n" + "Required Materials: " + lfuse + "\n");
 			break;
 		}
