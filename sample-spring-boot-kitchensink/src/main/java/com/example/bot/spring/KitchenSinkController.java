@@ -248,7 +248,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a card with: apn card {card}");
 				break;
 			}
-			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
+			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn materials ")[1]);
 			ArrayList<CardInstance> acis = ci.getLowestMaterials();
 			CardInstance[] ar = ci.getMaterials();
 			String fuse = "";
