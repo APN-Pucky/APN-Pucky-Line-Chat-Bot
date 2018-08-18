@@ -244,7 +244,7 @@ public class KitchenSinkController {
 			for(String s : sa)
 			{
 				ptext.replaceAll("apn " + s, "apn " + sa[0]);
-				log.info("Current ptext", replyToken, ptext);
+				log.info("Current ptext {}", ptext);
 			}
 		}
 
@@ -445,7 +445,7 @@ public class KitchenSinkController {
 			break;
 		default:
 			//log.info("Returns echo message {}: {}", replyToken, text);
-			this.replyText(replyToken, "Unknown command.");
+			this.replyText(replyToken, "Unknown command '" + text + "'");
 			break;
 		}
 	}
