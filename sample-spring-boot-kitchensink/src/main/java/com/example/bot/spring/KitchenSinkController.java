@@ -251,9 +251,14 @@ public class KitchenSinkController {
 			}
 			if(number > 20)number = 20;
 			String msg = "";
-			for(; number>0; number--)
+			for(int i = 0; i < Data.distinct_cards.length && number > 0; i++)
 			{
-				msg += Data.distinct_cards[Data.distinct_cards.length-number].toString() + "\n";
+				Card c = Data.distinct_cards[Data.distinct_cards.length-i];
+				if(c.fusion_level == 2)
+				{
+					msg += c.toString() + "\n";
+					number--;
+				}
 			}
 			this.replyText(replyToken,msg);
 			break;
