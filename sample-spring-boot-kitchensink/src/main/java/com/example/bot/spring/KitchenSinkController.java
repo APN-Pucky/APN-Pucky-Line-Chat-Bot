@@ -243,8 +243,7 @@ public class KitchenSinkController {
 		{
 			for(String s : sa)
 			{
-				ptext.replaceAll("apn " + s, "apn " + sa[0]);
-				log.info("Current ptext {}", ptext);
+				ptext = ptext.replaceAll("apn " + s, "apn " + sa[0]);
 			}
 		}
 
