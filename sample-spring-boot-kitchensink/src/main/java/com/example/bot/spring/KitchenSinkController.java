@@ -430,7 +430,7 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		case "profile": {
+		/*case "profile": {
 			String userId = event.getSource().getUserId();
 			if (userId != null) {
 				lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
@@ -529,7 +529,7 @@ public class KitchenSinkController {
 			break;
 		case "quickreply":
 			this.reply(replyToken, new MessageWithQuickReplySupplier().get());
-			break;
+			break;*/
 		default:
 			//log.info("Returns echo message {}: {}", replyToken, text);
 			this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
@@ -545,7 +545,7 @@ public class KitchenSinkController {
 		}
 		else
 		{
-			return Data.getCardInstanceByNameAndLevel(idorname);
+			return Data.getCardInstanceByNameAndLevel(StringUtil.capitalizeOnlyFirstLetters(idorname));
 		}
 	}
 
