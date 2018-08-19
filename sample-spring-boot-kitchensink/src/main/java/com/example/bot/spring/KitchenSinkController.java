@@ -309,11 +309,13 @@ public class KitchenSinkController {
 			}
 			if(number > 20)number = 20;
 			String msg = "";
-			for(int i = 1; i < Data.distinct_cards.length && number > 0; i++)
+			ArrayList<Card> printed = new ArrayList<Card>();
+			for(int i = 1; i < Data.all_cards.length && number > 0; i++)
 			{
-				Card c = Data.distinct_cards[Data.distinct_cards.length-i];
-				if(c.fusion_level == 2)
+				Card c = Data.all_cards[Data.all_cards.length-i];
+				if(c.fusion_level == 2 && !printed.contains(c))
 				{
+					printed.add(c);
 					msg += c.description() + "\n\n";
 					number--;
 				}
