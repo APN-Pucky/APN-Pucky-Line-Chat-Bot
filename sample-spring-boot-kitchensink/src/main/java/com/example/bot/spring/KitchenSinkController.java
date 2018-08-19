@@ -153,26 +153,26 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got followed event");
+		//this.replyText(replyToken, "Got followed event");
 	}
 
 	@EventMapping
 	public void handleJoinEvent(JoinEvent event) {
 		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Joined " + event.getSource());
+		this.replyText(replyToken, "Hi, Usage: 'apn help'");
 	}
 
 	@EventMapping
 	public void handlePostbackEvent(PostbackEvent event) {
 		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData() + ", param "
-				+ event.getPostbackContent().getParams().toString());
+		//this.replyText(replyToken, "Got postback data " + event.getPostbackContent().getData() + ", param "
+		//		+ event.getPostbackContent().getParams().toString());
 	}
 
 	@EventMapping
 	public void handleBeaconEvent(BeaconEvent event) {
 		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got beacon message " + event.getBeacon().getHwid());
+		//this.replyText(replyToken, "Got beacon message " + event.getBeacon().getHwid());
 	}
 
 	@EventMapping
@@ -205,18 +205,18 @@ public class KitchenSinkController {
 
 	private void handleHeavyContent(String replyToken, String messageId,
 			Consumer<MessageContentResponse> messageConsumer) {
-		final MessageContentResponse response;
+		/*final MessageContentResponse response;
 		try {
 			response = lineMessagingClient.getMessageContent(messageId).get();
 		} catch (InterruptedException | ExecutionException e) {
 			reply(replyToken, new TextMessage("Cannot get image: " + e.getMessage()));
 			throw new RuntimeException(e);
 		}
-		messageConsumer.accept(response);
+		messageConsumer.accept(response);*/
 	}
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
-		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
+		//reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
 
 	private static String[][] alias = new String[][]{
