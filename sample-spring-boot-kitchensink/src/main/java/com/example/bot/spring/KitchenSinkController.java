@@ -223,9 +223,11 @@ public class KitchenSinkController {
 		{"materials","mats","build","-m","-b"},
 			{"update","up","-u"},
 				{"card","c","-c","show","display"},
+					{"version","v"},
 	};
 	private static String[][] help = new String[][]{
 		{"help","apn bot help"},
+		{"version","version of this bot"},
 		{"tuo","tuo version"},
 		{"materials","displays materials for card"},
 		{"new","displays latest quads"},
