@@ -182,7 +182,7 @@ public class KitchenSinkController {
 	}
 
 	private void push(@NonNull String id, @NonNull Message message) {
-		reply(id, Collections.singletonList(message));
+		push(id, Collections.singletonList(message));
 	}
 	private void push(@NonNull String id, @NonNull List<Message> messages) {
 		try {
@@ -195,7 +195,7 @@ public class KitchenSinkController {
 
 	private void pushText(@NonNull String id, @NonNull String message) {
 		if (id.isEmpty()) {
-			throw new IllegalArgumentException("replyToken must not be empty");
+			throw new IllegalArgumentException("id must not be empty");
 		}
 		if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
