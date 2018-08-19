@@ -200,7 +200,7 @@ public class KitchenSinkController {
 		/*if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
 		}*/
-		this.push(id, new TextMessage(message));
+		this.push(id, new TextMessage(message.trim()));
 	}
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
@@ -223,7 +223,7 @@ public class KitchenSinkController {
 		/*if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
 		}*/
-		this.reply(replyToken, new TextMessage(message));
+		this.reply(replyToken, new TextMessage(message.trim()));
 	}
 
 	private void handleHeavyContent(String replyToken, String messageId,
@@ -441,6 +441,12 @@ public class KitchenSinkController {
 			this.replyText(replyToken, ci.description());
 			break;
 		}
+		case "event" : {
+
+		}
+		case "next" : {
+
+		}
 		case "roadmap": {
 			String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
     	String[] lines = general.split("\n");
@@ -460,6 +466,12 @@ public class KitchenSinkController {
     	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
     	map = map.substring(map.indexOf(">")+1);
     	map = map.substring(0,map.indexOf("</div>"));
+
+			if(!(args.length < 2) && args[1].equals("full")))
+			{
+				this.replyText(replyToken, map);
+				break;
+			}
 
 			String rep="";
     	String[] sections = map.split("\\*\\*");
