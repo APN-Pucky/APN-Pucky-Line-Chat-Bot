@@ -303,16 +303,46 @@ public class KitchenSinkController {
 		}
 		case "new": {
 			int number = 5;
+			int offset = Data.all_cards.length;
 			if(!(args.length < 2))
 			{
-				number = Integer.parseInt(args[1]);
+				if(!args[1].matches("\\d+"))
+				{
+						switch(args[1])
+						{
+							case "fort":
+							case "struct":
+							case "structure": {
+								offset = 55001;
+								break;
+							}
+							case "cmd":
+							case "commander": {
+								offset = 30000;
+								break;
+							}
+							default: {
+								offset = Data.all_cards.length;
+								break;
+							}
+						}
+						if(!(args.length < 3) && !args[2].matches("\\d+"))
+						{
+							number = Integer.parseInt(args[2]);
+						}
+				}
+				else
+				{
+					number = Integer.parseInt(args[1]);
+				}
+
 			}
-			if(number > 7)number = 7;
+			if(number > 10)number = 10;
 			String msg = "";
 			ArrayList<Card> printed = new ArrayList<Card>();
 			for(int i = 1; i < Data.all_cards.length && number > 0; i++)
 			{
-				Card c = Data.all_cards[Data.all_cards.length-i];
+				Card c = Data.all_cards[offset-i];
 				if(c != null && c.fusion_level == 2 && !printed.contains(c)
 				&& !c.getName().toLowerCase().startsWith("test")
 				&& !c.getName().toLowerCase().startsWith("revolt ranger")
@@ -320,11 +350,11 @@ public class KitchenSinkController {
 				)
 				{
 					printed.add(c);
-					msg += c.description() + "\n----------------------------------"+"\n";
+					msg += c.description() + "\n---------------------------------------"+"\n";
 					number--;
 				}
 			}
-			msg = StringUtil.removeLastCharacter(msg);
+			msg = StringUtil.removeLastCharacter(msg,42);
 			this.replyText(replyToken,msg);
 			break;
 		}
