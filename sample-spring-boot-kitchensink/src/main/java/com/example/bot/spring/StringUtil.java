@@ -21,6 +21,12 @@ public class StringUtil {
 		return o.substring(0,o.length()-x);
 	}
 
+		public static boolean equalsIgnoreSpecial(String a, String b)
+		{
+			String a1 = a.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
+			String b1 = b.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
+			return a1.equalsIgnoreCase(b1);
+		}
 
 	private static String capitalizeOnlyFirstLetter(String original) {
 	    if (original == null || original.length() == 0) {

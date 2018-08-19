@@ -176,8 +176,7 @@ public class Data
 	{
 		for(Card c : distinct_cards)
 		{
-			if(c.getName().equalsIgnoreCase(s_name.trim()))return c;
-
+			if(StringUtil.equalsIgnoreSpecial(c.getName(),s_name.trim()))return c;
 		}
 		return null;
 	}
@@ -186,7 +185,7 @@ public class Data
 	{
 		for(Card c : distinct_cards)
 		{
-			if(c.getName().equalsIgnoreCase(s_name.trim()))return c;
+			if(StringUtil.equalsIgnoreSpecial(c.getName(),s_name.trim()))return c;
 
 		}
 		return null;
@@ -262,7 +261,7 @@ public class Data
 	{
 		for(Mission c : missions)
 		{
-			if(c != null && c.getName().equalsIgnoreCase(name))return c;
+			if(c != null && StringUtil.equalsIgnoreSpecial(c.getName(),name))return c;
 		}
 		return null;
 	}
