@@ -436,6 +436,7 @@ public class KitchenSinkController {
     	map = map.substring(map.indexOf(">")+1);
     	map = map.substring(0,map.indexOf("</div>"));
 			this.replyText(replyToken, map);
+			this.replyText(replyToken, map);
 			break;
 		}
 		case "tuo": {
