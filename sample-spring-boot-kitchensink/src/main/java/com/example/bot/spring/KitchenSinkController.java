@@ -220,20 +220,22 @@ public class KitchenSinkController {
 	}
 
 	private static String[][] alias = new String[][]{
-		{"materials","mats","build","-m","-b"},
+			{"materials","mats","build","-m","-b"},
 			{"update","-u"},
-				{"card","-c","show","display"},
-					{"version","-v"},
+			{"card","-c","show","display"},
+			{"version","-v"},
+			{"help","?","-h"},
+			{"options","-o"},
 	};
 	private static String[][] help = new String[][]{
 			{"card","display a card"},
 			{"materials","displays materials for card"},
 			{"new","displays latest quads"},
-			{"full_help","apn bot help"},
+			{"tuo","tuo version"},
+			{"options","apn bot options"},
 	};
 	private static String[][] large_help = new String[][]{
 		{"roadmap","tu roadmap + link"},
-		{"tuo","tuo version"},
 		{"xml","show the date of xmls"},
 		{"update","reload xmls"},
 		{"alias","enlist alias"},
@@ -267,7 +269,7 @@ public class KitchenSinkController {
 			this.replyText(replyToken, rep);
 			break;
 		}
-		case "full_help": {
+		case "options": {
 			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
 			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 			for(String[] sa : large_help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
