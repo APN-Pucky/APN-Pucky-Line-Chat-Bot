@@ -264,13 +264,13 @@ public class KitchenSinkController {
 		String text = args[0];
 		switch (text) {
 		case "help": {
-			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
+			String rep = "TU line chat bot apn:\n" + "Usage: 'apn {option}'\n" 	+"\nOptions:\n" ;
 			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 			this.replyText(replyToken, rep);
 			break;
 		}
 		case "options": {
-			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
+			String rep = "TU line chat bot apn:\n" + "Usage: 'apn {option}'\n" 	+"\nOptions:\n" ;
 			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 			for(String[] sa : large_help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
 			this.replyText(replyToken, rep);
@@ -312,7 +312,7 @@ public class KitchenSinkController {
 						switch(args[1])
 						{
 							case "help": {
-								this.replyText(replyToken, "Usage: apn new {dom(inion)/struct(ure)/commander/cmd/assault}");
+								this.replyText(replyToken, "Usage: 'apn new {dom(inion)/struct(ure)/commander/cmd/assault} {number} {skip}'");
 								return;
 							}
 							case "dom":
@@ -384,7 +384,7 @@ public class KitchenSinkController {
 		case "materials": {
 			if(args.length < 2)
 			{
-				this.replyText(replyToken, "Please pass a card with: apn materials {card}");
+				this.replyText(replyToken, "Please pass a card with: 'apn materials {card}'");
 				break;
 			}
 			String card_name = ptext.split("apn materials ")[1];
@@ -402,7 +402,7 @@ public class KitchenSinkController {
 		case "card": {
 			if(args.length < 2)
 			{
-				this.replyText(replyToken, "Please pass a card with: apn card {card}");
+				this.replyText(replyToken, "Please pass a card with: 'apn card {card}'");
 				break;
 			}
 			String req = ptext.split("apn card ")[1];
