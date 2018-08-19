@@ -313,7 +313,7 @@ public class KitchenSinkController {
 			for(int i = 1; i < Data.all_cards.length && number > 0; i++)
 			{
 				Card c = Data.all_cards[Data.all_cards.length-i];
-				if(c.fusion_level == 2 && !printed.contains(c))
+				if(c != null && c.fusion_level == 2 && !printed.contains(c))
 				{
 					printed.add(c);
 					msg += c.description() + "\n\n";
