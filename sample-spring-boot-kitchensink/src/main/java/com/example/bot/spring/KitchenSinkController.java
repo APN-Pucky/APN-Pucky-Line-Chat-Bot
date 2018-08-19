@@ -42,6 +42,7 @@ import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.DatetimePickerAction;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
@@ -180,6 +181,28 @@ public class KitchenSinkController {
 		log.info("Received message(Ignored): {}", event);
 	}
 
+	private void push(@NonNull String id, @NonNull Message message) {
+		reply(id, Collections.singletonList(message));
+	}
+	private void push(@NonNull String id, @NonNull List<Message> messages) {
+		try {
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(id, messages)).get();
+			log.info("Sent push messages: {}", apiResponse);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void pushText(@NonNull String id, @NonNull String message) {
+		if (id.isEmpty()) {
+			throw new IllegalArgumentException("replyToken must not be empty");
+		}
+		if (message.length() > 1000) {
+			message = message.substring(0, 1000 - 2) + "……";
+		}
+		this.reply(id, new TextMessage(message));
+	}
+
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
@@ -187,7 +210,7 @@ public class KitchenSinkController {
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
-			log.info("Sent messages: {}", apiResponse);
+			log.info("Sent reply messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
@@ -436,7 +459,8 @@ public class KitchenSinkController {
     	map = map.substring(map.indexOf(">")+1);
     	map = map.substring(0,map.indexOf("</div>"));
 			this.replyText(replyToken, map);
-			this.replyText(replyToken, map);
+
+			this.pushText(event.getSource().getSenderId(), map);
 			break;
 		}
 		case "tuo": {
