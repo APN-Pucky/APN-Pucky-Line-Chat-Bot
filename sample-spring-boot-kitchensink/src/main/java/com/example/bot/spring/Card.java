@@ -94,7 +94,7 @@ public class Card {
 	}
 
 	public String description() {
-		return new CardInstance(ids[ids.length-1],this,infos[infos.length-1]).toString(); //Max Card
+		return new CardInstance(ids[ids.length-1],this,infos[infos.length-1]).description(); //Max Card
 	}
 
 	public static enum CardType {
