@@ -324,7 +324,7 @@ public class KitchenSinkController {
 					number--;
 				}
 			}
-			StringUtils.removeLastCharacter(msg,1);
+			StringUtil.removeLastCharacter(msg,1);
 			this.replyText(replyToken,msg);
 			break;
 		}
