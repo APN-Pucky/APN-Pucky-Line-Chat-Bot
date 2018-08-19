@@ -105,44 +105,44 @@ public class KitchenSinkController {
 
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-		handleSticker(event.getReplyToken(), event.getMessage());
+		/*handleSticker(event.getReplyToken(), event.getMessage());*/
 	}
 
 	@EventMapping
 	public void handleLocationMessageEvent(MessageEvent<LocationMessageContent> event) {
 		LocationMessageContent locationMessage = event.getMessage();
-		reply(event.getReplyToken(), new LocationMessage(locationMessage.getTitle(), locationMessage.getAddress(),
-				locationMessage.getLatitude(), locationMessage.getLongitude()));
+		/*reply(event.getReplyToken(), new LocationMessage(locationMessage.getTitle(), locationMessage.getAddress(),
+				locationMessage.getLatitude(), locationMessage.getLongitude()));*/
 	}
 
 	@EventMapping
 	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
 		// You need to install ImageMagick
-		handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
+		/*handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
 			DownloadedContent jpg = saveContent("jpg", responseBody);
 			DownloadedContent previewImg = createTempFile("jpg");
 			system("convert", "-resize", "240x", jpg.path.toString(), previewImg.path.toString());
 			reply(event.getReplyToken(), new ImageMessage(jpg.getUri(), jpg.getUri()));
-		});
+		});*/
 	}
 
 	@EventMapping
 	public void handleAudioMessageEvent(MessageEvent<AudioMessageContent> event) throws IOException {
-		handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
+	/*	handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
 			DownloadedContent mp4 = saveContent("mp4", responseBody);
 			reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
-		});
+		});*/
 	}
 
 	@EventMapping
 	public void handleVideoMessageEvent(MessageEvent<VideoMessageContent> event) throws IOException {
 		// You need to install ffmpeg and ImageMagick.
-		handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
+	/*	handleHeavyContent(event.getReplyToken(), event.getMessage().getId(), responseBody -> {
 			DownloadedContent mp4 = saveContent("mp4", responseBody);
 			DownloadedContent previewImg = createTempFile("jpg");
 			system("convert", mp4.path + "[0]", previewImg.path.toString());
 			reply(event.getReplyToken(), new VideoMessage(mp4.getUri(), previewImg.uri));
-		});
+		});*/
 	}
 
 	@EventMapping
