@@ -2,21 +2,22 @@ package com.example.bot.spring;
 
 import java.util.ArrayList;
 
-
 public class Card {
-	public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0,0);
+	public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,"allfactions",new CardInstance.Info[] {});
 	public final int[] ids;
+	public final CardInstance.Info[] infos;
 	public final int fusion_level;
 	public final String name;
 	public final int rarity;
 	public final int[] materials;
+	public final String faction;
 	public final CardType type;
 	public final CardCategory category;
 	public final int fort_type;
 	public final int set;
 	// further stats; skilz...
 
-	public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort,int set) {
+	public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort, int set,String f, CardInstance.Info[] infos) {
 		this.ids = ids;
 		this.name = name;
 		this.rarity = rarity;
@@ -26,6 +27,8 @@ public class Card {
 		this.fort_type = fort;
 		this.set = set;
 		this.category = CardCategory.getByID(ids[0], fort, set);
+		this.infos = infos;
+		this.faction = f;
 	}
 
 	public int[] getMaterials() {
@@ -63,6 +66,20 @@ public class Card {
 		return -1;
 	}
 
+	public CardType getCardType()
+	{
+		return type;
+	}
+
+	public String getFaction()
+	{
+		return faction;
+	}
+
+	public CardInstance.Info[] getInfos() {
+		return infos;
+	}
+
 	public boolean equals(Card c) {
 		return c != null && ids[0] == c.getIDs()[0];
 	}
@@ -74,6 +91,10 @@ public class Card {
 		}
 		;
 		return name + "[" + ret + "]" + "{" + rarity + "}";
+	}
+
+	public String description() {
+		return new CardInstance(ids[ids.length-1],this,infos[infos.length-1]).toString(); //Max Card
 	}
 
 	public static enum CardType {
@@ -107,7 +128,7 @@ public class Card {
 	}
 
 	public static enum CardCategory {
-		NORMAL, FORTRESS_DEFENSE, FORTRESS_SIEGE,FORTRESS_CONQUEST, DOMINION, DOMINION_MATERIAL;
+		NORMAL, FORTRESS_DEFENSE, FORTRESS_SIEGE, FORTRESS_CONQUEST, DOMINION, DOMINION_MATERIAL;
 
 		public static CardCategory getByID(int id, int fort, int set) {
 			if ((id >= 2700) && (id < 2997)) {
@@ -117,46 +138,71 @@ public class Card {
 				case 2:
 					return FORTRESS_SIEGE;
 				default:
-					if (/*TUM.settings.ASSERT &&*/ (id < 2748) || (id >= 2754) )
-						//System.out.println("unsupported Fortress Id: " + id + " fort_type: " + fort);
+					if (/* TUM.settings.ASSERT && */ (id < 2748) || (id >= 2754))
+						// System.out.println("unsupported Fortress Id: " + id + " fort_type: " + fort);
 						throw new NullPointerException("unsupported Fortress Id: " + id + " fort_type: " + fort);
 					else
 						return FORTRESS_SIEGE; // Sky Fortress
 				}
 			}
-			if ((id == 43451) || (id == 43452))
-			{
+			if ((id == 43451) || (id == 43452)) {
 				return DOMINION_MATERIAL;
 			}
-			if (id >= 50001 && id < 55001)
-	        {
-	            return DOMINION;
-	        }
-			if(set == 8000)
-			{
-				if(/*TUM.settings.ASSERT &&*/ CardType.getByID(id) != CardType.STRUCTURE) throw new NullPointerException("Set 8000 is fortress, but " + id + " is not a structure");
-				if(17359 >= id)return FORTRESS_CONQUEST; // END of CQ Cards look section 8
+			if (id >= 50001 && id < 55001) {
+				return DOMINION;
+			}
+			if (set == 8000) {
+				if (/* TUM.settings.ASSERT && */ CardType.getByID(id) != CardType.STRUCTURE)
+					throw new NullPointerException("Set 8000 is fortress, but " + id + " is not a structure");
+				if (17359 >= id)
+					return FORTRESS_CONQUEST; // END of CQ Cards look section 8
 			}
 			return NORMAL;
 		}
 	}
 
 	public static class CardInstance {
-		public static final CardInstance NULL = new CardInstance(0, Card.NULL);
+		public static class Info {
+			final int attack, health, level, cost;
+			final SkillSpec[] skills;
+
+			public Info(int attack, int health,int cost,int level, SkillSpec[] skills) {
+				this.attack = attack;
+				this.health = health;
+				this.level = level;
+				this.cost = cost;
+				this.skills = skills;
+			}
+		}
+
+		public static final CardInstance NULL = new CardInstance(0, Card.NULL,null);
 		private final int id;
+		private final Info info;
 		private final Card c;
 
-		public CardInstance(int id, Card card) {
+		public CardInstance(int id, Card card, Info info) {
 			this.id = id;
 			c = card;
-			/*if (TUM.settings.ASSERT)
+			this.info = info;
+			/*if (TUM.settings.ASSERT) {
 				if (Data.getCount(card.getIDs(), id) == 0)
-					throw new NullPointerException("CardInstance id not in Card");*/
+					throw new NullPointerException("CardInstance id not in Card");
+				if (info.level != getLevel())
+					throw new NullPointerException("Different Levels");
+			}*/
+		}
+
+		public CardInstance(int id, Card card) {
+			this(id, card, card.getInfos()[card.getPositionID(id)]);
 		}
 
 		public CardInstance(int id) {
-			this.id = id;
-			c = Data.getCardByID(id);
+			this(id, Data.getCardByID(id));
+		}
+
+		public Info getInfo()
+		{
+			return info;
 		}
 
 		public int getID() {
@@ -177,6 +223,33 @@ public class Card {
 
 		public String toString() {
 			return getName();
+		}
+
+		public String getFaction() {
+			return c.getFaction();
+		}
+
+		public CardType getCardType() {
+			return c.getCardType();
+		}
+
+		public String description() {
+			String ret = getName() + "\n";
+			ret += StringUtil.capitalizeOnlyFirstLetters(getFaction()) + " ";
+			ret += StringUtil.capitalizeOnlyFirstLetters(Data.rarityToString(getRarity())) + " ";
+			ret += StringUtil.capitalizeOnlyFirstLetters(getCardType().toString()) +" ";
+			ret += StringUtil.capitalizeOnlyFirstLetters(Data.fusionToString(getFusionLevel()))+ "\n";
+			ret += info.attack + "/" + info.health + "/"+ info.cost + "\n";
+			for(SkillSpec s : info.skills)
+			{
+				ret += s + "\n";
+			}
+			ret += "\n";
+			for(SkillSpec s : info.skills)
+			{
+				if(s.card_id>0)ret += new CardInstance(s.card_id).description() + "\n\n";
+			}
+			return StringUtil.removeLastCharacter(ret,2);
 		}
 
 		public int getFusionLevel() {
@@ -224,11 +297,11 @@ public class Card {
 		}
 
 		public int getCostFromLowestMaterials() {
-			int cost = Data.getSPNeededToLevelTo(getLowest(),this);
-			if(c.materials.length == 0) {
+			int cost = Data.getSPNeededToLevelTo(getLowest(), this);
+			if (c.materials.length == 0) {
 				return cost;
 			}
-			for(CardInstance ci : getMaterials()) {
+			for (CardInstance ci : getMaterials()) {
 				cost += ci.getCostFromLowestMaterials();
 			}
 			return cost;

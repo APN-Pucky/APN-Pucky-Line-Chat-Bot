@@ -225,11 +225,12 @@ public class KitchenSinkController {
 	private static String[][] help = new String[][]{
 		{"help","apn bot help"},
 		{"tuo","tuo version"},
-		{"alias","enlist alias"},
 		{"materials","displays materials for card"},
 		{"new","displays latest quads"},
 		{"xml","show the date of xmls"},
 		{"update","reload xmls"},
+		{"card","display a card"},
+		{"alias","enlist alias"},
 		{"roadmap","tu roadmap + link"},
 	};
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
@@ -293,7 +294,7 @@ public class KitchenSinkController {
 				Card c = Data.distinct_cards[Data.distinct_cards.length-i];
 				if(c.fusion_level == 2)
 				{
-					msg += c.toString() + "\n";
+					msg += c.description() + "\n\n";
 					number--;
 				}
 			}
@@ -325,7 +326,7 @@ public class KitchenSinkController {
 				break;
 			}
 			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
-			this.replyText(replyToken, "Card: " + ci.toString() + " [" +ci.getID() + "]");
+			this.replyText(replyToken, "Card: " + ci.description() + " [" +ci.getID() + "]");
 			break;
 		}
 		case "roadmap": {
@@ -339,7 +340,7 @@ public class KitchenSinkController {
 			JSONObject tuo = new JSONObject(tuojson);
 			String tag_name = (tuo).getString("tag_name");
 			String commit = tuo.getString("name");
-			this.replyText(replyToken, "TUO VERSION= " + tag_name + " - " + commit);
+			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
 		case "profile": {

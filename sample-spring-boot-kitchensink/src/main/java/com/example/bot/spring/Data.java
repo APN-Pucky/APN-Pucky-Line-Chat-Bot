@@ -192,6 +192,33 @@ public class Data
 		return null;
 	}
 
+		public static String factionToString(int faction)
+		{
+			if(faction ==1) return "imperial";
+			else if(faction==2) return "raider";
+			else if(faction ==3) return "bloodthirsty";
+			else if(faction ==4) return "xeno";
+			else if(faction ==5) return "righteous";
+			else if(faction ==6) return "progenitor";
+			return "allfaction"; //error
+		}
+		public static String fusionToString(int fusion)
+		{
+			if(fusion ==0) return "Single";
+			else if(fusion ==1) return "Dual";
+			else if(fusion ==2) return "Quad";
+			return "Unknkown Fusion";
+		}
+		public static String rarityToString(int rarity)
+		{
+			if(rarity ==1) return "Common";
+			else if(rarity ==2) return "Rare";
+			else if(rarity ==3) return "Epic";
+			else if(rarity ==4) return "Legendary";
+			else if(rarity ==5) return "Vindicator";
+			else if(rarity ==6) return "Mythic";
+			return "Unknkown Rarity";
+		}
 	public static Card getCardByID(int s_id)
 	{
 		return all_cards[s_id];

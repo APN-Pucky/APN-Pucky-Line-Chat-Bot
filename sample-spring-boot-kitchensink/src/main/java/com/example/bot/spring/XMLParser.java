@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.BufferedInputStream;
 
 import java.net.URL;
+import com.example.bot.spring.Card.CardInstance;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class XMLParser 
+public class XMLParser
 {
 	public static final int CARD_SECTIONS_COUNT = 16;//TODO: load from data
 	private int card_count = 1;
@@ -30,8 +32,8 @@ public class XMLParser
 	private Document fusion_document;
 	private Document mission_document;
 	private Document level_document;
-	
-	
+
+
 	public XMLParser()
 	{
 
@@ -48,7 +50,7 @@ public class XMLParser
 	        NodeList nList = card_documents[i].getElementsByTagName("unit");
 	        card_count+=nList.getLength();
 		}
-		
+
 		//File inputFile = new File("data/fusion_recipes_cj2.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -56,7 +58,7 @@ public class XMLParser
         fusion_document.getDocumentElement().normalize();
         NodeList nList = fusion_document.getElementsByTagName("fusion_recipe");
         fusion_count+=nList.getLength();
-	
+
 		//inputFile = new File("data/missions.xml");
 	    dbFactory = DocumentBuilderFactory.newInstance();
 	    dBuilder = dbFactory.newDocumentBuilder();
@@ -64,25 +66,30 @@ public class XMLParser
 	    mission_document.getDocumentElement().normalize();
 	    nList = mission_document.getElementsByTagName("mission");
 	    mission_count+=nList.getLength();
-	    
+
 	    //inputFile = new File("data/levels.xml");
 	    dbFactory = DocumentBuilderFactory.newInstance();
 	    dBuilder = dbFactory.newDocumentBuilder();
 	    level_document = dBuilder.parse(new BufferedInputStream(new URL("http://mobile-dev.tyrantonline.com/assets/levels.xml").openStream()));
 	    level_document.getDocumentElement().normalize();
-	    
+
 	   	}catch(Exception e){e.printStackTrace();}
 		System.out.println("XMLParser Done");
-		
+
 	}
 
-	public Pair<Card[],Card[]> loadCards() 
+	public Pair<Card[],Card[]> loadCards()
 	{
 		System.out.println("Loading Cards");
 		int max_id = 0;
 		Card[] distinct_cards = new Card[card_count];
 		int id,rarity,fusion_level,fort_type,set;
     	String name;
+    	String f;
+
+    	int attack, health, cost, level;
+    	ArrayList<SkillSpec> skills = new ArrayList<SkillSpec>();
+
     	int cur = 1;
     	distinct_cards[0] = Card.NULL;
     	try{
@@ -91,10 +98,11 @@ public class XMLParser
         	NodeList nList = card_documents[i].getElementsByTagName("unit");
         	for (int temp = 0; temp < nList.getLength(); temp++) {
         		Node nNode = nList.item(temp);
-           
+
         		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
         			Element eElement = (Element) nNode;
         			name = eElement.getElementsByTagName("name").item(0).getTextContent();
+        			f = Data.factionToString(Integer.parseInt(eElement.getElementsByTagName("type").item(0).getTextContent()));
         			id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent());
         			rarity = Integer.parseInt(eElement.getElementsByTagName("rarity").item(0).getTextContent());
         			if(eElement.getElementsByTagName("set").getLength() > 0)set = Integer.parseInt(eElement.getElementsByTagName("set").item(0).getTextContent());
@@ -107,20 +115,75 @@ public class XMLParser
         			if(eElement.getElementsByTagName("fusion_level").getLength()==0)fusion_level=0;
         			else
         				fusion_level = Integer.parseInt(eElement.getElementsByTagName("fusion_level").item(0).getTextContent());
-        			
+
         			NodeList upList = eElement.getElementsByTagName("upgrade");
+
         			int[] ids = new int[upList.getLength()+1];
+        			CardInstance.Info[] info = new CardInstance.Info[upList.getLength()+1];
         			ids[0] = id;
+        			attack = 0; health = 0; level =0;cost=0;
+        			skills.clear();
+        			//System.out.println(name + " " + i);
+        			if(eElement.getElementsByTagName("attack").getLength()!=0)attack = eElement.getElementsByTagName("attack").item(0).getTextContent().length()>0?Integer.parseInt(eElement.getElementsByTagName("attack").item(0).getTextContent()):0;
+        			if(eElement.getElementsByTagName("health").getLength()!=0)health = eElement.getElementsByTagName("health").item(0).getTextContent().length()>0?Integer.parseInt(eElement.getElementsByTagName("health").item(0).getTextContent()):0;
+        			if(eElement.getElementsByTagName("cost").getLength()!=0)cost = eElement.getElementsByTagName("cost").item(0).getTextContent().length()>0?Integer.parseInt(eElement.getElementsByTagName("cost").item(0).getTextContent()):0;
+        			if(eElement.getElementsByTagName("level").getLength()!=0)level = eElement.getElementsByTagName("level").item(0).getTextContent().length()>0?Integer.parseInt(eElement.getElementsByTagName("level").item(0).getTextContent()):0;
+
+        			//System.out.println(ids[0] + " " + attack + " " + health + " " + cost + " " + level);
+        			NodeList skillList = eElement.getElementsByTagName("skill");
+        			for(int j =0;j < skillList.getLength();j++)
+        			{
+        				String skill_id = fixSkillName(((Element)skillList.item(j)).hasAttribute("id")?((Element)skillList.item(j)).getAttribute("id"):"no_skill");
+        				String trigger = ((Element)skillList.item(j)).hasAttribute("trigger")?((Element)skillList.item(j)).getAttribute("trigger"):"activate";
+        				int x = ((Element)skillList.item(j)).hasAttribute("x")?Integer.parseInt(((Element)skillList.item(j)).getAttribute("x")):0;
+        				int card_id = ((Element)skillList.item(j)).hasAttribute("card_id")?Integer.parseInt(((Element)skillList.item(j)).getAttribute("card_id")):0;
+        				String faction = ((Element)skillList.item(j)).hasAttribute("y")?Data.factionToString(Integer.parseInt(((Element)skillList.item(j)).getAttribute("y"))):"allfactions";
+        				int n = ((Element)skillList.item(j)).hasAttribute("n")?Integer.parseInt(((Element)skillList.item(j)).getAttribute("n")):0;
+        				int c = ((Element)skillList.item(j)).hasAttribute("c")?Integer.parseInt(((Element)skillList.item(j)).getAttribute("c")):0;
+        				String s = fixSkillName(((Element)skillList.item(j)).hasAttribute("s")?((Element)skillList.item(j)).getAttribute("s"):"no_skill");
+        				String s2 = fixSkillName(((Element)skillList.item(j)).hasAttribute("s2")?((Element)skillList.item(j)).getAttribute("s2"):"no_skill");
+        				int all = ((Element)skillList.item(j)).hasAttribute("all")?Integer.parseInt(((Element)skillList.item(j)).getAttribute("all")):0;
+        				for(int k = 0;k < skills.size();k++)if(skills.get(k).id.equals(skill_id))skills.remove(k); //update old skill
+        				skills.add(new SkillSpec(skill_id, x,faction,n,c,s,s2,all==1,card_id,trigger));
+        			}
+        			info[0] = new CardInstance.Info(attack,health,cost,level,skills.toArray(new SkillSpec[]{}));
                 	for (int j = 0; j < upList.getLength(); j++) {
                 		Node upNode = upList.item(j);
                 		if (upNode.getNodeType() == Node.ELEMENT_NODE) {
                 			Element uElement = (Element) upNode;
                 			ids[j+1] = Integer.parseInt(uElement.getElementsByTagName("card_id").item(0).getTextContent());
                 			if(ids[j+1]>max_id)max_id = ids[j+1];
+
+                			if(uElement.getElementsByTagName("attack").getLength()!=0)attack = uElement.getElementsByTagName("attack").item(0).getTextContent().length()>0?Integer.parseInt(uElement.getElementsByTagName("attack").item(0).getTextContent()):0;
+                			if(uElement.getElementsByTagName("health").getLength()!=0)health = uElement.getElementsByTagName("health").item(0).getTextContent().length()>0?Integer.parseInt(uElement.getElementsByTagName("health").item(0).getTextContent()):0;
+                			if(uElement.getElementsByTagName("cost").getLength()!=0)cost = uElement.getElementsByTagName("cost").item(0).getTextContent().length()>0?Integer.parseInt(uElement.getElementsByTagName("cost").item(0).getTextContent()):0;
+                			if(uElement.getElementsByTagName("level").getLength()!=0)level = uElement.getElementsByTagName("level").item(0).getTextContent().length()>0?Integer.parseInt(uElement.getElementsByTagName("level").item(0).getTextContent()):0;
+                			skillList = uElement.getElementsByTagName("skill");
+                			for(int h =0;h < skillList.getLength();h++)
+                			{
+                				//System.out.println(ids[0] + " " + attack + " " + health + " " + cost + " " + level);
+                				String skill_id = fixSkillName(((Element)skillList.item(h)).hasAttribute("id")?((Element)skillList.item(h)).getAttribute("id"):"no_skill");
+                				String trigger = ((Element)skillList.item(h)).hasAttribute("trigger")?((Element)skillList.item(h)).getAttribute("trigger"):"activate";
+                				int x = ((Element)skillList.item(h)).hasAttribute("x")?Integer.parseInt(((Element)skillList.item(h)).getAttribute("x")):0;
+                				int card_id = ((Element)skillList.item(h)).hasAttribute("card_id")?Integer.parseInt(((Element)skillList.item(h)).getAttribute("card_id")):0;
+                				String faction = ((Element)skillList.item(h)).hasAttribute("y")?Data.factionToString(Integer.parseInt(((Element)skillList.item(h)).getAttribute("y"))):"allfactions";
+                				int n = ((Element)skillList.item(h)).hasAttribute("n")?Integer.parseInt(((Element)skillList.item(h)).getAttribute("n")):0;
+                				int c = ((Element)skillList.item(h)).hasAttribute("c")?Integer.parseInt(((Element)skillList.item(h)).getAttribute("c")):0;
+                				String s = fixSkillName(((Element)skillList.item(h)).hasAttribute("s")?((Element)skillList.item(h)).getAttribute("s"):"no_skill");
+                				String s2 = fixSkillName(((Element)skillList.item(h)).hasAttribute("s2")?((Element)skillList.item(h)).getAttribute("s2"):"no_skill");
+                				int all = ((Element)skillList.item(h)).hasAttribute("all")?Integer.parseInt(((Element)skillList.item(h)).getAttribute("all")):0;
+                				for(int k = 0;k < skills.size();k++)if(skills.get(k).id.equals(skill_id))skills.remove(k); //update old skill
+                				SkillSpec ss = new SkillSpec(skill_id, x,faction,n,c,s,s2,all==1,card_id,trigger);
+                				//System.out.println(ss);
+                				//Fix wrongnames skills; armore besiege
+
+                				skills.add(ss);
+                			}
+                			info[j+1] = new CardInstance.Info(attack,health,cost,level,skills.toArray(new SkillSpec[]{}));
                 		}
                 	}
-                	
-                	distinct_cards[cur] = new Card(ids,name,rarity,fusion_level, Data.getFusionByID(ids[0]).getMaterials(),fort_type,set);
+
+                	distinct_cards[cur] = new Card(ids,name,rarity,fusion_level, Data.getFusionByID(ids[0]).getMaterials(),fort_type,set,f,info);
         			cur++;
         		}
         	}
@@ -135,7 +198,13 @@ public class XMLParser
     	}
         return new Pair<Card[],Card[]>(distinct_cards,all_cards);
 	}
-	
+
+		private String fixSkillName(String s)
+		{
+			if(s.equals("armored"))return "armor";
+			if(s.equals("besiege"))return "mortar";
+			return s;
+		}
 	public Fusion[] loadFusions()
 	{
 		System.out.println("Loading Fusions");
@@ -173,7 +242,7 @@ public class XMLParser
 		}}catch(Exception e){e.printStackTrace();}
 		return fusions;
 	}
-	
+
 	public Mission[] loadMissions()
 	{
 		System.out.println("Loading Missions");
@@ -191,14 +260,14 @@ public class XMLParser
     			id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent());
     			costs = Integer.parseInt(eElement.getElementsByTagName("energy").item(0).getTextContent());
     			name = eElement.getElementsByTagName("name").item(0).getTextContent();
-    			
+
     			missions[cur] = new Mission(id,costs,name);
     			cur++;
 			}
 		}}catch(Exception e){e.printStackTrace();}
 		return missions;
 	}
-	
+
 	public int[][][][] loadLevels()
 	{
 		System.out.println("Loading Levels");
@@ -216,13 +285,13 @@ public class XMLParser
     			sp_cost = 0;
     			if(eElement.getElementsByTagName("sp_cost").getLength() > 0)sp_cost = Integer.parseInt(eElement.getElementsByTagName("sp_cost").item(0).getTextContent());
     			salvage = Integer.parseInt(eElement.getElementsByTagName("salvage").item(0).getTextContent());
-    			
+
     			NodeList resList = eElement.getElementsByTagName("fusion_salvage");
-    			
+
     			fusion_level =0;
 				levels[rarity][level][fusion_level][0] = salvage;
 				levels[rarity][level][fusion_level][1] = sp_cost;
-    			
+
     			for(int j =0;j < resList.getLength();j++)
     			{
     				fusion_level = Integer.parseInt(((Element)resList.item(j)).getAttribute("level"));
@@ -230,21 +299,21 @@ public class XMLParser
     				levels[rarity][level][fusion_level][0] = salvage;
     				levels[rarity][level][fusion_level][1] = sp_cost;
     			}
-    			
+
     			resList = eElement.getElementsByTagName("buyback_cost");
-    			
+
     			for(int j =0;j < resList.getLength();j++)
     			{
     				fusion_level = Integer.parseInt(((Element)resList.item(j)).getAttribute("level"));
     				buyback_cost = Integer.parseInt(((Element)resList.item(j)).getAttribute("salvage"));
-    				
+
     				levels[rarity][level][fusion_level][2] = buyback_cost;
     			}
-    			
+
 			}
-		}}catch(Exception e){e.printStackTrace();}	
+		}}catch(Exception e){e.printStackTrace();}
 		return levels;
-		
+
 	}
-	
+
 }
