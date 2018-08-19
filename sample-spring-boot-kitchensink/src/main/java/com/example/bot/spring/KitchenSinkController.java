@@ -226,16 +226,18 @@ public class KitchenSinkController {
 					{"version","-v"},
 	};
 	private static String[][] help = new String[][]{
-		{"help","apn bot help"},
-		{"version","version of this bot"},
+			{"card","display a card"},
+			{"materials","displays materials for card"},
+			{"new","displays latest quads"},
+			{"full_help","apn bot help"},
+	};
+	private static String[][] large_help = new String[][]{
+		{"roadmap","tu roadmap + link"},
 		{"tuo","tuo version"},
-		{"materials","displays materials for card"},
-		{"new","displays latest quads"},
 		{"xml","show the date of xmls"},
 		{"update","reload xmls"},
-		{"card","display a card"},
 		{"alias","enlist alias"},
-		{"roadmap","tu roadmap + link"},
+		{"version","version of this bot"},
 	};
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
 		String ptext = content.getText();//.toLowerCase();
@@ -262,7 +264,14 @@ public class KitchenSinkController {
 		case "help": {
 			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
 			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
-		this.replyText(replyToken, rep);
+			this.replyText(replyToken, rep);
+			break;
+		}
+		case "full_help": {
+			String rep = "TU line chat bot apn:\n" + "Usage: apn {option}\n" 	+"\nOptions:\n" ;
+			for(String[] sa : help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
+			for(String[] sa : large_help) rep += "\t - "+sa[0]+": \n\t\t\t\t\t\t "+sa[1]+"\n";
+			this.replyText(replyToken, rep);
 			break;
 		}
 		case "version": {
@@ -454,7 +463,7 @@ public class KitchenSinkController {
 			break;
 		default:
 			//log.info("Returns echo message {}: {}", replyToken, text);
-			this.replyText(replyToken, "Unknown command '" + text + "'");
+			this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
 			break;
 		}
 	}
