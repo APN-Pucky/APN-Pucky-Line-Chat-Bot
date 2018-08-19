@@ -310,20 +310,23 @@ public class KitchenSinkController {
 				{
 						switch(args[1])
 						{
+							case "help": {
+								this.replyText(replyToken, "Usage: apn new {dom(inion)/struct(ure)/commander/cmd/assault}");
+								return;
+							}
 							case "dom":
 							case "dominion": {
 								offset = 55001;
 								break;
 							}
-							case "fort":
 							case "struct":
 							case "structure": {
-								offset = 30000;
+								offset = 25000;
 								break;
 							}
 							case "cmd":
 							case "commander": {
-								offset = 50001;
+								offset = 30000;
 								break;
 							}
 							default: {
