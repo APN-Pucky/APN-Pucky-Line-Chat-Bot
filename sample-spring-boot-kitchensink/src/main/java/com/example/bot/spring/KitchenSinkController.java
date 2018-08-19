@@ -302,6 +302,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "new": {
+			int skip = 0;
 			int number = 5;
 			int offset = Data.all_cards.length;
 			if(!(args.length < 2))
@@ -334,14 +335,22 @@ public class KitchenSinkController {
 								break;
 							}
 						}
-						if(!(args.length < 3) && !args[2].matches("\\d+"))
+						if(!(args.length < 3) && args[2].matches("\\d+"))
 						{
 							number = Integer.parseInt(args[2]);
+							if(!(args.length < 4) && args[3].matches("\\d+"))
+							{
+								skip = Integer.parseInt(args[3]);
+							}
 						}
 				}
 				else
 				{
 					number = Integer.parseInt(args[1]);
+					if(!(args.length < 3) && args[2].matches("\\d+"))
+					{
+						skip = Integer.parseInt(args[2]);
+					}
 				}
 
 			}
@@ -358,8 +367,14 @@ public class KitchenSinkController {
 				)
 				{
 					printed.add(c);
-					msg += c.description() + "\n---------------------------------------"+"\n";
-					number--;
+					if(skip >0)
+					{
+						skip--;
+					}
+					else {
+						msg += c.description() + "\n---------------------------------------"+"\n";
+						number--;
+					}
 				}
 			}
 			msg = StringUtil.removeLastCharacter(msg,42);
