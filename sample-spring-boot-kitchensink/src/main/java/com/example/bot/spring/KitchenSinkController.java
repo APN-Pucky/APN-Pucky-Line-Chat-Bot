@@ -320,11 +320,11 @@ public class KitchenSinkController {
 				)
 				{
 					printed.add(c);
-					msg += c.description() + "\n-------------------------"+"\n";
+					msg += c.description() + "\n----------------------------------"+"\n";
 					number--;
 				}
 			}
-			StringUtil.removeLastCharacter(msg,1);
+			msg = StringUtil.removeLastCharacter(msg);
 			this.replyText(replyToken,msg);
 			break;
 		}
