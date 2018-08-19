@@ -310,15 +310,20 @@ public class KitchenSinkController {
 				{
 						switch(args[1])
 						{
+							case "dom":
+							case "dominion": {
+								offset = 55001;
+								break;
+							}
 							case "fort":
 							case "struct":
 							case "structure": {
-								offset = 55001;
+								offset = 30000;
 								break;
 							}
 							case "cmd":
 							case "commander": {
-								offset = 30000;
+								offset = 50001;
 								break;
 							}
 							default: {
@@ -382,7 +387,15 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a card with: apn card {card}");
 				break;
 			}
-			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
+			String req = ptext.split("apn card ")[1];
+			CardInstance ci = null;
+			if(req.matches("\\d+"))
+			{
+				ci = new CardInstance(Integer.parseInt(req));
+			}
+			else  {
+				ci = Data.getCardInstanceByNameAndLevel(req);
+			}
 			this.replyText(replyToken, ci.description());
 			break;
 		}
