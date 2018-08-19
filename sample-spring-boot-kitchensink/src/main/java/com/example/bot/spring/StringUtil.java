@@ -23,9 +23,9 @@ public class StringUtil {
 
 		public static boolean equalsIgnoreSpecial(String a, String b)
 		{
-			String a1 = a.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
-			String b1 = b.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
-			return a1.equalsIgnoreCase(b1);
+			//String a1 = a.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
+			//String b1 = b.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll(".", "").replaceAll(",", "");
+			return a.equalsIgnoreCase(b);
 		}
 
 	private static String capitalizeOnlyFirstLetter(String original) {

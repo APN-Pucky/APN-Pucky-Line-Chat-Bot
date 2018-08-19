@@ -186,7 +186,6 @@ public class Data
 		for(Card c : distinct_cards)
 		{
 			if(StringUtil.equalsIgnoreSpecial(c.getName(),s_name.trim()))return c;
-
 		}
 		return null;
 	}
