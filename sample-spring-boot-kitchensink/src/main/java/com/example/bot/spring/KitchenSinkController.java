@@ -200,7 +200,7 @@ public class KitchenSinkController {
 		if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
 		}
-		this.reply(id, new TextMessage(message));
+		this.push(id, new TextMessage(message));
 	}
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
