@@ -373,7 +373,7 @@ public class KitchenSinkController {
 				break;
 			}
 			String card_name = ptext.split("apn materials ")[1];
-			CardInstance ci = Data.getCardInstanceByNameAndLevel(card_name);
+			CardInstance ci = getCardInstance(card_name);
 			if(ci == null || ci == CardInstance.NULL)
 			{
 				this.replyText(replyToken, "Unknown card: '" + card_name + "'");
@@ -391,13 +391,12 @@ public class KitchenSinkController {
 				break;
 			}
 			String req = ptext.split("apn card ")[1];
-			CardInstance ci = null;
-			if(req.matches("\\d+"))
+			CardInstance ci = getCardInstance(req);
+
+			if(ci == null || ci == CardInstance.NULL)
 			{
-				ci = new CardInstance(Integer.parseInt(req));
-			}
-			else  {
-				ci = Data.getCardInstanceByNameAndLevel(req);
+				this.replyText(replyToken, "Unknown card: '" + req + "'");
+				break;
 			}
 			this.replyText(replyToken, ci.description());
 			break;
@@ -520,6 +519,18 @@ public class KitchenSinkController {
 			//log.info("Returns echo message {}: {}", replyToken, text);
 			this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
 			break;
+		}
+	}
+
+	private static CardInstance getCardInstance(String idorname)
+	{
+		if(idorname.matches("\\d+"))
+		{
+			return new CardInstance(Integer.parseInt(idorname));
+		}
+		else
+		{
+			return Data.getCardInstanceByNameAndLevel(idorname);
 		}
 	}
 
