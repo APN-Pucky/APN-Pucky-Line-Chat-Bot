@@ -221,9 +221,9 @@ public class KitchenSinkController {
 
 	private static String[][] alias = new String[][]{
 		{"materials","mats","build","-m","-b"},
-			{"update","up","-u"},
-				{"card","c","-c","show","display"},
-					{"version","v"},
+			{"update","-u"},
+				{"card","-c","show","display"},
+					{"version","-v"},
 	};
 	private static String[][] help = new String[][]{
 		{"help","apn bot help"},
