@@ -460,9 +460,20 @@ public class KitchenSinkController {
     	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
     	map = map.substring(map.indexOf(">")+1);
     	map = map.substring(0,map.indexOf("</div>"));
-			this.replyText(replyToken, map);
 
-			this.pushText(event.getSource().getSenderId(), map);
+			String rep="";
+    	String[] sections = map.split("\\*\\*");
+    	for(int i = 1; i < sections.length; i+=2)
+    	{
+    		String title = sections[i];
+    		String msg = sections[i+1];
+    		String date = msg.split("\\*")[1];
+				rep += title + "\n";
+				rep += date + "\n\n";
+    	}
+			this.replyText(replyToken, rep);
+
+			//this.pushText(event.getSource().getSenderId(), map);
 			break;
 		}
 		case "tuo": {
