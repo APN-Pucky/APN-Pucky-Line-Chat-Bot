@@ -221,6 +221,8 @@ public class KitchenSinkController {
 
 	private static String[][] alias = new String[][]{
 		{"materials","mats","build","-m","-b"},
+			{"update","up","-u"},
+				{"card","c","-c","show","display"},
 	};
 	private static String[][] help = new String[][]{
 		{"help","apn bot help"},
@@ -261,6 +263,11 @@ public class KitchenSinkController {
 		this.replyText(replyToken, rep);
 			break;
 		}
+		case "version": {
+			String msg = "APN " + System.getenv("HEROKU_RELEASE_VERSION");
+			this.replyText(replyToken, msg);
+			break;
+		}
 		case "alias": {
 			String msg = "Alias list:\n\n";
 			for(String[] sa : alias)
@@ -273,7 +280,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "xml": {
-			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
+			this.replyText(replyToken, "load dev-xml @" + Data.xml_time);
 			break;
 		}
 		case "update": {
@@ -326,7 +333,7 @@ public class KitchenSinkController {
 				break;
 			}
 			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
-			this.replyText(replyToken, "Card: " + ci.description());
+			this.replyText(replyToken, ci.description());
 			break;
 		}
 		case "roadmap": {

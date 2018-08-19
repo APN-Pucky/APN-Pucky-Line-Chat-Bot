@@ -32,6 +32,7 @@ public class KitchenSinkApplication {
     public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
         Data.init();
+        System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
         SpringApplication.run(KitchenSinkApplication.class, args);
     }
 

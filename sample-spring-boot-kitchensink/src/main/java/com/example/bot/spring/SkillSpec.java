@@ -39,36 +39,4 @@ public class SkillSpec {
 		this.card_id = card_id;
 		this.trigger = trigger;
 	}
-/*
-	public static enum Name {
-		// Placeholder for no-skill:
-		no_skill,
-
-		// Activation (harmful):
-		enfeeble, jam, mortar, siege, strike, sunder, weaken,
-
-		// Activation (helpful):
-		enhance, evolve, heal, mend, overload, protect, rally, fortify, enrage, entrap, rush,
-
-		// Activation (unclassified/polymorphic):
-		mimic,
-
-		// Defensive:
-		armor, avenge, scavenge, corrosive, counter, evade, subdue, absorb, flying, payback, revenge, tribute, refresh, wall, barrier,
-
-		// Combat-Modifier:
-		coalition, legion, pierce, rupture, swipe, drain, venom, hunt,
-
-		// Damage-Dependent:
-		berserk, inhibit, sabotage, leech, poison,
-
-		// Triggered:
-		allegiance, flurry, valor, stasis, summon, bravery;
-
-		public static
-	};
-
-	public static enum Trigger {
-		activate, play, attacked, death,
-	};*/
 }
