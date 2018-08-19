@@ -307,13 +307,13 @@ public class KitchenSinkController {
 			{
 				number = Integer.parseInt(args[1]);
 			}
-			if(number > 20)number = 20;
+			if(number > 7)number = 7;
 			String msg = "";
 			ArrayList<Card> printed = new ArrayList<Card>();
 			for(int i = 1; i < Data.all_cards.length && number > 0; i++)
 			{
 				Card c = Data.all_cards[Data.all_cards.length-i];
-				if(c != null && c.fusion_level == 2 && !printed.contains(c))
+				if(c != null && c.fusion_level == 2 && !printed.contains(c) && !c.getName().toLowerCase().startsWith("test"))
 				{
 					printed.add(c);
 					msg += c.description() + "\n\n";
