@@ -395,8 +395,8 @@ public class KitchenSinkController {
 				break;
 			}
 			this.replyText(replyToken, "Card: " + ci + "\n" +
-			"Fused by: \n[" + StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", ")) + "]\n\n" +
-			"Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n[" + StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", ")) + "]\n");
+			"Fused by: \n[" + StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n",", "),2) + "]\n\n" +
+			"Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n[" + StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", "),2) + "]\n");
 			break;
 		}
 		case "card": {
