@@ -224,7 +224,7 @@ public class KitchenSinkController {
 			{"update","-u"},
 			{"card","-c","show","display"},
 			{"version","-v"},
-			{"help","?","-h"},
+			{"help","\\?","-h"},
 			{"options","-o"},
 	};
 	private static String[][] help = new String[][]{
@@ -286,7 +286,7 @@ public class KitchenSinkController {
 			for(String[] sa : alias)
 			{
 				msg += "\t - "+sa[0]+": \n\t\t\t\t\t\t ";
-				for(int i = 1; i < sa.length;i++) msg += "'" + sa[i]+"'', ";
+				for(int i = 1; i < sa.length;i++) msg += "'" + sa[i]+"', ";
 				msg += "\n";
 			}
 			this.replyText(replyToken, msg);
