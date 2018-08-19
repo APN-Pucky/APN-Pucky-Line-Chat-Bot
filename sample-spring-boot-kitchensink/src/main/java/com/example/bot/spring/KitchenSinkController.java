@@ -320,7 +320,7 @@ public class KitchenSinkController {
 				)
 				{
 					printed.add(c);
-					msg += c.description() + "-------------------------"+"\n";
+					msg += c.description() + "\n-------------------------"+"\n";
 					number--;
 				}
 			}
