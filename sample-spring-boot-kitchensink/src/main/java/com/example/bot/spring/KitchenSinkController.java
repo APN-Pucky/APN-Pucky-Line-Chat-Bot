@@ -197,9 +197,9 @@ public class KitchenSinkController {
 		if (id.isEmpty()) {
 			throw new IllegalArgumentException("id must not be empty");
 		}
-		if (message.length() > 1000) {
+		/*if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
-		}
+		}*/
 		this.push(id, new TextMessage(message));
 	}
 
@@ -220,9 +220,9 @@ public class KitchenSinkController {
 		if (replyToken.isEmpty()) {
 			throw new IllegalArgumentException("replyToken must not be empty");
 		}
-		if (message.length() > 1000) {
+		/*if (message.length() > 1000) {
 			message = message.substring(0, 1000 - 2) + "……";
-		}
+		}*/
 		this.reply(replyToken, new TextMessage(message));
 	}
 
@@ -395,13 +395,15 @@ public class KitchenSinkController {
 						skip--;
 					}
 					else {
-						msg += c.description() + "\n---------------------------------------"+"\n";
+
+						this.pushText(event.getSource().getSenderId(), c.description());
+						//msg +=  + "\n---------------------------------------"+"\n";
 						number--;
 					}
 				}
 			}
-			msg = StringUtil.removeLastCharacter(msg,42);
-			this.replyText(replyToken,msg);
+			//msg = StringUtil.removeLastCharacter(msg,42);
+			//this.replyText(replyToken,msg);
 			break;
 		}
 		case "materials": {
