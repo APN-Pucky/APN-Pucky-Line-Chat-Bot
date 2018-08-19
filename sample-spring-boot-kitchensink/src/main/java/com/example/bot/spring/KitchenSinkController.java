@@ -326,7 +326,7 @@ public class KitchenSinkController {
 				break;
 			}
 			CardInstance ci = Data.getCardInstanceByNameAndLevel(ptext.split("apn card ")[1]);
-			this.replyText(replyToken, "Card: " + ci.description() + " [" +ci.getID() + "]");
+			this.replyText(replyToken, "Card: " + ci.description());
 			break;
 		}
 		case "roadmap": {
