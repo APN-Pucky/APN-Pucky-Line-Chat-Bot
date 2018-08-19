@@ -417,7 +417,25 @@ public class KitchenSinkController {
 			break;
 		}
 		case "roadmap": {
-			this.replyText(replyToken, "Roadmap feature, soon tm");
+			String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
+    	String[] lines = general.split("\n");
+    	String fin = "";
+    	for(String l : lines)
+    	{
+    		if(l.contains("Roadmap"))
+    		{
+    			fin = l;
+    			break;
+    		}
+    	}
+    	String url = "https://www.kongregate.com" + fin.substring(fin.indexOf("href=\"/forums/2468-general")+6, fin.indexOf("\">[Dev]"));
+
+    	String road = Wget.wGet(url);
+
+    	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
+    	map = map.substring(map.indexOf(">")+1);
+    	map = map.substring(0,map.indexOf("</div>"));
+			this.replyText(replyToken, map);
 			break;
 		}
 		case "tuo": {
