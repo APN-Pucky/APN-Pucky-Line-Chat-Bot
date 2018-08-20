@@ -795,13 +795,14 @@ private static String getRedditTagUrl(String tag)
 	if(!url.matches(".*\\.(jpg|png).*"))
 	{
 		if(url.matches(".*imgur.*") && !url.matches(".*gallery.*"))url+=".jpg";
-		url = getRedditTagUrl(tag); //only png+fig
+		else url = getRedditTagUrl(tag); //only png+fig
 	}
 	if(!url.matches(".*https://.*"))
 	{
 		if(url.matches(".*imgur.*"))url.replace("http://","https://");
+		else url = getRedditTagUrl(tag); //only https
 	}
-	log.info("Reddit image url", url);
+	log.info("Reddit image url: " + url);
 	return url;
 }
 
