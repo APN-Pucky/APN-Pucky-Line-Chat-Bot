@@ -433,7 +433,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				break;
 			}
 			String req = ptext.split("apn list ")[1];
-			String rep = "card search: '"+req+"'";
+			String rep = "card search: '"+req+"'\n\n";
 			for(Card c: Data.distinct_cards)
 			{
 				if(StringUtil.containsIgnoreSpecial(c.getName(),req)) {
