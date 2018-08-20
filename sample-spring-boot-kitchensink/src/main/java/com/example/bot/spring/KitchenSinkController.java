@@ -618,11 +618,6 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		case "cat" : {
-			String url = "https://thecatapi.com/api/images/get?format=src&type=gif";
-			this.reply(replyToken,	new ImageMessage(url,url));
-			break;
-		}
 		case "geek": {
 			String msg = Wget.wGet("https://geek-jokes.sameerkumar.website/api");
 			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
@@ -630,8 +625,8 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "fail": {
-			String url = getFAILUrl();
-			this.reply(replyToken,	new VideoMessage(url,url));
+			Pair<String,String> url = getFAILUrl();
+			this.reply(replyToken,	new VideoMessage(url.t,url.u));
 			break;
 		}
 		case "xkcd": {
@@ -739,12 +734,13 @@ break;
 }
 }
 
-private static String getFAILUrl()
+private static Pair<String,String> getFAILUrl()
 {
 	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=fail&rating=pg-13");
   JSONObject json = new JSONObject(xkcd);
-  String url = json.getJSONObject("data").getString("image_url");
-	return url;
+  String url = json.getJSONObject("data").getString("image_mp4_url");
+  String url2 = json.getJSONObject("data").getString("image_url");
+	return new Pair<String,String>(url,url2);
 }
 
 private static String getMEMEUrl()
