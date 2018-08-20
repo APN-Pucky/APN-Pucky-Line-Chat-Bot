@@ -102,12 +102,26 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
+import org.springframework.core.io.ResourceLoader;
+
 @Slf4j
 @LineMessageHandler
 public class KitchenSinkController {
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
 
+
+	@Autowired
+	public ResourceLoader rl;
+
+	@PostConstruct
+	public void init() {
+		KitchenSinkApplication.resourceLoader = rl;
+		Data.init();
+		KitchenSinkApplication.render = new Render();
+		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
+	}
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {

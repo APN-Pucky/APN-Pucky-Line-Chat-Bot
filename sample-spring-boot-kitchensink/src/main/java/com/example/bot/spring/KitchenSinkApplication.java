@@ -23,16 +23,14 @@ import java.nio.file.Path;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.core.io.ResourceLoader;
 import org.json.JSONObject;
 
 @SpringBootApplication
 public class KitchenSinkApplication {
 
-    @Autowired
-    public ResourceLoader rl;
     public static ResourceLoader resourceLoader;
     public static Render render;
 
@@ -41,15 +39,6 @@ public class KitchenSinkApplication {
     public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-      super.run(args);
-      resourceLoader = rl;
-      Data.init();
-      KitchenSinkApplication.render = new Render();
-      System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
     }
 
 }
