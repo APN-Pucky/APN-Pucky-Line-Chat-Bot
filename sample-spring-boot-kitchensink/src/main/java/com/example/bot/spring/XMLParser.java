@@ -78,7 +78,7 @@ public class XMLParser
 
 			dbFactory = DocumentBuilderFactory.newInstance();
 			dBuilder = dbFactory.newDocumentBuilder();
-			document = dBuilder.parse(KitchenSinkApplication.resourceLoader.getResource("classpath:" + "cardSources.xml").getFile());
+			document = dBuilder.parse(KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/cardSources.xml").getFile());
 			document.getDocumentElement().normalize();
 
 		}catch(Exception e){e.printStackTrace();}

@@ -18,8 +18,8 @@ public class Render {
 	Font arial;
 	public Render() {
 		try{
-			optimus = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "Optimus.otf").getFile());
-			arial = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "arialbold.ttf").getFile());
+			optimus = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/Optimus.otf").getFile());
+			arial = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/arialbold.ttf").getFile());
 		}
 		catch(Exception e)
 		{
@@ -128,7 +128,7 @@ public class Render {
 	public static void draw(Graphics g, String img, int sx,int  sy,int sw,int sh,int dx,int dy,int dw,int dh)
 	{
 		try {
-			g.drawImage(ImageIO.read(KitchenSinkApplication.resourceLoader.getResource("classpath:"+img+".png").getFile()),  dx,dy,dx+dw,dy+dh,sx,sy,sx+sw,sy+sh,null);
+			g.drawImage(ImageIO.read(KitchenSinkApplication.resourceLoader.getResource("classpath:static/"+img+".png").getFile()),  dx,dy,dx+dw,dy+dh,sx,sy,sx+sw,sy+sh,null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
