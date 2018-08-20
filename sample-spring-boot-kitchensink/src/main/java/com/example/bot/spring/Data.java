@@ -32,6 +32,8 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import java.util.HashMap;
+
 
 public class Data
 {
@@ -45,13 +47,21 @@ public class Data
 	public static Fusion[] fusions = new Fusion[] {};
 	public static Mission[] missions = new Mission[]{};
 	public static int[][][][] levels = new int[][][][]{};
-	//public static Bot[] bots = new Bot[]{};
+	public static int[][][] style_borders;
+	public static int[][] frame_borders;
+  public static HashMap<String,int[]> icon_borders;
+  public static HashMap<String,int[]> skill_borders;
+
 
 	public static void init() {
 		xml= new XMLParser();
 		fusions = xml.loadFusions();
 		missions = xml.loadMissions();
 		levels = xml.loadLevels();
+		style_borders = xml.loadStyle();
+		frame_borders = xml.laodFrame();
+		icon_borders = xml.loadIcon();
+		skill_borders = xml.loadSkill();
 
 		Pair<Card[],Card[]> p = xml.loadCards();
 		distinct_cards = p.t;

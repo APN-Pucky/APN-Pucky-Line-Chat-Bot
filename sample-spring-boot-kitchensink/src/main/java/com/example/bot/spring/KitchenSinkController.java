@@ -18,6 +18,8 @@ package com.example.bot.spring;
 
 import java.io.IOException;
 
+import java.awt.image.BufferedImage;
+
 import com.example.bot.spring.Card.CardType;
 import com.example.bot.spring.Card.CardCategory;
 import com.example.bot.spring.Card.CardInstance;
@@ -36,6 +38,7 @@ import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.core.io.Resource;
 
 import com.google.common.io.ByteStreams;
 
@@ -91,6 +94,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -103,6 +107,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KitchenSinkController {
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
+
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
@@ -469,6 +474,26 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			"Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n[" + StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {}))).replaceAll("\n",", "),2) + "]\n");
 			break;
 		}
+		case "icard": {
+			if(args.length < 2)
+			{
+				this.replyText(replyToken, "Please pass a card with: 'apn icard {card}'");
+				break;
+			}
+			String req = ptext.split("apn icard ")[1];
+			CardInstance ci = getCardInstance(req);
+
+			if(ci == null || ci == CardInstance.NULL)
+			{
+				this.replyText(replyToken, "Unknown card: '" + req + "'");
+				break;
+			}
+			BufferedImage bi = KitchenSinkApplication.render.render(ci);
+			DownloadedContent d = createTempFile("jpg");
+			ImageIO.write(bi,"jpg",d.path.toFile());
+			this.reply(replyToken, new ImageMessage(d.uri,d.uri));
+			break;
+		}
 		case "card": {
 			if(args.length < 2)
 			{
@@ -625,7 +650,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 
 			if(!(args.length < 2) && args[1].equals("full"))
 			{
-				this.replyText(replyToken, map);
+				this.replyText(replyToken, map+ "\n\n" + url);
 				break;
 			}
 
@@ -843,7 +868,7 @@ private static String getMEMEUrl()
 	}
 	Random r = new Random();
 	String url = urls.get(r.nextInt(urls.size()));
-	DownloadedContent img = createLongTempFile("meme");
+	DownloadedContent img = createTempFile("jpg");
 	Wget.wGet(img.path.toString(),url);
 	return img.uri;
 }
@@ -960,13 +985,6 @@ private static DownloadedContent createTempFile(String ext) {
 	String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 	Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
 	tempFile.toFile().deleteOnExit();
-	return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
-}
-
-private static DownloadedContent createLongTempFile(String ext) {
-	String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
-	Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
-	//tempFile.toFile().deleteOnExit();
 	return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
 }
 

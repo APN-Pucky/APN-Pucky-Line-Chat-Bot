@@ -3,21 +3,21 @@ package com.example.bot.spring;
 import java.util.ArrayList;
 
 public class Card {
-	public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,"allfactions",new CardInstance.Info[] {});
+	public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {});
 	public final int[] ids;
 	public final CardInstance.Info[] infos;
 	public final int fusion_level;
 	public final String name;
 	public final int rarity;
 	public final int[] materials;
-	public final String faction;
+	public final int faction;
 	public final CardType type;
 	public final CardCategory category;
 	public final int fort_type;
 	public final int set;
 	// further stats; skilz...
 
-	public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort, int set,String f, CardInstance.Info[] infos) {
+	public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort, int set,int f, CardInstance.Info[] infos) {
 		this.ids = ids;
 		this.name = name;
 		this.rarity = rarity;
@@ -71,7 +71,7 @@ public class Card {
 		return type;
 	}
 
-	public String getFaction()
+	public int getFaction()
 	{
 		return faction;
 	}
@@ -96,6 +96,20 @@ public class Card {
 	public String description() {
 		return new CardInstance(ids[ids.length-1],this,infos[infos.length-1]).description(); //Max Card
 	}
+
+	public String getUnitType()
+		{
+			int id = getHighestID();
+			if ((1000 <= id && id < 2000) || (25000 <= id && id < 30000)) {
+				return "Commander";
+			} else if ((2000 <= id && id < 3000) || (8000 <= id && id < 10000) || (17000 <= id && id < 25000)) {
+				return "Structure";
+			} else if ((50000 <= id && id < 55000)) {
+				return "Dominion";
+			} else {
+				return "Assault";
+			}
+		}
 
 	public static enum CardType {
 		ASSAULT, COMMANDER, STRUCTURE;// , FORTRESS_DEFENSE, FORTRESS_SIEGE,
@@ -200,10 +214,32 @@ public class Card {
 			this(id, Data.getCardByID(id));
 		}
 
-		public Info getInfo()
-		{
-			return info;
-		}
+
+
+			public Info getInfo()
+			{
+				return info;
+			}
+
+			public int getCost()
+			{
+				return info.cost;
+			}
+
+			public int getHealth()
+			{
+				return info.health;
+			}
+
+			public int getAttack()
+			{
+				return info.attack;
+			}
+
+			public SkillSpec[] getSkills()
+			{
+				return info.skills;
+			}
 
 		public int getID() {
 			return id;
@@ -225,7 +261,7 @@ public class Card {
 			return getName();
 		}
 
-		public String getFaction() {
+		public int getFaction() {
 			return c.getFaction();
 		}
 
@@ -235,7 +271,7 @@ public class Card {
 
 		public String description() {
 			String ret = getName() + "\n";
-			ret += StringUtil.capitalizeOnlyFirstLetters(getFaction()) + " ";
+			ret += StringUtil.capitalizeOnlyFirstLetters(Data.factionToString(getFaction())) + " ";
 			ret += StringUtil.capitalizeOnlyFirstLetters(Data.rarityToString(getRarity())) + " ";
 			ret += StringUtil.capitalizeOnlyFirstLetters(getCardType().toString()) +" ";
 			ret += StringUtil.capitalizeOnlyFirstLetters(Data.fusionToString(getFusionLevel()))+ "\n";
@@ -251,6 +287,12 @@ public class Card {
 			}
 			return StringUtil.removeLastCharacter(ret,2);
 		}
+
+
+				public String getUnitType()
+				{
+					return c.getUnitType();
+				}
 
 		public int getFusionLevel() {
 			return c.getFusionLevel();
