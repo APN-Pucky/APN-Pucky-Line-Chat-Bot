@@ -617,6 +617,23 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
+		case "cat" : {
+			String url = "https://thecatapi.com/api/images/get?format=src&type=gif";
+				this.reply(replyToken,
+			new ImageMessage(url,url));
+			break;
+		}
+		case "geek": {
+			String msg = Wget.wGet("https://geek-jokes.sameerkumar.website/api");
+			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+			this.replyText(replyToken, msg);
+			break;
+		}
+		case "fail": {
+			this.reply(replyToken,
+			new ImageMessage(getFAILUrl(),getFAILUrl()));
+			break;
+		}
 		case "xkcd": {
 			this.reply(replyToken,
 			new ImageMessage(getXKCDUrl(),getXKCDUrl()));
@@ -722,6 +739,14 @@ break;
 }
 }
 
+private static String getFAILUrl()
+{
+	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=fail&rating=pg-13");
+  JSONObject json = new JSONObject(xkcd);
+  String url = json.getJSONObject("data").getString("image_url");
+	return url;
+}
+
 private static String getMEMEUrl()
 {
 	String xkcd = Wget.wGet("http://www.quickmeme.com/random");
@@ -736,6 +761,8 @@ private static String getMEMEUrl()
 		}
 	}
 	String url = fin.substring(fin.indexOf("src=\"")+5).split("\"")[0].trim();
+	DownloadedContent img = createTempFile("meme");
+	Wget.wGet(img.path.toString(),url);
 	return url;
 }
 
