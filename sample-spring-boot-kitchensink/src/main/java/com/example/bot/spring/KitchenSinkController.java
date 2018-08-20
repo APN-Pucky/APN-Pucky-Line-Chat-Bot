@@ -609,8 +609,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "tuo": {
-			String json = Wget.wGet(
-			"https://api.github.com/repos/APN-Pucky/tyrant_optimize/releases/latest");
+			String json = Wget.wGet("https://api.github.com/repos/APN-Pucky/tyrant_optimize/releases/latest");
 			String tuojson = json.replaceAll("\n", "");
 			JSONObject tuo = new JSONObject(tuojson);
 			String tag_name = (tuo).getString("tag_name");
@@ -759,7 +758,7 @@ private static String getMEMEUrl()
 	String url = fin.substring(fin.indexOf("src=\"")+5).split("\"")[0].trim();
 	DownloadedContent img = createTempFile("meme");
 	Wget.wGet(img.path.toString(),url);
-	return url;
+	return img.uri;
 }
 
 private static String getXKCDUrl()
