@@ -285,7 +285,7 @@ private static String[][] large_help = new String[][]{
 	{"version","version of this bot"},
 };
 private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-	String ptext = content.getText();//.toLowerCase();
+	String ptext = content.getText().toLowerCase();
 	if (!ptext.startsWith("apn ")) {
 		return;
 	}
