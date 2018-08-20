@@ -65,6 +65,7 @@ import com.linecorp.bot.model.event.source.RoomSource;
 import com.linecorp.bot.model.event.source.Source;
 import com.linecorp.bot.model.message.AudioMessage;
 import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.VideoMessage;
 import com.linecorp.bot.model.message.ImagemapMessage;
 import com.linecorp.bot.model.message.LocationMessage;
 import com.linecorp.bot.model.message.Message;
@@ -619,8 +620,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 		}
 		case "cat" : {
 			String url = "https://thecatapi.com/api/images/get?format=src&type=gif";
-				this.reply(replyToken,
-			new ImageMessage(url,url));
+			this.reply(replyToken,	new ImageMessage(url,url));
 			break;
 		}
 		case "geek": {
@@ -630,18 +630,18 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "fail": {
-			this.reply(replyToken,
-			new ImageMessage(getFAILUrl(),getFAILUrl()));
+			String url = getFAILUrl();
+			this.reply(replyToken,	new VideoMessage(url,url));
 			break;
 		}
 		case "xkcd": {
-			this.reply(replyToken,
-			new ImageMessage(getXKCDUrl(),getXKCDUrl()));
+			String url = getXKCDUrl();
+			this.reply(replyToken,new ImageMessage(url,url));
 			break;
 		}
 		case "meme": {
-			this.reply(replyToken,
-			new ImageMessage(getMEMEUrl(),getMEMEUrl()));
+			String url = getMEMEUrl();
+			this.reply(replyToken,	new ImageMessage(url,url));
 			break;
 		}
 		/*case "profile": {
