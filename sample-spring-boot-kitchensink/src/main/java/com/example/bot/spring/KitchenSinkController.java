@@ -618,22 +618,15 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "xkcd": {
-			String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
-			String[] lines = xkcd.split("\n");
-			String fin = "";
-			for(String l : lines)
-			{
-				if(l.contains("Image URL (for hotlinking/embedding): "))
-				{
-					fin = l;
-					break;
-				}
-			}
-			String url = fin.substring(fin.indexOf(": ")+1).trim();
 			this.reply(replyToken,
-			new ImageMessage(url,url));
+			new ImageMessage(getXKCDUrl(),getXKCDUrl()));
 			break;
-	}
+		}
+		case "meme": {
+			this.reply(replyToken,
+			new ImageMessage(getMEMEUrl(),getMEMEUrl()));
+			break;
+		}
 		/*case "profile": {
 		String userId = event.getSource().getUserId();
 		if (userId != null) {
@@ -727,6 +720,40 @@ default:
 this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
 break;
 }
+}
+
+private static String getMEMEUrl()
+{
+	String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+	String[] lines = xkcd.split("\n");
+	String fin = "";
+	for(String l : lines)
+	{
+		if(l.contains("class=\"post-image\" src=\""))
+		{
+			fin = l;
+			break;
+		}
+	}
+	String url = fin.substring(fin.indexOf("src=\"")+5).split("\"")[0].trim();
+	return url;
+}
+
+private static String getXKCDUrl()
+{
+	String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+	String[] lines = xkcd.split("\n");
+	String fin = "";
+	for(String l : lines)
+	{
+		if(l.contains("Image URL (for hotlinking/embedding): "))
+		{
+			fin = l;
+			break;
+		}
+	}
+	String url = fin.substring(fin.indexOf(": ")+1).trim();
+	return url;
 }
 
 private static String getRoadMapUrl()
