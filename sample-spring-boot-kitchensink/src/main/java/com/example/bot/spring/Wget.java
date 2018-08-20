@@ -2,17 +2,68 @@ package com.example.bot.spring;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Wget {
 	public static enum Status {
 		Success, MalformedUrl, IoException, UnableToCloseOutputStream;
+	}
 
+
+	public static String sendGet(String url) {
+		String ret = null;
+		BufferedReader in = null;
+		try {
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		// optional default is GET
+		con.setRequestMethod("GET");
+
+		//add request header
+
+		String USER_AGENT = "Mozilla/5.0";
+		con.setRequestProperty("User-Agent", USER_AGENT);
+
+		int responseCode = con.getResponseCode();
+		//System.out.println("\nSending 'GET' request to URL : " + url);
+		//System.out.println("Response Code : " + responseCode);
+
+		in = new BufferedReader(
+		        new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+
+		//print result
+		ret = response.toString();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		return ret;
 	}
 
 	public static String wGet(String urlOfFile) {
@@ -48,7 +99,7 @@ public class Wget {
 		}
 		return ret;
 	}
-	
+
 	public static Wget.Status wGet(String saveAsFile, String urlOfFile) {
 		InputStream httpIn = null;
 		OutputStream fileOutput = null;
