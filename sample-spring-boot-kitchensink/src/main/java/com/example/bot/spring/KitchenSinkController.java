@@ -631,10 +631,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			}
 			String url = fin.substring(fin.indexOf(": ")+1).trim();
 			this.reply(replyToken,
-			new ImagemapMessage(createUri(url), "This is alt text", new ImagemapBaseSize(1040, 1040),
-			Arrays.asList(
-			new URIImagemapAction("https://xkcd.com/",
-			new ImagemapArea(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE)))));
+			new ImageMessage(url,url));
 			break;
 	}
 		/*case "profile": {
