@@ -621,7 +621,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "art" : {
-			String json = Wget.wGet("https://www.reddit.com/r/Art/random.json");
+			String json = Wget.sendGet("https://www.reddit.com/r/Art/random.json");
     	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
 
 			this.reply(replyToken,new ImageMessage(url,url));
@@ -642,7 +642,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
  				url = getGIFTagUrl(args[1]);
 				if(url.u==url.t && url.u ==null)
 				{
-					this.replyText(replyToken, "No gif for '" + args[2] + "'");
+					this.replyText(replyToken, "No gif for '" + args[1] + "'");
 					break;
 				}
 			}
