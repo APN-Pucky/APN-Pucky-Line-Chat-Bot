@@ -256,6 +256,9 @@ private static String[][] alias = new String[][]{
 	{"update","-u"},
 	{"list","search"},
 	{"card","-c","show","display"},
+	{"random","fun"},
+	{"joke","geek"},
+	{"nude","nudes"},
 	{"version","-v"},
 	{"help","\\?","-h"},
 	{"options","-o", "opts"},
@@ -656,6 +659,11 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.reply(replyToken,new ImageMessage(url,url));
 			break;
 		}
+		case "nude" : {
+			String url = getRedditTagUrl("hardwareporn");
+			this.reply(replyToken,new ImageMessage(url,url));
+			break;
+		}
 		case "random" : {
 			Random r = new Random();
 			String[] opt = new String[]{"art","pic","joke","gif","fail","meme","xkcd"};
@@ -784,7 +792,16 @@ private static String getRedditTagUrl(String tag)
 {
 	String json = Wget.sendGet("https://www.reddit.com/r/"+tag+"/random.json");
 	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
-	if(!url.matches(".*\\.(jpg|png).*"))url = getRedditTagUrl(tag); //only png+fig
+	if(!url.matches(".*\\.(jpg|png).*"))
+	{
+		if(url.matches(".*imgur.*") && !url.matches(".*gallery.*"))url+=".jpg";
+		url = getRedditTagUrl(tag); //only png+fig
+	}
+	if(!url.matches(".*https://.*"))
+	{
+		if(url.matches(".*imgur.*"))url.replace("http://","https://");
+	}
+	log.info("Reddit image url", url);
 	return url;
 }
 
