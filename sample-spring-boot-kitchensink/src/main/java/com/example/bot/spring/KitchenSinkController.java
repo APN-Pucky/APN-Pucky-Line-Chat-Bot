@@ -246,6 +246,8 @@ private void handleSticker(String replyToken, StickerMessageContent content) {
 
 private static String[][] alias = new String[][]{
 	{"materials","mats","build","-m","-b"},
+	{"today","current"},
+	{"change","release"},
 	{"update","-u"},
 	{"card","-c","show","display"},
 	{"version","-v"},
@@ -446,7 +448,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, ci.description());
 			break;
 		}
-		case "release" : {
+		case "change" : {
 			String map = getRoadMap();
 			String rep="";
 			String[] sections = map.split("\\*\\*");
@@ -539,7 +541,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, rep);
 			break;
 		}
-		case "current" : {
+		case "today" : {
 			String map = getRoadMap();
 			String rep="";
 			String[] sections = map.split("\\*\\*");
@@ -575,6 +577,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				}
 
 			}
+			if(rep.equals(""))rep = "No event today";
 			this.replyText(replyToken, rep);
 			break;
 		}
