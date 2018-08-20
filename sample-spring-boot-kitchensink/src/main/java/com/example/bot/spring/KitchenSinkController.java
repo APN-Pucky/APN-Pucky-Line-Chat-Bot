@@ -620,20 +620,31 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		case "art" : {
-			String json = Wget.sendGet("https://www.reddit.com/r/Art/random.json");
-    	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
-
+		case "dark" : {
+    	String url = getRedditTagUrl("OffensiveMemes");
 			this.reply(replyToken,new ImageMessage(url,url));
 			break;
 		}
-		case "joke": {
-			String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
-			//System.out.println(msg);
-			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
-			//System.out.println(msg);
-			this.replyText(replyToken, msg);
+		case "art" : {
+    	String url = getRedditTagUrl("Art");
+			this.reply(replyToken,new ImageMessage(url,url));
 			break;
+		}
+		case "pic" : {
+    	String url = getRedditTagUrl("pic");
+			this.reply(replyToken,new ImageMessage(url,url));
+			break;
+		}
+		case "reddit" : {
+			String url  = null;
+			if(!(args.length < 2))
+			{
+				url = getRedditTagUrl(args[1]);
+			}
+			else {
+				url = getRedditTagUrl("pics");
+			}
+			this.reply(replyToken,	new ImageMessage(url,url));
 		}
 		case "gif": {
 			Pair<String,String> url  = null;
@@ -655,6 +666,14 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 		case "fail": {
 			Pair<String,String> url = getFAILUrl();
 			this.reply(replyToken,	new VideoMessage(url.t,url.u));
+			break;
+		}
+		case "joke": {
+			String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
+			//System.out.println(msg);
+			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+			//System.out.println(msg);
+			this.replyText(replyToken, msg);
 			break;
 		}
 		case "xkcd": {
@@ -761,6 +780,12 @@ this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a 
 break;
 }
 }
+private static String getRedditTagUrl(String tag)
+{
+	String json = Wget.sendGet("https://www.reddit.com/r/"+tag+"/random.json");
+	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
+	return url;
+}
 
 private static Pair<String,String> getFAILUrl()
 {
@@ -808,7 +833,7 @@ private static String getMEMEUrl()
 	}
   Random r = new Random();
 	String url = urls.get(r.nextInt(urls.size()));
-	DownloadedContent img = createTempFile("meme");
+	DownloadedContent img = createLongTempFile("meme");
 	Wget.wGet(img.path.toString(),url);
 	return img.uri;
 }
@@ -925,6 +950,13 @@ private static DownloadedContent createTempFile(String ext) {
 	String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 	Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
 	tempFile.toFile().deleteOnExit();
+	return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
+}
+
+private static DownloadedContent createLongTempFile(String ext) {
+	String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
+	Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
+	//tempFile.toFile().deleteOnExit();
 	return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
 }
 
