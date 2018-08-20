@@ -465,7 +465,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				String date =split[1];
 				String conten = split[2];
 				for(int j = 3 ; j < split.length;j++)
-					conten += "*" + split[j];
+				conten += "*" + split[j];
 				conten = conten.trim();
 				//rep += title + "\n";
 				//rep += date + "\n\n";
@@ -621,199 +621,159 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "dark" : {
-    	String url = getRedditTagUrl("OffensiveMemes");
+			String url = getRedditTagUrl("OffensiveMemes");
 			this.reply(replyToken,new ImageMessage(url,url));
+			break;
+		}
+		case "random" : {
+			Random r = new Random();
+			String[] opt = new String[]{"art","pic","joke","gif","fail","meme","xkcd"};
+			switch(opt[r.nextInt(opt.length)]) {
+				case "art": art(replyToken); break;
+				case "pic": pic(replyToken); break;
+				case "joke": joke(replyToken); break;
+				case "gif": gif(replyToken,new String[]{args[0]}); break;
+				case "fail": fail(replyToken); break;
+				case "meme": meme(replyToken); break;
+				case "xkcd": xkcd(replyToken); break;
+			}
 			break;
 		}
 		case "art" : {
-    	String url = getRedditTagUrl("Art");
-			this.reply(replyToken,new ImageMessage(url,url));
+			art(replyToken);
 			break;
 		}
 		case "pic" : {
-    	String url = getRedditTagUrl("pic");
-			this.reply(replyToken,new ImageMessage(url,url));
+			pic(replyToken);
 			break;
 		}
 		case "reddit" : {
-			String url  = null;
-			if(!(args.length < 2))
-			{
-				url = getRedditTagUrl(args[1]);
-			}
-			else {
-				url = getRedditTagUrl("pics");
-			}
-			this.reply(replyToken,	new ImageMessage(url,url));
+			reddit(replyToken,args);
 			break;
 		}
 		case "gif": {
-			Pair<String,String> url  = null;
-			if(!(args.length < 2))
-			{
- 				url = getGIFTagUrl(args[1]);
-				if(url.u==url.t && url.u ==null)
-				{
-					this.replyText(replyToken, "No gif for '" + args[1] + "'");
-					break;
-				}
-			}
-			else {
-				url = getGIFUrl();
-			}
-			this.reply(replyToken,	new VideoMessage(url.t,url.u));
+			gif(replyToken,args);
 			break;
 		}
 		case "fail": {
-			Pair<String,String> url = getFAILUrl();
-			this.reply(replyToken,	new VideoMessage(url.t,url.u));
+			fail(replyToken);
 			break;
 		}
 		case "joke": {
-			String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
-			//System.out.println(msg);
-			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
-			//System.out.println(msg);
-			this.replyText(replyToken, msg);
+			joke(replyToken);
 			break;
 		}
 		case "xkcd": {
-			String url = getXKCDUrl();
-			this.reply(replyToken,new ImageMessage(url,url));
+			xkcd(replyToken);
 			break;
 		}
 		case "meme": {
-			String url = getMEMEUrl();
-			this.reply(replyToken,	new ImageMessage(url,url));
+			meme(replyToken);
 			break;
 		}
-		/*case "profile": {
-		String userId = event.getSource().getUserId();
-		if (userId != null) {
-		lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
-		if (throwable != null) {
-		this.replyText(replyToken, throwable.getMessage());
-		return;
+		case "flex":
+		this.reply(replyToken, new ExampleFlexMessageSupplier().get());
+		break;
+		case "quickreply":
+		this.reply(replyToken, new MessageWithQuickReplySupplier().get());
+		break;
+		default:
+		//log.info("Returns echo message {}: {}", replyToken, text);
+		this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
+		break;
 	}
+}
+private void reddit(String replyToken, String tag)
+{
+	String url = getRedditTagUrl(tag);
+	this.reply(replyToken,new ImageMessage(url,url));
+}
+private void reddit(String replyToken, String[] args)
+{
+	String url  = null;
+	if(!(args.length < 2))
+	{
+		url = getRedditTagUrl(args[1]);
+	}
+	else {
+		url = getRedditTagUrl("pics");
+	}
+	this.reply(replyToken,	new ImageMessage(url,url));
+}
+private void art(String replyToken) {
+	reddit(replyToken,"Art");
+}
 
-	this.reply(replyToken, Arrays.asList(new TextMessage("Display name: " + profile.getDisplayName()),
-	new TextMessage("Status message: " + profile.getStatusMessage())));
+private void pic(String replyToken) {
+	reddit(replyToken,"pic");
+}
 
-});
-} else {
-this.replyText(replyToken, "Bot can't use profile API without user ID");
+private void gif(String replyToken, String tag) {
+	Pair<String,String> url = getGIFTagUrl(tag);
+	this.reply(replyToken,	new VideoMessage(url.t,url.u));
 }
-break;
+private void gif(String replyToken, String[] args) {
+	Pair<String,String> url  = null;
+	if(!(args.length < 2))
+	{
+		url = getGIFTagUrl(args[1]);
+		if(url.u==url.t && url.u ==null)
+		{
+			this.replyText(replyToken, "No gif for '" + args[1] + "'");
+			return;
+		}
+	}
+	else {
+		url = getGIFUrl();
+	}
+	this.reply(replyToken,	new VideoMessage(url.t,url.u));
 }
-case "bye": {
-Source source = event.getSource();
-if (source instanceof GroupSource) {
-this.replyText(replyToken, "Leaving group");
-lineMessagingClient.leaveGroup(((GroupSource) source).getGroupId()).get();
-} else if (source instanceof RoomSource) {
-this.replyText(replyToken, "Leaving room");
-lineMessagingClient.leaveRoom(((RoomSource) source).getRoomId()).get();
-} else {
-this.replyText(replyToken, "Bot can't leave from 1:1 chat");
+private void fail(String replyToken) {
+	gif(replyToken,"fail");
 }
-break;
+
+private void joke(String replyToken) {
+	String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
+	//System.out.println(msg);
+	msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+	//System.out.println(msg);
+	this.replyText(replyToken, msg);
 }
-case "confirm": {
-ConfirmTemplate confirmTemplate = new ConfirmTemplate("Do it?", new MessageAction("Yes", "Yes!"),
-new MessageAction("No", "No!"));
-TemplateMessage templateMessage = new TemplateMessage("Confirm alt text", confirmTemplate);
-this.reply(replyToken, templateMessage);
-break;
+private void meme(String replyToken) {
+	String url = getMEMEUrl();
+	this.reply(replyToken,	new ImageMessage(url,url));
 }
-case "buttons": {
-String imageUrl = createUri("/static/buttons/1040.jpg");
-ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "My button sample", "Hello, my button",
-Arrays.asList(new URIAction("Go to line.me", "https://line.me"),
-new PostbackAction("Say hello1", "hello こんにちは"),
-new PostbackAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-new MessageAction("Say message", "Rice=米")));
-TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
-this.reply(replyToken, templateMessage);
-break;
+private void xkcd(String replyToken) {
+	String url = getXKCDUrl();
+	this.reply(replyToken,new ImageMessage(url,url));
 }
-case "carousel": {
-String imageUrl = createUri("/static/buttons/1040.jpg");
-CarouselTemplate carouselTemplate = new CarouselTemplate(Arrays.asList(
-new CarouselColumn(imageUrl, "hoge", "fuga",
-Arrays.asList(new URIAction("Go to line.me", "https://line.me"),
-new URIAction("Go to line.me", "https://line.me"),
-new PostbackAction("Say hello1", "hello こんにちは"))),
-new CarouselColumn(imageUrl, "hoge", "fuga",
-Arrays.asList(new PostbackAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-new PostbackAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-new MessageAction("Say message", "Rice=米"))),
-new CarouselColumn(imageUrl, "Datetime Picker", "Please select a date, time or datetime",
-Arrays.asList(
-new DatetimePickerAction("Datetime", "action=sel", "datetime", "2017-06-18T06:15",
-"2100-12-31T23:59", "1900-01-01T00:00"),
-new DatetimePickerAction("Date", "action=sel&only=date", "date", "2017-06-18",
-"2100-12-31", "1900-01-01"),
-new DatetimePickerAction("Time", "action=sel&only=time", "time", "06:15", "23:59",
-"00:00")))));
-TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
-this.reply(replyToken, templateMessage);
-break;
-}
-case "image_carousel": {
-String imageUrl = createUri("/static/buttons/1040.jpg");
-ImageCarouselTemplate imageCarouselTemplate = new ImageCarouselTemplate(Arrays.asList(
-new ImageCarouselColumn(imageUrl, new URIAction("Goto line.me", "https://line.me")),
-new ImageCarouselColumn(imageUrl, new MessageAction("Say message", "Rice=米")),
-new ImageCarouselColumn(imageUrl, new PostbackAction("言 hello2", "hello こんにちは", "hello こんにちは"))));
-TemplateMessage templateMessage = new TemplateMessage("ImageCarousel alt text", imageCarouselTemplate);
-this.reply(replyToken, templateMessage);
-break;
-}*/
-case "flex":
-this.reply(replyToken, new ExampleFlexMessageSupplier().get());
-break;
-case "quickreply":
-this.reply(replyToken, new MessageWithQuickReplySupplier().get());
-break;
-default:
-//log.info("Returns echo message {}: {}", replyToken, text);
-this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
-break;
-}
-}
+
+
 private static String getRedditTagUrl(String tag)
 {
 	String json = Wget.sendGet("https://www.reddit.com/r/"+tag+"/random.json");
 	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
+	if(!url.matches(".*\\.(jpg|png).*"))url = getRedditTagUrl(tag); //only png+fig
 	return url;
 }
 
-private static Pair<String,String> getFAILUrl()
-{
-	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=fail&rating=pg-13");
-  JSONObject json = new JSONObject(xkcd);
-	JSONObject data = json.optJSONObject("data");
-  String url = data.getString("image_mp4_url");
-  String url2 = data.getString("image_url");
-	return new Pair<String,String>(url,url2);
-}
-private static Pair<String,String> getGIFTagUrl(String tag) throws Exception
+private static Pair<String,String> getGIFTagUrl(String tag)
 {
 	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" +tag +"&rating=pg-13");
-  JSONObject json = new JSONObject(xkcd);
+	JSONObject json = new JSONObject(xkcd);
 	JSONObject data = json.optJSONObject("data");
 	if(data==null) return new Pair<String,String>(null,null);
-  String url = data.getString("image_mp4_url");
-  String url2 = data.getString("image_url");
+	String url = data.getString("image_mp4_url");
+	String url2 = data.getString("image_url");
 	return new Pair<String,String>(url,url2);
 }
 private static Pair<String,String> getGIFUrl()
 {
 	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&rating=pg-13");
-  JSONObject json = new JSONObject(xkcd);
+	JSONObject json = new JSONObject(xkcd);
 	JSONObject data = json.optJSONObject("data");
-  String url = data.getString("image_mp4_url");
-  String url2 = data.getString("image_url");
+	String url = data.getString("image_mp4_url");
+	String url2 = data.getString("image_url");
 	return new Pair<String,String>(url,url2);
 }
 
@@ -832,7 +792,7 @@ private static String getMEMEUrl()
 			urls.add(url);
 		}
 	}
-  Random r = new Random();
+	Random r = new Random();
 	String url = urls.get(r.nextInt(urls.size()));
 	DownloadedContent img = createLongTempFile("meme");
 	Wget.wGet(img.path.toString(),url);
@@ -889,20 +849,20 @@ private static String getRoadMap()
 	String fin = "";
 	for(String l : lines)
 	{
-		if(l.contains("Roadmap"))
-		{
-			fin = l;
-			break;
-		}
-	}
-	String url = "https://www.kongregate.com" + fin.substring(fin.indexOf("href=\"/forums/2468-general")+6, fin.indexOf("\">[Dev]"));
+	if(l.contains("Roadmap"))
+	{
+	fin = l;
+	break;
+}
+}
+String url = "https://www.kongregate.com" + fin.substring(fin.indexOf("href=\"/forums/2468-general")+6, fin.indexOf("\">[Dev]"));
 
-	String road = Wget.wGet(url);
+String road = Wget.wGet(url);
 
-	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
-	map = map.substring(map.indexOf(">")+1);
-	map = map.substring(0,map.indexOf("</div>"));
-	return map;*/
+String map = road.substring(road.indexOf("<div class=\"raw_post\""));
+map = map.substring(map.indexOf(">")+1);
+map = map.substring(0,map.indexOf("</div>"));
+return map;*/
 }
 private static CardInstance getCardInstance(String idorname)
 {
