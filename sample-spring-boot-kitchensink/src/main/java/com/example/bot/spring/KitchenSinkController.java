@@ -619,12 +619,36 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
+		case "art" : {
+			String json = Wget.wGet("https://www.reddit.com/r/Art/random.json");
+    	String url = new JSONArray(json).getJSONObject(0).getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
+
+			this.reply(replyToken,new ImageMessage(url,url));
+			break;
+		}
 		case "joke": {
 			String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
 			//System.out.println(msg);
 			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
 			//System.out.println(msg);
 			this.replyText(replyToken, msg);
+			break;
+		}
+		case "gif": {
+			Pair<String,String> url  = null;
+			if(!(args.length < 2))
+			{
+ 				url = getGifTagUrl(args[1]);
+				if(url.u==url.t && url.u ==null)
+				{
+					this.replyText(replyToken, "No gif for '" + args[2] + "'");
+					break;
+				}
+			}
+			else {
+				url = getGifUrl();
+			}
+			this.reply(replyToken,	new VideoMessage(url.t,url.u));
 			break;
 		}
 		case "fail": {
@@ -741,8 +765,28 @@ private static Pair<String,String> getFAILUrl()
 {
 	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=fail&rating=pg-13");
   JSONObject json = new JSONObject(xkcd);
-  String url = json.getJSONObject("data").getString("image_mp4_url");
-  String url2 = json.getJSONObject("data").getString("image_url");
+	JSONObject data = json.optJSONObject("data");
+  String url = data.getString("image_mp4_url");
+  String url2 = data.getString("image_url");
+	return new Pair<String,String>(url,url2);
+}
+private static Pair<String,String> getGIFTagUrl() throws Exception
+{
+	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" +tag +"&rating=pg-13");
+  JSONObject json = new JSONObject(xkcd);
+	JSONObject data = json.optJSONObject("data");
+	if(data==null) return new Pair<String,String>(null,null);
+  String url = data.getString("image_mp4_url");
+  String url2 = data.getString("image_url");
+	return new Pair<String,String>(url,url2);
+}
+private static Pair<String,String> getGIFUrl()
+{
+	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&rating=pg-13");
+  JSONObject json = new JSONObject(xkcd);
+	JSONObject data = json.optJSONObject("data");
+  String url = data.getString("image_mp4_url");
+  String url2 = data.getString("image_url");
 	return new Pair<String,String>(url,url2);
 }
 
