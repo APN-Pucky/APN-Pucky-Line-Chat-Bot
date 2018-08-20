@@ -32,6 +32,7 @@ import org.json.JSONObject;
 public class KitchenSinkApplication {
 
     @Autowired
+    public ResourceLoader rl;
     public static ResourceLoader resourceLoader;
     public static Render render;
 
@@ -40,9 +41,15 @@ public class KitchenSinkApplication {
     public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
-        Data.init();
-        KitchenSinkApplication.render = new Render();
-        System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+      super.run(args);
+      resourceLoader = rl;
+      Data.init();
+      KitchenSinkApplication.render = new Render();
+      System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
     }
 
 }
