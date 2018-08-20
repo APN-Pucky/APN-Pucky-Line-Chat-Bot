@@ -620,9 +620,9 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 		case "joke": {
 			String msg = Wget.wGet("https://geek-jokes.sameerkumar.website/api");
 			System.out.println(msg);
-			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
-			System.out.println(msg);
-			this.replyText(replyToken, msg);
+			//msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+			//System.out.println(msg);
+			//this.replyText(replyToken, msg);
 			break;
 		}
 		case "fail": {
