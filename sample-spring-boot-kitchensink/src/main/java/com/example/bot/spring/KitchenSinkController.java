@@ -645,6 +645,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				url = getRedditTagUrl("pics");
 			}
 			this.reply(replyToken,	new ImageMessage(url,url));
+			break;
 		}
 		case "gif": {
 			Pair<String,String> url  = null;
