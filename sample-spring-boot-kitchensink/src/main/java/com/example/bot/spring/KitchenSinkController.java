@@ -724,7 +724,7 @@ break;
 
 private static String getMEMEUrl()
 {
-	String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+	String xkcd = Wget.wGet("http://www.quickmeme.com/random");
 	String[] lines = xkcd.split("\n");
 	String fin = "";
 	for(String l : lines)
