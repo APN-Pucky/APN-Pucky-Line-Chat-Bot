@@ -799,7 +799,7 @@ private static String getRedditTagUrl(String tag)
 	}
 	if(!url.matches(".*https://.*"))
 	{
-		if(url.matches(".*imgur.*"))url.replace("http://","https://");
+		if(url.matches(".*imgur.*"))url = url.replace("http://","https://");
 		else url = getRedditTagUrl(tag); //only https
 	}
 	log.info("Reddit image url: " + url);
