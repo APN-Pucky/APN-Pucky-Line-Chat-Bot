@@ -159,7 +159,8 @@ public void handleUnfollowEvent(UnfollowEvent event) {
 
 @EventMapping
 public void handleFollowEvent(FollowEvent event) {
-	String replyToken = event.getReplyToken();
+		String replyToken = event.getReplyToken();
+		log.info("followed this bot: {}", event);
 	//this.replyText(replyToken, "Got followed event");
 }
 
@@ -253,6 +254,7 @@ private static String[][] alias = new String[][]{
 	{"today","current"},
 	{"change","release"},
 	{"update","-u"},
+	{"list","search"},
 	{"card","-c","show","display"},
 	{"version","-v"},
 	{"help","\\?","-h"},
@@ -273,6 +275,13 @@ private static String[][] large_help = new String[][]{
 	{"xml","show the date of xmls"},
 	{"update","reload xmls"},
 	{"alias","enlist alias"},
+	{"random","random"},
+	{"joke","geeky joke"},
+	{"fail","fail gif"},
+	{"art","art image"},
+	{"pic","some image"},
+	{"xkcd","xkcd image"},
+	{"meme","meme image"},
 	{"version","version of this bot"},
 };
 private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
@@ -415,6 +424,28 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			}
 			//msg = StringUtil.removeLastCharacter(msg,42);
 			//this.replyText(replyToken,msg);
+			break;
+		}
+		case "list": {
+			if(args.length < 2)
+			{
+				this.replyText(replyToken, "Please pass a name with: 'apn list {name}'");
+				break;
+			}
+			String req = ptext.split("apn list ")[1];
+			String rep = "card search: '"+req+"'";
+			for(Card c: Data.distinct_cards)
+			{
+				if(StringUtil.containsIgnoreSpecial(c.getName(),req)) {
+					rep +=c.getName() + "\n";
+					if(rep.length() > 1000)
+					{
+						rep+="..........EOM..........";
+						break;
+					}
+				}
+			}
+			this.replyText(replyToken, rep);
 			break;
 		}
 		case "materials": {

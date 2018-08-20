@@ -28,6 +28,13 @@ public class StringUtil {
 				return a1.equalsIgnoreCase(b1);
 		}
 
+		public static boolean containsIgnoreSpecial(String a, String b)
+		{
+				String a1 = a.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll("\\.", "").replaceAll(",", "").toLowerCase();
+				String b1 = b.replaceAll("'", "").replaceAll("-","").replaceAll("\"", "").replaceAll(" ", "").replaceAll("\\.", "").replaceAll(",", "").toLowerCase();
+				return a1.contains(b1);
+		}
+
 	public static String replaceLast(String text, String regex, String replacement) {
         return text.replaceFirst("(?s)"+regex+"(?!.*?"+regex+")", replacement);
     }
