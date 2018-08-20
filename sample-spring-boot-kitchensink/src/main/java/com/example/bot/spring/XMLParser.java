@@ -15,6 +15,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.Resource;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -78,7 +81,10 @@ public class XMLParser
 
 			dbFactory = DocumentBuilderFactory.newInstance();
 			dBuilder = dbFactory.newDocumentBuilder();
-			document = dBuilder.parse(KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/cardSources.xml").getFile());
+			ResourceLoader r = KitchenSinkApplication.resourceLoader;
+			Resource re = r.getResource("classpath:" + "static/cardSources.xml");
+			File f= re.getFile();
+			document = dBuilder.parse(f);
 			document.getDocumentElement().normalize();
 
 		}catch(Exception e){e.printStackTrace();}
