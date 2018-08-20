@@ -582,7 +582,8 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			break;
 		}
 		case "roadmap": {
-			String map = getRoadMap();
+			String url = getRoadMapUrl();
+			String map = getRoadMap(url);
 
 			if(!(args.length < 2) && args[1].equals("full"))
 			{
@@ -600,6 +601,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				rep += title + "\n";
 				rep += date + "\n\n";
 			}
+			rep += url;
 			this.replyText(replyToken, rep);
 
 			//this.pushText(event.getSource().getSenderId(), map);
@@ -615,6 +617,26 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
+		case "xkcd": {
+			String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+			String[] lines = xkcd.split("\n");
+			String fin = "";
+			for(String l : lines)
+			{
+				if(l.contains("Image URL (for hotlinking/embedding): "))
+				{
+					fin = l;
+					break;
+				}
+			}
+			String url = fin.substring(fin.indexOf(": ")+1).trim();
+			this.reply(replyToken,
+			new ImagemapMessage(createUri(url), "This is alt text", new ImagemapBaseSize(1040, 1040),
+			Arrays.asList(
+			new URIImagemapAction("https://xkcd.com/",
+			new ImagemapArea(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE)))));
+			break;
+	}
 		/*case "profile": {
 		String userId = event.getSource().getUserId();
 		if (userId != null) {
@@ -696,34 +718,49 @@ new ImageCarouselColumn(imageUrl, new PostbackAction("言 hello2", "hello こん
 TemplateMessage templateMessage = new TemplateMessage("ImageCarousel alt text", imageCarouselTemplate);
 this.reply(replyToken, templateMessage);
 break;
-}
-case "imagemap":
-this.reply(replyToken,
-new ImagemapMessage(createUri("/static/rich"), "This is alt text", new ImagemapBaseSize(1040, 1040),
-Arrays.asList(
-new URIImagemapAction("https://store.line.me/family/manga/en",
-new ImagemapArea(0, 0, 520, 520)),
-new URIImagemapAction("https://store.line.me/family/music/en",
-new ImagemapArea(520, 0, 520, 520)),
-new URIImagemapAction("https://store.line.me/family/play/en",
-new ImagemapArea(0, 520, 520, 520)),
-new MessageImagemapAction("URANAI!", new ImagemapArea(520, 520, 520, 520)))));
-break;
+}*/
 case "flex":
 this.reply(replyToken, new ExampleFlexMessageSupplier().get());
 break;
 case "quickreply":
 this.reply(replyToken, new MessageWithQuickReplySupplier().get());
-break;*/
+break;
 default:
 //log.info("Returns echo message {}: {}", replyToken, text);
 this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
 break;
 }
 }
-private static String getRoadMap()
+
+private static String getRoadMapUrl()
 {
 	String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
+	String[] lines = general.split("\n");
+	String fin = "";
+	for(String l : lines)
+	{
+		if(l.contains("Roadmap"))
+		{
+			fin = l;
+			break;
+		}
+	}
+	String url = "https://www.kongregate.com" + fin.substring(fin.indexOf("href=\"/forums/2468-general")+6, fin.indexOf("\">[Dev]"));
+	return url;
+}
+private static String getRoadMap(String url)
+{
+	String road = Wget.wGet(url);
+
+	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
+	map = map.substring(map.indexOf(">")+1);
+	map = map.substring(0,map.indexOf("</div>"));
+	return map;
+}
+private static String getRoadMap()
+{
+	return getRoadMap(getRoadMapUrl());
+	/*String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
 	String[] lines = general.split("\n");
 	String fin = "";
 	for(String l : lines)
@@ -741,7 +778,7 @@ private static String getRoadMap()
 	String map = road.substring(road.indexOf("<div class=\"raw_post\""));
 	map = map.substring(map.indexOf(">")+1);
 	map = map.substring(0,map.indexOf("</div>"));
-	return map;
+	return map;*/
 }
 private static CardInstance getCardInstance(String idorname)
 {
