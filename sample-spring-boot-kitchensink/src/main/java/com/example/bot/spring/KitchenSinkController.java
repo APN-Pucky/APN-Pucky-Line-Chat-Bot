@@ -89,6 +89,8 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
+
 import org.json.JSONObject;
 
 import lombok.NonNull;
@@ -749,15 +751,18 @@ private static String getMEMEUrl()
 	String xkcd = Wget.wGet("http://www.quickmeme.com/random");
 	String[] lines = xkcd.split("\n");
 	String fin = "";
+	ArrayList<String> urls = new ArrayList<String>();
 	for(String l : lines)
 	{
 		if(l.contains("class=\"post-image\" src=\""))
 		{
 			fin = l;
-			break;
+			String url = fin.substring(fin.indexOf("src=\"")+5).split("\"")[0].trim();
+			urls.add(url);
 		}
 	}
-	String url = fin.substring(fin.indexOf("src=\"")+5).split("\"")[0].trim();
+  Random r = new Random();
+	String url = urls.get(r.nextInt(urls.size()));
 	DownloadedContent img = createTempFile("meme");
 	Wget.wGet(img.path.toString(),url);
 	return img.uri;
