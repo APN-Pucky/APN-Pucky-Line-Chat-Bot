@@ -92,6 +92,7 @@ import java.util.Date;
 import java.util.Random;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import lombok.NonNull;
 import lombok.Value;
@@ -638,7 +639,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			Pair<String,String> url  = null;
 			if(!(args.length < 2))
 			{
- 				url = getGifTagUrl(args[1]);
+ 				url = getGIFTagUrl(args[1]);
 				if(url.u==url.t && url.u ==null)
 				{
 					this.replyText(replyToken, "No gif for '" + args[2] + "'");
@@ -646,7 +647,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				}
 			}
 			else {
-				url = getGifUrl();
+				url = getGIFUrl();
 			}
 			this.reply(replyToken,	new VideoMessage(url.t,url.u));
 			break;
@@ -770,7 +771,7 @@ private static Pair<String,String> getFAILUrl()
   String url2 = data.getString("image_url");
 	return new Pair<String,String>(url,url2);
 }
-private static Pair<String,String> getGIFTagUrl() throws Exception
+private static Pair<String,String> getGIFTagUrl(String tag) throws Exception
 {
 	String xkcd = Wget.wGet("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" +tag +"&rating=pg-13");
   JSONObject json = new JSONObject(xkcd);
