@@ -617,9 +617,11 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		case "geek": {
+		case "joke": {
 			String msg = Wget.wGet("https://geek-jokes.sameerkumar.website/api");
+			System.out.prinln(msg);
 			msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+			System.out.prinln(msg);
 			this.replyText(replyToken, msg);
 			break;
 		}
