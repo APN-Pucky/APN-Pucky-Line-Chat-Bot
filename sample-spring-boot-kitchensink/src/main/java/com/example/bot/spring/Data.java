@@ -188,7 +188,7 @@ public class Data
 		{
 			if(StringUtil.equalsIgnoreSpecial(c.getName(),s_name.trim()))return c;
 		}
-		return null;
+		return Card.NULL;
 	}
 	@Deprecated
 	public static Card getCardByNameAndRarity(String s_name, int rarity)

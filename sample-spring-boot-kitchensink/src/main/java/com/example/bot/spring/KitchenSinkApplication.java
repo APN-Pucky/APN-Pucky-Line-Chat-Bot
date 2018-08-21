@@ -15,6 +15,11 @@
  */
 
  //https://github.com/Perfare/AssetStudio
+ //http://alexsadonis.blogspot.com/
+ //http://devxdevelopment.com/UnpackerFAQ
+ //https://7daystodie.com/forums/showthread.php?22675-Unity-Assets-Bundle-Extractor
+ //http://forum.xentax.com/viewtopic.php?f=10&t=10085
+ //https://gameart.eu.org/reverse-engineering-decompiling-unity3d-files/
 
 package com.example.bot.spring;
 

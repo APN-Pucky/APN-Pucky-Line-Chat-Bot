@@ -320,11 +320,23 @@ private static String[][] large_help = new String[][]{
 	{"version","version of this bot"},
 };
 private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-	String ptext = content.getText().toLowerCase();
-	if (!ptext.startsWith("apn ")) {
+	final String ftext = content.getText().toLowerCase();
+	if (!ftext.startsWith("apn ")) {
 		return;
 	}
-	log.info("Got text message from {}: {}", replyToken, ptext);
+	String userId = event.getSource().getUserId();
+	if(userId!=null)
+		lineMessagingClient.getProfile(userId)
+                            .whenComplete((profile, throwable) -> {
+                                if (throwable != null) {
+																		log.info("Got text error:{}", throwable.getMessage());
+                                    return;
+                                }
+																log.info("Got text message from {}: {}", profile.getDisplayName(), ftext);
+															});
+	else
+		log.info("Got text message from {}: {}", "Unknown", ftext);
+	String ptext = ftext;
 	//alias
 	for(String[] sa :  alias)
 	{
@@ -780,6 +792,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 		this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
 		break;
 	}
+	System.gc();
 }
 private void reddit(String replyToken, String tag)
 {
@@ -958,25 +971,6 @@ private static String getRoadMap(String url)
 private static String getRoadMap()
 {
 	return getRoadMap(getRoadMapUrl());
-	/*String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
-	String[] lines = general.split("\n");
-	String fin = "";
-	for(String l : lines)
-	{
-	if(l.contains("Roadmap"))
-	{
-	fin = l;
-	break;
-}
-}
-String url = "https://www.kongregate.com" + fin.substring(fin.indexOf("href=\"/forums/2468-general")+6, fin.indexOf("\">[Dev]"));
-
-String road = Wget.wGet(url);
-
-String map = road.substring(road.indexOf("<div class=\"raw_post\""));
-map = map.substring(map.indexOf(">")+1);
-map = map.substring(0,map.indexOf("</div>"));
-return map;*/
 }
 private static CardInstance getCardInstance(String idorname)
 {
