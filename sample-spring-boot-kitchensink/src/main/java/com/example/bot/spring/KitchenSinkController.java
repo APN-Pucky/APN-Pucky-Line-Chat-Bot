@@ -332,10 +332,10 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 																		log.info("Got text error:{}", throwable.getMessage());
                                     return;
                                 }
-																log.info("Got text message from {}: {}", profile.getDisplayName(), ftext);
+																log.info("\\e[32mGot text message from {}: {}\\e[0m]", profile.getDisplayName(), ftext);
 															});
 	else
-		log.info("Got text message from {}: {}", "Unknown", ftext);
+		log.info("\\e[32mGot text message from {}: {}\\e[0m]", "Unknown", ftext);
 	String ptext = ftext;
 	//alias
 	for(String[] sa :  alias)
