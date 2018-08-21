@@ -503,8 +503,8 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 				break;
 			}
 			BufferedImage bi = KitchenSinkApplication.render.render(ci);
-			DownloadedContent d = createTempFile("jpg");
-			ImageIO.write(bi,"jpg",d.path.toFile());
+			DownloadedContent d = createTempFile("png");
+			ImageIO.write(bi,"png",d.path.toFile());
 			this.reply(replyToken, new ImageMessage(d.uri,d.uri));
 			break;
 		}
