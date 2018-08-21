@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import com.example.bot.spring.Card.CardInstance;
@@ -18,8 +19,8 @@ public class Render {
 	Font arial;
 	public Render() {
 		try{
-			optimus = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/Optimus.otf").getFile());
-			arial = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/arialbold.ttf").getFile());
+			optimus = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/Optimus.otf").getInputStream());
+			arial = Font.createFont(Font.TRUETYPE_FONT, KitchenSinkApplication.resourceLoader.getResource("classpath:" + "static/arialbold.ttf").getInputStream());
 		}
 		catch(Exception e)
 		{
@@ -128,7 +129,7 @@ public class Render {
 	public static void draw(Graphics g, String img, int sx,int  sy,int sw,int sh,int dx,int dy,int dw,int dh)
 	{
 		try {
-			g.drawImage(ImageIO.read(KitchenSinkApplication.resourceLoader.getResource("classpath:static/"+img+".png").getFile()),  dx,dy,dx+dw,dy+dh,sx,sy,sx+sw,sy+sh,null);
+			g.drawImage(ImageIO.read(KitchenSinkApplication.resourceLoader.getResource("classpath:static/"+img+".png").getInputStream()),  dx,dy,dx+dw,dy+dh,sx,sy,sx+sw,sy+sh,null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

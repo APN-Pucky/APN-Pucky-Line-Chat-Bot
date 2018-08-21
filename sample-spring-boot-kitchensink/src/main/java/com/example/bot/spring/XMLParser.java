@@ -6,6 +6,7 @@ import com.example.bot.spring.Card.CardInstance;
 import java.io.File;
 import java.io.IOException;
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 import java.net.URL;
 import com.example.bot.spring.Card.CardInstance;
@@ -83,8 +84,9 @@ public class XMLParser
 			dBuilder = dbFactory.newDocumentBuilder();
 			ResourceLoader r = KitchenSinkApplication.resourceLoader;
 			Resource re = r.getResource("classpath:" + "static/cardSources.xml");
-			File f= re.getFile();
-			document = dBuilder.parse(f);
+			InputStream is = re.getInputStream();
+			//File f= re.getFile();
+			document = dBuilder.parse(is);
 			document.getDocumentElement().normalize();
 
 		}catch(Exception e){e.printStackTrace();}
