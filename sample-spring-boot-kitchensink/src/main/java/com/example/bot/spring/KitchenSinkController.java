@@ -105,6 +105,7 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import org.springframework.core.io.ResourceLoader;
 import java.util.Map;
 
@@ -120,7 +121,10 @@ public class KitchenSinkController {
 	@Autowired
 	public ResourceLoader rl;
 
-
+	@PreDestroy
+	public void finalEnd() {
+				pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Stop "+ System.getenv("HEROKU_RELEASE_VERSION"));
+	}
 
 	@PostConstruct
 	public void init() {
@@ -128,6 +132,7 @@ public class KitchenSinkController {
 		Data.init();
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
+		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start "+ System.getenv("HEROKU_RELEASE_VERSION"));
 	}
 
 	@EventMapping
@@ -513,6 +518,12 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			BufferedImage bi = KitchenSinkApplication.render.render(ci);
 			DownloadedContent d = createTempFile("png");
 			ImageIO.write(bi,"png",d.path.toFile());
+			try {
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				String perm_uri = (String)uploadResult.get("secure_url");
+				this.reply(replyToken, new ImageMessage(perm_uri,perm_uri));
+				break;
+			}catch(Exception e){e.printStackTrace();}
 			this.reply(replyToken, new ImageMessage(d.uri,d.uri));
 			break;
 		}
@@ -896,8 +907,8 @@ private static String getMEMEUrl()
 		Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.uri, ObjectUtils.emptyMap());
 		return (String)uploadResult.get("secure_url");
 	}catch(Exception e){e.printStackTrace();}
-	return "null";
-	//return img.uri;
+	//return "null";
+	return img.uri;
 }
 
 private static String getXKCDUrl()

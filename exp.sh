@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 ./gradlew compileJava
-heroku local
+heroku local web
