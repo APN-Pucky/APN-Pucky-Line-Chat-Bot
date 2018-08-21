@@ -20,4 +20,7 @@ dependencies {
     compile project(':line-bot-spring-boot')
     compile 'org.json:json:20171018'
     compile group: 'org.jdom', name: 'jdom', version: '2.0.0'
+    compile group: 'com.cloudinary', name: 'cloudinary', version: '1.0.2'
+    compile group: 'com.cloudinary', name: 'cloudinary-core', version: '1.19.0'
+
 }

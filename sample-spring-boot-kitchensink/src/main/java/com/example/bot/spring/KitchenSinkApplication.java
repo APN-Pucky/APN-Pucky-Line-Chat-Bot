@@ -27,12 +27,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.core.io.ResourceLoader;
 import org.json.JSONObject;
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
 
 @SpringBootApplication
 public class KitchenSinkApplication {
 
     public static ResourceLoader resourceLoader;
     public static Render render;
+    public static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+  	  "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),
+  	  "api_key", System.getenv("CLOUDINARY_API_KEY"),
+  	  "api_secret", System.getenv("CLOUDINARY_API_SECRET")));
 
     static Path downloadedContentDir;
 

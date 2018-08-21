@@ -17,6 +17,8 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
 
 import java.awt.image.BufferedImage;
 
@@ -104,9 +106,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import org.springframework.core.io.ResourceLoader;
+import java.util.Map;
+
 
 @Slf4j
 @LineMessageHandler
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class KitchenSinkController {
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
@@ -114,6 +119,8 @@ public class KitchenSinkController {
 
 	@Autowired
 	public ResourceLoader rl;
+
+
 
 	@PostConstruct
 	public void init() {
@@ -220,6 +227,7 @@ private void push(@NonNull String id, @NonNull List<Message> messages) {
 }
 
 private void pushText(@NonNull String id, @NonNull String message) {
+	log.info("Pushing to '" + id + "'");
 	if (id.isEmpty()) {
 		throw new IllegalArgumentException("id must not be empty");
 	}
@@ -884,7 +892,12 @@ private static String getMEMEUrl()
 	String url = urls.get(r.nextInt(urls.size()));
 	DownloadedContent img = createTempFile("jpg");
 	Wget.wGet(img.path.toString(),url);
-	return img.uri;
+	try {
+		Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.uri, ObjectUtils.emptyMap());
+		return (String)uploadResult.get("secure_url");
+	}catch(Exception e){e.printStackTrace();}
+	return "null";
+	//return img.uri;
 }
 
 private static String getXKCDUrl()
