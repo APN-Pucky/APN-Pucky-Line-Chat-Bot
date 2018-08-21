@@ -520,6 +520,7 @@ private void handleTextContent(String replyToken, Event event, TextMessageConten
 			ImageIO.write(bi,"png",d.path.toFile());
 			try {
 				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				Files.deleteIfExists(img.path);
 				String perm_uri = (String)uploadResult.get("secure_url");
 				this.reply(replyToken, new ImageMessage(perm_uri,perm_uri));
 				break;
@@ -905,6 +906,7 @@ private static String getMEMEUrl()
 	Wget.wGet(img.path.toString(),url);
 	try {
 		Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.uri, ObjectUtils.emptyMap());
+		Files.deleteIfExists(img.path);
 		return (String)uploadResult.get("secure_url");
 	}catch(Exception e){e.printStackTrace();}
 	//return "null";

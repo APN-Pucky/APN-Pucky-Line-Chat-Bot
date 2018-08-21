@@ -205,6 +205,7 @@ public class XMLParser
 				}
 			}}catch(Exception e){e.printStackTrace();}
 			Card[] all_cards = new Card[max_id+1];
+			System.out.println("Number of cards: " + max_id);
 			for(Card c : distinct_cards)
 			{
 				for(int it_id : c.getIDs())
