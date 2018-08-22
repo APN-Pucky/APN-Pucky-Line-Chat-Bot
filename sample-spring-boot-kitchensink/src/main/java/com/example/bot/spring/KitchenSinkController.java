@@ -990,8 +990,7 @@ public class KitchenSinkController {
 	}
 
 	private static String getBGEUrl(String bge) {
-		String general = Wget.wGet(
-				"https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
+		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
 		general = general.substring(general.indexOf("Global Battleground Effects"),
 				general.indexOf("Restore Information"));
 		String[] lines = general.split("\n");
@@ -1002,11 +1001,11 @@ public class KitchenSinkController {
 				break;
 			}
 		}
-		String url = fin.replaceFirst(".*(https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+).*", "$1");
+		String url = fin.replaceFirst(".*(https?://www\\.kongregate\\.com/forums/2468-general/topics/\\d+).*", "$1");
 		// String url =
 		// fin.substring(fin.indexOf("href=\"http://www.kongregte.com/forums/2468-general")
 		// + 6, fin.indexOf("\">"));
-		if (url.matches("https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
+		if (url.matches("https?://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
 			return url;
 		return null;
 	}
