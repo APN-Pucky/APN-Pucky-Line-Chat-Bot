@@ -480,7 +480,7 @@ public class KitchenSinkController {
         	String req = ptext.split("apn skill ")[1].toLowerCase();
         	if(Data.skill_desc.containsKey(req))
         	{
-        		this.replyText(replyToken, Data.skill_desc.get(req));
+        		this.replyText(replyToken, "'" + req + "': " + Data.skill_desc.get(req));
         	}
         	else
         	{
@@ -755,10 +755,11 @@ public class KitchenSinkController {
         }
         case "random": {
             Random r = new Random();
-            String[] opt = new String[] {"art","pic","joke","gif","fail","meme","xkcd"};
+            String[] opt = new String[] {"art","pic","joke","gif","fail","meme","xkcd", "insult"};
             switch(opt[r.nextInt(opt.length)]) {
             case "art": art(replyToken); break;
             case "pic": pic(replyToken); break;
+            case "insult": insult(replyToken); break;
             case "joke": joke(replyToken); break;
             case "gif": gif(replyToken,new String[] {args[0]}); break;
             case "fail": fail(replyToken); break;
@@ -785,6 +786,10 @@ public class KitchenSinkController {
         }
         case "fail": {
             fail(replyToken);
+            break;
+        }
+        case "insult": {
+            insult(replyToken);
             break;
         }
         case "joke": {
@@ -861,6 +866,14 @@ public class KitchenSinkController {
         gif(replyToken,"fail");
     }
 
+    private void insult(String replyToken) {
+    	String msg = Wget.sendGet("https://insult.mattbas.org/api/insult");
+        //System.out.println(msg);
+        msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
+        //System.out.println(msg);
+        this.replyText(replyToken, msg);
+    }
+    
     private void joke(String replyToken) {
         String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
         //System.out.println(msg);
