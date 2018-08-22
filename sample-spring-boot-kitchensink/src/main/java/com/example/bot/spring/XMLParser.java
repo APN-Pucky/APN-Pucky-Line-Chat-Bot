@@ -522,7 +522,7 @@ public class XMLParser {
 				Element eElement = (Element) nNode;
 				String name = eElement.getElementsByTagName("name").item(0).getTextContent().toLowerCase();
 				String desc = "";
-				if (eElement.hasAttribute("desc"))desc = eElement.getElementsByTagName("desc").item(0).getTextContent().toLowerCase();
+				if (eElement.getElementsByTagName("desc").getLength()!= 0)desc = eElement.getElementsByTagName("desc").item(0).getTextContent().toLowerCase();
 				skill_borders.put(name, desc);
 			}
 		}

@@ -68,6 +68,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.message.VideoMessageContent;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
@@ -86,7 +87,7 @@ public class KitchenSinkController {
     @Autowired
     private LineMessagingClient lineMessagingClient;
 
-
+    private Random r = new Random();
     @Autowired
     public ResourceLoader rl;
 
@@ -112,7 +113,7 @@ public class KitchenSinkController {
 
     @EventMapping
     public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-        /*handleSticker(event.getReplyToken(), event.getMessage());*/
+        handleSticker(event.getReplyToken(), event.getMessage());
     }
 
     @EventMapping
@@ -245,9 +246,36 @@ public class KitchenSinkController {
            }
            messageConsumer.accept(response);*/
     }
+    private static int[][] stickerids = new int[][] {
+    	{1,103},    	{1,102},    	{1,101},    	{1,100},
+    	{1,109},    	{1,402},    	{1,116},    	{1,404},
+    	{1,411},    	{1,420},
+    	{2,47},
+    	{2,39}, 
+    	{2,161},
+    	{2,165},
+    	{2,526},
+    	{2,502},
 
+    	{4,287},
+    	{4,285},
+    	{4,283},
+    	{4,279},
+    	{4,281},
+    	{4,280},
+    	{4,288},
+    	
+    	{3,225},
+    	{3,226},
+    	{3,227},
+    	{3,220},
+    	{3,221},
+    	{3,222},
+    };
+    
     private void handleSticker(String replyToken, StickerMessageContent content) {
-        //reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
+    	int pi = r.nextInt(stickerids.length);
+        reply(replyToken, new StickerMessage(""+stickerids[pi][0],""+stickerids[pi][1]));
     }
 
     private static String[][] alias = new String[][] {
@@ -257,6 +285,7 @@ public class KitchenSinkController {
         {"update","-u"},
         {"list","search"},
         {"card","-c","show","display"},
+        {"battlegroundeffect", "bge"},
         {"random","fun"},
         {"joke","geek"},
         {"nude","nudes"},
@@ -301,10 +330,10 @@ public class KitchenSinkController {
                     log.info("Got text error:{}", throwable.getMessage());
                     return;
                 }
-                log.info("\\e[32mGot text message from {}: {}\\e[0m]", profile.getDisplayName(), ftext);
+                log.info("Got text message from {}: {}", profile.getDisplayName(), ftext);
             });
         else
-            log.info("\\e[32mGot text message from {}: {}\\e[0m]", "Unknown", ftext);
+            log.info("Got text message from {}: {}", "Unknown", ftext);
         String ptext = ftext;
         //alias
         for(String[] sa :  alias)
@@ -458,6 +487,9 @@ public class KitchenSinkController {
         		this.replyText(replyToken, "Unknown skill: '"+req+"'");
         	}
         	break;
+        }
+        case "battlegroundeffect" : {
+        	
         }
         case "list": {
             if(args.length < 2)
