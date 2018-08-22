@@ -442,6 +442,23 @@ public class KitchenSinkController {
             //this.replyText(replyToken,msg);
             break;
         }
+        case "skill" : {
+        	if(args.length < 2)
+            {
+                this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");
+                break;
+            }
+        	String req = ptext.split("apn skill ")[1].toLowerCase();
+        	if(Data.skill_desc.containsKey(req))
+        	{
+        		this.replyText(replyToken, Data.skill_desc.get(req));
+        	}
+        	else
+        	{
+        		this.replyText(replyToken, "Unknown skill: '"+req+"'");
+        	}
+        	break;
+        }
         case "list": {
             if(args.length < 2)
             {

@@ -51,6 +51,7 @@ public static int[][][] style_borders;
 public static int[][] frame_borders;
 public static HashMap<String,int[]> icon_borders;
 public static HashMap<String,int[]> skill_borders;
+public static HashMap<String,String> skill_desc;
 
 
 public static void init() {
@@ -62,6 +63,7 @@ public static void init() {
         frame_borders = xml.laodFrame();
         icon_borders = xml.loadIcon();
         skill_borders = xml.loadSkill();
+        skill_desc = xml.loadSkillDesc();
 
         Pair<Card[],Card[]> p = xml.loadCards();
         distinct_cards = p.t;
