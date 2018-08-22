@@ -282,9 +282,9 @@ public class KitchenSinkController {
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
 			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun", "lol", "lul" },
-			{ "joke", "geek" }, { "nude", "nudes" }, { "version", "-v" }, { "help", "\\?", "-h" },
+			{ "joke", "geek" }, { "nude", "nudes" },{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 			{ "options", "-o", "opts" }, };
-	private static String[][] help = new String[][] { { "card", "display a card" },
+	private static String[][] help = new String[][] { { "card", "display a card" }, { "icard", "display a card with image" },
 			{ "materials", "displays materials for card" }, { "new", "displays latest quads" }, {"bge", "display a bge"}, {"skill", "display a skill"},
 			{ "roadmap", "tu roadmap + link" }, { "current", "current tu event" }, { "next", "next tu event" },
 			{ "release", "next tu release" }, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
@@ -827,11 +827,11 @@ public class KitchenSinkController {
 			meme(replyToken);
 			break;
 		}
-		case "daddy": {
+		case "dad": {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/%40dr%5Ff3ll"),
+							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"),
 							new MessageAction("Random", "apn random"),
 							new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/%40xdc0493y")
