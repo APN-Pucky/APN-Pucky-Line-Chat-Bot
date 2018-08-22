@@ -265,7 +265,7 @@ public class KitchenSinkController {
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		int pi = r.nextInt(stickerids.length);
-		reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
+		if(Math.random()>0.9)reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
 	}
 
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
@@ -454,7 +454,7 @@ public class KitchenSinkController {
 			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
 			String ret = "";
 			String[] lines = map.split("\n");
-			lines[0] = lines[0].replace("**", "");
+			lines[0] = lines[0].replaceAll("\\*+", "");
 			for (String l : lines) {
 				if (l.contains("will start"))
 					break;
