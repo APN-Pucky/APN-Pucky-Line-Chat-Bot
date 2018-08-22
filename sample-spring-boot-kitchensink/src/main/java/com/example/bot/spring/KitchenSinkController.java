@@ -452,7 +452,7 @@ public class KitchenSinkController {
 				for(int i =0; i < dbges.length;i++) {
 					String b = dbges[i];
 					String[] inf = b.split(":");
-					if(inf.length>1 && StringUtil.equalsIgnoreSpecial(inf[0],req))
+					if(inf.length>1 && StringUtil.containsIgnoreSpecial(inf[0],req))
 					{
 						this.replyText(replyToken, b);
 						break;
