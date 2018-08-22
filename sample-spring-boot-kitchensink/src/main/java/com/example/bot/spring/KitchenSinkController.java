@@ -753,14 +753,20 @@ public class KitchenSinkController {
             this.reply(replyToken,new ImageMessage(url,url));
             break;
         }
+        case "rip": {
+        	String url = getRedditTagUrl("techsupportgore");
+            this.reply(replyToken,new ImageMessage(url,url));
+            break;
+        }
         case "random": {
             Random r = new Random();
-            String[] opt = new String[] {"art","pic","joke","gif","fail","meme","xkcd", "insult"};
+            String[] opt = new String[] {"art","pic","joke","gif","fail","meme","xkcd", "insult","mama"};
             switch(opt[r.nextInt(opt.length)]) {
             case "art": art(replyToken); break;
             case "pic": pic(replyToken); break;
             case "insult": insult(replyToken); break;
             case "joke": joke(replyToken); break;
+            case "mama": mama(replyToken); break;
             case "gif": gif(replyToken,new String[] {args[0]}); break;
             case "fail": fail(replyToken); break;
             case "meme": meme(replyToken); break;
@@ -790,6 +796,10 @@ public class KitchenSinkController {
         }
         case "insult": {
             insult(replyToken);
+            break;
+        }
+        case "mama": {
+            mama(replyToken);
             break;
         }
         case "joke": {
@@ -871,6 +881,13 @@ public class KitchenSinkController {
         //System.out.println(msg);
         msg = msg.replaceAll("\"","").replaceAll("&quot;","\"");
         //System.out.println(msg);
+        this.replyText(replyToken, msg);
+    }
+    
+    private void mama(String replyToken) {
+    	String msg = Wget.sendGet("http://api.yomomma.info/");
+    	JSONObject j = new JSONObject(msg);
+    	msg = j.getString("joke");
         this.replyText(replyToken, msg);
     }
     
