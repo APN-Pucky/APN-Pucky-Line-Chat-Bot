@@ -14,12 +14,12 @@
  * under the License.
  */
 
- //https://github.com/Perfare/AssetStudio
- //http://alexsadonis.blogspot.com/
- //http://devxdevelopment.com/UnpackerFAQ
- //https://7daystodie.com/forums/showthread.php?22675-Unity-Assets-Bundle-Extractor
- //http://forum.xentax.com/viewtopic.php?f=10&t=10085
- //https://gameart.eu.org/reverse-engineering-decompiling-unity3d-files/
+//https://github.com/Perfare/AssetStudio
+//http://alexsadonis.blogspot.com/
+//http://devxdevelopment.com/UnpackerFAQ
+//https://7daystodie.com/forums/showthread.php?22675-Unity-Assets-Bundle-Extractor
+//http://forum.xentax.com/viewtopic.php?f=10&t=10085
+//https://gameart.eu.org/reverse-engineering-decompiling-unity3d-files/
 
 package com.example.bot.spring;
 
@@ -40,18 +40,18 @@ import com.cloudinary.utils.ObjectUtils;
 @SpringBootApplication
 public class KitchenSinkApplication {
 
-    public static ResourceLoader resourceLoader;
-    public static Render render;
-    public static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-  	  "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),
-  	  "api_key", System.getenv("CLOUDINARY_API_KEY"),
-  	  "api_secret", System.getenv("CLOUDINARY_API_SECRET")));
+public static ResourceLoader resourceLoader;
+public static Render render;
+public static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                                                             "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),
+                                                             "api_key", System.getenv("CLOUDINARY_API_KEY"),
+                                                             "api_secret", System.getenv("CLOUDINARY_API_SECRET")));
 
-    static Path downloadedContentDir;
+static Path downloadedContentDir;
 
-    public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws IOException {
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
-    }
+}
 
 }

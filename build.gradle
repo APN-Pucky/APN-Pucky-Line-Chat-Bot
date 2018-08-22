@@ -17,7 +17,7 @@
 // ./gradlew clean && ./gradlew uploadArchives -Prelease
 
 buildscript {
-    ext.kotlin_version = '1.2.51'
+    //ext.kotlin_version = '1.2.51'
 
     repositories {
         mavenCentral()
@@ -31,7 +31,7 @@ buildscript {
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE'
         classpath 'io.franzbecker:gradle-lombok:1.14'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -178,7 +178,7 @@ subprojects {
         }
     }
 }
-
+/*
 [':line-bot-api-client', ':line-bot-model', ':line-bot-servlet', ':line-bot-spring-boot', ':line-bot-cli'].each { projectName ->
     project(projectName) { project ->
         apply plugin: 'signing'
@@ -233,4 +233,4 @@ subprojects {
             }
         }
     }
-}
+}*/
