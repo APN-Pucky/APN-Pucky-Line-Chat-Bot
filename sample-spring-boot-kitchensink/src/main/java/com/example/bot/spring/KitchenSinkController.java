@@ -833,7 +833,8 @@ public class KitchenSinkController {
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
 							new URIAction("Visit DR_F3LL", "line://ti/p/%40dr%5Ff3ll"),
 							new MessageAction("Random", "apn random"),
-							new MessageAction("Help", "apn help")
+							new MessageAction("Help", "apn help"),
+							new URIAction("Share", "line://nv/recommendOA/%40xdc0493y")
 
 					));
 			TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
