@@ -53,6 +53,9 @@ import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
+import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.BeaconEvent;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.FollowEvent;
@@ -69,8 +72,10 @@ import com.linecorp.bot.model.event.message.VideoMessageContent;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.StickerMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
@@ -210,6 +215,10 @@ public class KitchenSinkController {
 		}
 	}
 
+	private void pushLongText(@NonNull String id, @NonNull String message) {
+
+	}
+
 	private void pushText(@NonNull String id, @NonNull String message) {
 		log.info("Pushing to '" + id + "'");
 		if (id.isEmpty()) {
@@ -257,24 +266,26 @@ public class KitchenSinkController {
 		 */
 	}
 
-	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },{1,405},{1,406},
-			{ 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 }, { 2, 161 }, { 2, 165 }, {2,30},{2,28},{2,34},
-			{ 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 }, { 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 },{3,223},{3,224},
-			{ 3, 227 }, { 3, 220 }, { 3, 221 }, { 3, 222 }, { 3, 253 }, { 4, 287 }, { 4, 285 }, { 4, 283 }, { 4, 279 },
-			{ 4, 281 }, { 4, 280 }, { 4, 288 }, { 4, 300 },{ 4, 291 },{ 4, 298 },{4,608},{4,282}};
+	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },
+			{ 1, 405 }, { 1, 406 }, { 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 },
+			{ 2, 161 }, { 2, 165 }, { 2, 30 }, { 2, 28 }, { 2, 34 }, { 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 },
+			{ 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 }, { 3, 223 }, { 3, 224 }, { 3, 227 }, { 3, 220 },
+			{ 3, 221 }, { 3, 222 }, { 3, 253 }, { 4, 287 }, { 4, 285 }, { 4, 283 }, { 4, 279 }, { 4, 281 }, { 4, 280 },
+			{ 4, 288 }, { 4, 300 }, { 4, 291 }, { 4, 298 }, { 4, 608 }, { 4, 282 } };
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		int pi = r.nextInt(stickerids.length);
-		if(Math.random()>0.9)reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
+		if (Math.random() > 0.9)
+			reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
 	}
 
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun","lol","lul" },
+			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun", "lol", "lul" },
 			{ "joke", "geek" }, { "nude", "nudes" }, { "version", "-v" }, { "help", "\\?", "-h" },
 			{ "options", "-o", "opts" }, };
 	private static String[][] help = new String[][] { { "card", "display a card" },
-			{ "materials", "displays materials for card" }, { "new", "displays latest quads" },
+			{ "materials", "displays materials for card" }, { "new", "displays latest quads" }, {"bge", "display a bge"}, {"skill", "display a skill"},
 			{ "roadmap", "tu roadmap + link" }, { "current", "current tu event" }, { "next", "next tu event" },
 			{ "release", "next tu release" }, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
 	private static String[][] large_help = new String[][] { { "xml", "show the date of xmls" },
@@ -447,13 +458,13 @@ public class KitchenSinkController {
 			// TODO CHECK github bges.txt => Number yes no
 			String url = getBGEUrl(req);
 			if (url == null) {
-				String lbge = Wget.wGet("https://raw.githubusercontent.com/APN-Pucky/tyrant_optimize/merged/data/bges.txt");
+				String lbge = Wget
+						.wGet("https://raw.githubusercontent.com/APN-Pucky/tyrant_optimize/merged/data/bges.txt");
 				String[] dbges = lbge.split("\n");
-				for(int i =0; i < dbges.length;i++) {
+				for (int i = 0; i < dbges.length; i++) {
 					String b = dbges[i];
 					String[] inf = b.split(":");
-					if(inf.length>1 && StringUtil.containsIgnoreSpecial(inf[0],req))
-					{
+					if (inf.length > 1 && StringUtil.containsIgnoreSpecial(inf[0], req)) {
 						this.replyText(replyToken, b);
 						break;
 					}
@@ -816,6 +827,19 @@ public class KitchenSinkController {
 			meme(replyToken);
 			break;
 		}
+		case "daddy": {
+			String imageUrl = createUri("/static/buttons/hannibal.jpg");
+			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
+					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
+							new URIAction("Visit DR_F3LL", "line://ti/p/%40dr_f3ll"),
+							new MessageAction("Random", "apn random"),
+							new MessageAction("Help", "apn help")
+
+					));
+			TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
+			this.reply(replyToken, templateMessage);
+			break;
+		}
 		case "flex":
 			this.reply(replyToken, new ExampleFlexMessageSupplier().get());
 			break;
@@ -1001,7 +1025,8 @@ public class KitchenSinkController {
 	}
 
 	private static String getBGEUrl(String bge) {
-		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
+		String general = Wget.wGet(
+				"https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
 		general = general.substring(general.indexOf("Global Battleground Effects"),
 				general.indexOf("Restore Information"));
 		String[] lines = general.split("\n");
