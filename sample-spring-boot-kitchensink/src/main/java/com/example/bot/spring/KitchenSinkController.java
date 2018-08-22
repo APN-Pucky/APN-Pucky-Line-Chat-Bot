@@ -259,11 +259,9 @@ public class KitchenSinkController {
 
 	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },
 			{ 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 }, { 2, 161 }, { 2, 165 },
-			{ 2, 526 }, { 2, 502 },
-
-			{ 4, 287 }, { 4, 285 }, { 4, 283 }, { 4, 279 }, { 4, 281 }, { 4, 280 }, { 4, 288 },
-
-			{ 3, 225 }, { 3, 226 }, { 3, 227 }, { 3, 220 }, { 3, 221 }, { 3, 222 }, };
+			{ 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 }, { 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 },
+			{ 3, 227 }, { 3, 220 }, { 3, 221 }, { 3, 222 }, { 3, 253 }, { 4, 287 }, { 4, 285 }, { 4, 283 }, { 4, 279 },
+			{ 4, 281 }, { 4, 280 }, { 4, 288 }, { 4, 300 },{ 4, 291 },{ 4, 298 },};
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		int pi = r.nextInt(stickerids.length);
@@ -446,10 +444,9 @@ public class KitchenSinkController {
 				break;
 			}
 			String req = ptext.split("apn battlegroundeffect ")[1];
-			//TODO CHECK github bges.txt => Number yes no
+			// TODO CHECK github bges.txt => Number yes no
 			String url = getBGEUrl(req);
-			if(url == null)
-			{
+			if (url == null) {
 				this.replyText(replyToken, "Unknown bge: '" + req + "'");
 				break;
 			}
@@ -457,10 +454,11 @@ public class KitchenSinkController {
 			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
 			String ret = "";
 			String[] lines = map.split("\n");
-			for(String l : lines) 
-			{
-				if(l.contains("will start"))break;
-				ret+=l + "\n\n";
+			lines[0] = lines[0].replace("**", "");
+			for (String l : lines) {
+				if (l.contains("will start"))
+					break;
+				ret += l + "\n\n";
 			}
 			this.replyText(replyToken, ret);
 			break;
@@ -990,21 +988,25 @@ public class KitchenSinkController {
 		String url = fin.substring(fin.indexOf(": ") + 1).trim();
 		return url;
 	}
-	
+
 	private static String getBGEUrl(String bge) {
-		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
-		general = general.substring(general.indexOf("Global Battleground Effects"), general.indexOf("Restore Information"));
+		String general = Wget.wGet(
+				"https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
+		general = general.substring(general.indexOf("Global Battleground Effects"),
+				general.indexOf("Restore Information"));
 		String[] lines = general.split("\n");
 		String fin = "";
 		for (String l : lines) {
-			if (StringUtil.containsIgnoreSpecial(l,bge)) {
+			if (StringUtil.containsIgnoreSpecial(l, bge)) {
 				fin = l;
 				break;
 			}
 		}
-		String url = fin.replaceFirst(".*(https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+).*","$1");
-		//String url = fin.substring(fin.indexOf("href=\"http://www.kongregte.com/forums/2468-general") + 6, fin.indexOf("\">"));
-		if(url.matches("https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
+		String url = fin.replaceFirst(".*(https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+).*", "$1");
+		// String url =
+		// fin.substring(fin.indexOf("href=\"http://www.kongregte.com/forums/2468-general")
+		// + 6, fin.indexOf("\">"));
+		if (url.matches("https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
 			return url;
 		return null;
 	}
@@ -1023,9 +1025,8 @@ public class KitchenSinkController {
 				+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">[Dev]"));
 		return url;
 	}
-	
-	private static String getFirstKongPost(String url)
-	{
+
+	private static String getFirstKongPost(String url) {
 		String road = Wget.wGet(url);
 
 		String map = road.substring(road.indexOf("<div class=\"raw_post\""));
