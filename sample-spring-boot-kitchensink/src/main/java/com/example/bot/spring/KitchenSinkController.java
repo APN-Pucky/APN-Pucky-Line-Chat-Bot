@@ -257,11 +257,11 @@ public class KitchenSinkController {
 		 */
 	}
 
-	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },
-			{ 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 }, { 2, 161 }, { 2, 165 },
-			{ 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 }, { 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 },
+	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },{1,405},{1,406},
+			{ 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 }, { 2, 161 }, { 2, 165 }, {2,30},{2,28},{2,34},
+			{ 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 }, { 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 },{3,223},{3,224},
 			{ 3, 227 }, { 3, 220 }, { 3, 221 }, { 3, 222 }, { 3, 253 }, { 4, 287 }, { 4, 285 }, { 4, 283 }, { 4, 279 },
-			{ 4, 281 }, { 4, 280 }, { 4, 288 }, { 4, 300 },{ 4, 291 },{ 4, 298 },};
+			{ 4, 281 }, { 4, 280 }, { 4, 288 }, { 4, 300 },{ 4, 291 },{ 4, 298 },{4,608},{4,282}};
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		int pi = r.nextInt(stickerids.length);
@@ -270,7 +270,7 @@ public class KitchenSinkController {
 
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun" },
+			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun","lol","lul" },
 			{ "joke", "geek" }, { "nude", "nudes" }, { "version", "-v" }, { "help", "\\?", "-h" },
 			{ "options", "-o", "opts" }, };
 	private static String[][] help = new String[][] { { "card", "display a card" },
@@ -456,7 +456,7 @@ public class KitchenSinkController {
 			String[] lines = map.split("\n");
 			lines[0] = lines[0].replaceAll("\\*+", "");
 			for (String l : lines) {
-				if (l.contains("will start"))
+				if (l.contains("will start") || l.contains("will affect all modes"))
 					break;
 				ret += l + "\n\n";
 			}
