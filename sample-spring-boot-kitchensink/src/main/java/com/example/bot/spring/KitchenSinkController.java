@@ -489,7 +489,7 @@ public class KitchenSinkController {
         	break;
         }
         case "battlegroundeffect" : {
-        	
+        	break;
         }
         case "list": {
             if(args.length < 2)
