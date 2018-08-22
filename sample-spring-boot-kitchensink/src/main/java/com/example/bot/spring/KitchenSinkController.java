@@ -447,6 +447,17 @@ public class KitchenSinkController {
 			// TODO CHECK github bges.txt => Number yes no
 			String url = getBGEUrl(req);
 			if (url == null) {
+				String lbge = Wget.wGet("https://raw.githubusercontent.com/APN-Pucky/tyrant_optimize/merged/data/bges.txt");
+				String[] dbges = lbge.split("\n");
+				for(int i =0; i < dbges.length;i++) {
+					String b = dbges[i];
+					String[] inf = b.split(":");
+					if(inf.length>1 && StringUtil.equalsIgnoreSpecial(inf[0],req))
+					{
+						this.replyText(replyToken, b);
+						break;
+					}
+				}
 				this.replyText(replyToken, "Unknown bge: '" + req + "'");
 				break;
 			}
