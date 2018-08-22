@@ -441,6 +441,28 @@ public class KitchenSinkController {
 			break;
 		}
 		case "battlegroundeffect": {
+			if (args.length < 2) {
+				this.replyText(replyToken, "Please pass a card with: 'apn bge {bge}'");
+				break;
+			}
+			String req = ptext.split("apn battlegroundeffect ")[1];
+			//TODO CHECK github bges.txt => Number yes no
+			String url = getBGEUrl(req);
+			if(url == null)
+			{
+				this.replyText(replyToken, "Unknown bge: '" + req + "'");
+				break;
+			}
+			String map = getFirstKongPost(url);
+			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
+			String ret = "";
+			String[] lines = map.split("\n");
+			for(String l : lines) 
+			{
+				if(l.contains("will start"))break;
+				ret+=l + "\n\n";
+			}
+			this.replyText(replyToken, ret);
 			break;
 		}
 		case "list": {
@@ -968,6 +990,24 @@ public class KitchenSinkController {
 		String url = fin.substring(fin.indexOf(": ") + 1).trim();
 		return url;
 	}
+	
+	private static String getBGEUrl(String bge) {
+		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general/topics/387545-q-a-account-sharing-etiquette-faq-support-player-made-guides");
+		general = general.substring(general.indexOf("Global Battleground Effects"), general.indexOf("Restore Information"));
+		String[] lines = general.split("\n");
+		String fin = "";
+		for (String l : lines) {
+			if (StringUtil.containsIgnoreSpecial(l,bge)) {
+				fin = l;
+				break;
+			}
+		}
+		String url = fin.replaceFirst(".*(https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+).*","$1");
+		//String url = fin.substring(fin.indexOf("href=\"http://www.kongregte.com/forums/2468-general") + 6, fin.indexOf("\">"));
+		if(url.matches("https://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
+			return url;
+		return null;
+	}
 
 	private static String getRoadMapUrl() {
 		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
@@ -983,14 +1023,19 @@ public class KitchenSinkController {
 				+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">[Dev]"));
 		return url;
 	}
-
-	private static String getRoadMap(String url) {
+	
+	private static String getFirstKongPost(String url)
+	{
 		String road = Wget.wGet(url);
 
 		String map = road.substring(road.indexOf("<div class=\"raw_post\""));
 		map = map.substring(map.indexOf(">") + 1);
 		map = map.substring(0, map.indexOf("</div>"));
 		return map;
+	}
+
+	private static String getRoadMap(String url) {
+		return getFirstKongPost(url);
 	}
 
 	private static String getRoadMap() {
