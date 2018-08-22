@@ -831,7 +831,7 @@ public class KitchenSinkController {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/%40dr_f3ll"),
+							new URIAction("Visit DR_F3LL", "line://ti/p/%40dr%5Ff3ll"),
 							new MessageAction("Random", "apn random"),
 							new MessageAction("Help", "apn help")
 
