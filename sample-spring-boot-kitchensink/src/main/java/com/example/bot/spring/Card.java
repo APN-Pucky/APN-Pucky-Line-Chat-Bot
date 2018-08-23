@@ -189,7 +189,7 @@ public class Card {
                         }
                 }
 
-                public static final CardInstance NULL = new CardInstance(0, Card.NULL,null);
+                public static final CardInstance NULL = new CardInstance(0, Card.NULL,Card.NULL.getInfos()[0]);
                 private final int id;
                 private final Info info;
                 private final Card c;
@@ -213,7 +213,42 @@ public class Card {
                 public CardInstance(int id) {
                         this(id, Data.getCardByID(id));
                 }
-
+                
+                public static CardInstance get(int id)
+                {
+                	if(id==0)
+                	{
+                		return NULL;
+                	}
+                	else
+                	{
+                		return new CardInstance(id);
+                	}
+                }
+                
+                public static CardInstance get(int id,Card c)
+                {
+                	if(id==0)
+                	{
+                		return NULL;
+                	}
+                	else
+                	{
+                		return new CardInstance(id,c);
+                	}
+                }
+                
+                public static CardInstance get(int id, Card c, Info i)
+                {
+                	if(id==0)
+                	{
+                		return NULL;
+                	}
+                	else
+                	{
+                		return new CardInstance(id,c,i);
+                	}
+                }
 
 
                 public Info getInfo()

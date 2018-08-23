@@ -3,6 +3,7 @@ package com.example.bot.spring;
 import com.example.bot.spring.Card.CardType;
 import com.example.bot.spring.Card.CardCategory;
 import com.example.bot.spring.Card.CardInstance;
+import com.example.bot.spring.Card.CardInstance.Info;
 import com.example.bot.spring.Card;
 import com.example.bot.spring.Deck;
 import java.io.BufferedReader;
@@ -85,7 +86,7 @@ public static CardInstance[] getCardInstancesFromIDs(int[] ids)
 {
         CardInstance[] cis = new CardInstance[ids.length];
         if(ids.length==0) return cis;
-        cis[0] = new CardInstance(ids[0]);
+        cis[0] = getCardInstanceById(ids[0]);
         for(int i = 1; i < ids.length; i++)
         {
                 if(ids[i] == cis[i-1].getID())
@@ -94,7 +95,7 @@ public static CardInstance[] getCardInstancesFromIDs(int[] ids)
                 }
                 else
                 {
-                        cis[i] = new CardInstance(ids[i]);
+                        cis[i] = getCardInstanceById(ids[i]);
                 }
         }
         return cis;
@@ -117,6 +118,21 @@ public static String getNameAndLevelByID(int s_id)
         return c.getName() + "-" +  getCardLevel(s_id);
 }
 
+public static CardInstance getCardInstanceById(int id)
+{
+	return CardInstance.get(id);
+}
+
+public static CardInstance getCardInstanceById(int id,Card c)
+{
+	return CardInstance.get(id,c);
+}
+
+public static CardInstance getCardInstanceById(int id,Card c,Info i)
+{
+	return CardInstance.get(id,c,i);
+}
+
 public static CardInstance getCardInstanceByNameAndLevel(String name)
 {
         Pattern p = Pattern.compile("\\s*-\\d+");
@@ -133,7 +149,7 @@ public static CardInstance getCardInstanceByNameAndLevel(String name)
                         System.out.println("WTFFFFFFFFFFF!!!!!!!! --2--  " + name);
                         return null;
                 }
-                return new CardInstance(c.getIDs()[c.getIDs().length-1],c);
+                return getCardInstanceById(c.getIDs()[c.getIDs().length-1],c);
         }
         String[] split = name.split("-");
         int level =1;
@@ -146,7 +162,7 @@ public static CardInstance getCardInstanceByNameAndLevel(String name)
         }
         Card c = getCardByName(n);
         if(c == null) System.out.println("WTFFFFFFFFFFF!!!!!!!! --3--  " + name);
-        return new CardInstance(c.getIDs()[level-1],c);
+        return getCardInstanceById(c.getIDs()[level-1],c);
 }
 
 @Deprecated
@@ -492,7 +508,7 @@ public static boolean contains(int[] ids, int id)
 
 public static CardInstance[] concat(CardInstance[] a, CardInstance[] b)
 {
-        CardInstance[] ret = new CardInstance[a.length+b.length];
+        CardInstance[] ret = new  CardInstance[a.length+b.length];
         System.arraycopy(a, 0, ret, 0, a.length);
         System.arraycopy(b, 0,ret, a.length, b.length);
         return ret;
