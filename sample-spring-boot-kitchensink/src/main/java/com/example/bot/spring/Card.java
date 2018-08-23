@@ -3,7 +3,7 @@ package com.example.bot.spring;
 import java.util.ArrayList;
 
 public class Card {
-        public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {});
+        public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})});
         public final int[] ids;
         public final CardInstance.Info[] infos;
         public final int fusion_level;

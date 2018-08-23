@@ -864,7 +864,7 @@ public class KitchenSinkController {
 							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"), //TODO replace with dr_F3ll whe works
 							new MessageAction("Random", "apn random"),
 							//new MessageAction("Help", "apn help"),
-							new URIAction("Share", "line://nv/recommendOA/%40xdc0493y")
+							new URIAction("Share", "line://nv/recommendOA/@xdc0493y")
 
 					));
 			TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
