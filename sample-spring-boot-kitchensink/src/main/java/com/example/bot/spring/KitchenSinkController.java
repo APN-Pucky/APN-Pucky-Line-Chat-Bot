@@ -841,6 +841,13 @@ public class KitchenSinkController {
 			break;
 		}
 		case "insult": {
+			if (!(args.length < 2)) {
+				String insult = getInsult();
+				String name = content.getText().substring(10);
+				String msg = insult.replace("You are", name + " is");
+				this.replyText(replyToken, msg);
+				break;
+			}
 			insult(replyToken);
 			break;
 		}
@@ -864,7 +871,7 @@ public class KitchenSinkController {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/%40cGOI7BBPeE"), //TODO replace with dr_F3ll whe works
+							new URIAction("Visit DR_F3LL", "line://ti/p/cGOI7BBPeE"), //TODO replace with dr_F3ll whe works
 							new MessageAction("Random", "apn random"),
 							//new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/@xdc0493y")
@@ -961,13 +968,18 @@ public class KitchenSinkController {
 	private void fail(String replyToken) {
 		gif(replyToken, "fail");
 	}
-
-	private void insult(String replyToken) {
+	
+	private static String getInsult() {
 		String msg = Wget.sendGet("https://insult.mattbas.org/api/insult");
 		// System.out.println(msg);
 		msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
+		return msg;
+	}
+
+	private void insult(String replyToken) {
+		
 		// System.out.println(msg);
-		this.replyText(replyToken, msg);
+		this.replyText(replyToken, getInsult());
 	}
 
 	private void mama(String replyToken) {
