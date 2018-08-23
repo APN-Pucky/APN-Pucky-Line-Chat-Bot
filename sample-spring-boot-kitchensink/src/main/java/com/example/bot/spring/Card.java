@@ -3,12 +3,14 @@ package com.example.bot.spring;
 import java.util.ArrayList;
 
 public class Card {
-        public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})});
+        public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})},"",0);
         public final int[] ids;
         public final CardInstance.Info[] infos;
         public final int fusion_level;
         public final String name;
         public final int rarity;
+        public final String picture;
+        public final int asset_bundle;
         public final int[] materials;
         public final int faction;
         public final CardType type;
@@ -17,7 +19,7 @@ public class Card {
         public final int set;
         // further stats; skilz...
 
-        public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort, int set,int f, CardInstance.Info[] infos) {
+        public Card(int[] ids, String name, int rarity, int lvl, int[] mats, int fort, int set,int f, CardInstance.Info[] infos,String pic, int bundle) {
                 this.ids = ids;
                 this.name = name;
                 this.rarity = rarity;
@@ -29,6 +31,8 @@ public class Card {
                 this.category = CardCategory.getByID(ids[0], fort, set);
                 this.infos = infos;
                 this.faction = f;
+                this.picture = pic;
+                this.asset_bundle = bundle;
         }
 
         public int[] getMaterials() {

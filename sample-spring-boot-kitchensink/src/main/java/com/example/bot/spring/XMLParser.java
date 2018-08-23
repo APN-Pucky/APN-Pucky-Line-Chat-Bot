@@ -96,8 +96,8 @@ public class XMLParser {
 		System.out.println("Loading Cards");
 		int max_id = 0;
 		Card[] distinct_cards = new Card[card_count];
-		int id, rarity, fusion_level, fort_type, set;
-		String name;
+		int id, rarity, fusion_level, fort_type, set,bundle;
+		String name,picture;
 		int f;
 
 		int attack, health, cost, level;
@@ -115,6 +115,7 @@ public class XMLParser {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
 						name = eElement.getElementsByTagName("name").item(0).getTextContent();
+	        			picture = eElement.getElementsByTagName("picture").item(0).getTextContent();
 						f = Integer.parseInt(eElement.getElementsByTagName("type").item(0).getTextContent());
 						id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent());
 						rarity = Integer.parseInt(eElement.getElementsByTagName("rarity").item(0).getTextContent());
@@ -122,6 +123,9 @@ public class XMLParser {
 							set = Integer.parseInt(eElement.getElementsByTagName("set").item(0).getTextContent());
 						else
 							set = 0;
+	        			if(eElement.getElementsByTagName("asset_bundle").getLength() > 0 && !eElement.getElementsByTagName("asset_bundle").item(0).getTextContent().equals(""))bundle = Integer.parseInt(eElement.getElementsByTagName("asset_bundle").item(0).getTextContent())-100;
+	        			else
+	        				bundle = 0;
 						if (eElement.getElementsByTagName("fortress_type").getLength() > 0)
 							fort_type = Integer
 									.parseInt(eElement.getElementsByTagName("fortress_type").item(0).getTextContent());
@@ -164,7 +168,7 @@ public class XMLParser {
 						// System.out.println(ids[0] + " " + attack + " " + health + " " + cost + " " +
 						// level);
 						NodeList skillList = eElement.getElementsByTagName("skill");
-						for (int j = 0; j < skillList.getLength(); j++) {
+						for (int j = 0; j < (upList.getLength()==0?skillList.getLength():skillList.getLength()/upList.getLength()); j++) {
 							String skill_id = fixSkillName(((Element) skillList.item(j)).hasAttribute("id")
 									? ((Element) skillList.item(j)).getAttribute("id")
 									: "no_skill");
@@ -283,7 +287,7 @@ public class XMLParser {
 						}
 
 						distinct_cards[cur] = new Card(ids, name, rarity, fusion_level,
-								Data.getFusionByID(ids[0]).getMaterials(), fort_type, set, f, info);
+								Data.getFusionByID(ids[0]).getMaterials(), fort_type, set, f, info,picture,bundle);
 						cur++;
 					}
 				}

@@ -680,7 +680,10 @@ public class KitchenSinkController {
 					// + date + "\n\n" + content);
 				}
 			}
-			this.replyText(replyToken, rep);
+			if(rep.equals(""))
+				this.replyText(replyToken, "No next event. Check 'apn today'.");
+			else
+				this.replyText(replyToken, rep);
 			break;
 		}
 		case "today": {
