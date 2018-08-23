@@ -284,14 +284,14 @@ public class KitchenSinkController {
 			{ 4, 288 }, { 4, 300 }, { 4, 291 }, { 4, 298 }, { 4, 608 }, { 4, 282 } };
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
-		int pi = r.nextInt(stickerids.length);
-		if (Math.random() > 0.9)
-			reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
+		if(Math.random() > 0.9)sticker(replyToken);
 	}
+	
+	
 
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun", "lol"},
+			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" },{"coins","amazon","buy"}, { "random", "fun", "lol"},
 			{ "joke", "geek" }, { "nude", "nudes" },{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 			{ "options", "-o", "opts" }, };
 	private static String[][] help = new String[][] { { "card", "display a card" }, { "icard", "display a card with image" },
@@ -782,13 +782,16 @@ public class KitchenSinkController {
 		}
 		case "random": {
 			Random r = new Random();
-			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama" };
+			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama", "sticker" };
 			switch (opt[r.nextInt(opt.length)]) {
 			case "art":
 				art(replyToken);
 				break;
 			case "pic":
 				pic(replyToken);
+				break;
+			case "sticker":
+				sticker(replyToken);
 				break;
 			case "insult":
 				insult(replyToken);
@@ -860,7 +863,7 @@ public class KitchenSinkController {
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
 							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"), //TODO replace with dr_F3ll whe works
 							new MessageAction("Random", "apn random"),
-							new MessageAction("Help", "apn help"),
+							//new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/%40xdc0493y")
 
 					));
@@ -925,6 +928,12 @@ public class KitchenSinkController {
 
 	private void pic(String replyToken) {
 		reddit(replyToken, "pic");
+	}
+	
+	private void sticker(String replyToken) {
+		int pi = r.nextInt(stickerids.length);
+		if (Math.random() > 0.9)
+			reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
 	}
 
 	private void gif(String replyToken, String tag) {
