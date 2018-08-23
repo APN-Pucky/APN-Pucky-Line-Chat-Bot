@@ -216,18 +216,29 @@ public class KitchenSinkController {
 	}
 
 	private void pushLongText(@NonNull String id, @NonNull String message) {
-
+		String[] lines = message.split("\n");
+		String cur = "";
+		for(String l : lines)
+		{
+			if(cur.length()+l.length()<1500) {
+				cur+=l + "\n";
+			}else{
+				pushText(id,cur); //TODO check for order issues
+				cur = l + "\n"; //one long line here, but broken, maybe TODO split new line @ spaces
+			}	
+		}
+		pushText(id,cur);
 	}
 
 	private void pushText(@NonNull String id, @NonNull String message) {
+		if (message.equals(""))return;
 		log.info("Pushing to '" + id + "'");
 		if (id.isEmpty()) {
 			throw new IllegalArgumentException("id must not be empty");
 		}
-		/*
-		 * if (message.length() > 1000) { message = message.substring(0, 1000 - 2) +
-		 * "……"; }
-		 */
+			
+
+		if (message.length() > 2000) { message = message.substring(0, 2000 - 2) + "……"; }
 		this.push(id, new TextMessage(message.trim()));
 	}
 
@@ -245,13 +256,12 @@ public class KitchenSinkController {
 	}
 
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
+		if (message.equals(""))return;
 		if (replyToken.isEmpty()) {
 			throw new IllegalArgumentException("replyToken must not be empty");
 		}
-		/*
-		 * if (message.length() > 1000) { message = message.substring(0, 1000 - 2) +
-		 * "……"; }
-		 */
+		if (message.length() > 2000) { message = message.substring(0, 2000 - 2) + "……"; }
+		 
 		this.reply(replyToken, new TextMessage(message.trim()));
 	}
 
@@ -281,7 +291,7 @@ public class KitchenSinkController {
 
 	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun", "lol", "lul" },
+			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" }, { "random", "fun", "lol"},
 			{ "joke", "geek" }, { "nude", "nudes" },{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 			{ "options", "-o", "opts" }, };
 	private static String[][] help = new String[][] { { "card", "display a card" }, { "icard", "display a card with image" },
@@ -293,6 +303,10 @@ public class KitchenSinkController {
 			{ "fail", "fail gif" }, { "art", "art image" }, { "pic", "some image" }, { "xkcd", "xkcd image" },
 			{ "meme", "meme image" }, { "version", "version of this bot" }, };
 
+	private static String[][] amazon_coin_urls = new String[][] {{"USA","https://www.amazon.com/Amazon-50-000-Coins/dp/B018HB6E80"},
+		{"DE","https://www.amazon.de/dp/B018GWRCV8"}, {"UK","https://www.amazon.co.uk/dp/B018GRDG5O"}, {"FR","https://www.amazon.fr/dp/B018EZT2YM"}
+	};
+	
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
 		final String ftext = content.getText().toLowerCase();
 		if (!ftext.startsWith("apn ")) {
@@ -441,7 +455,11 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");
 				break;
 			}
-			String req = ptext.split("apn skill ")[1].toLowerCase();
+			if(args[1].equals("full"))
+			{
+				
+			}
+			String req = ptext.split("apn skill ")[1].toLowerCase().trim();;
 			if (Data.skill_desc.containsKey(req)) {
 				this.replyText(replyToken, "'" + req + "': " + Data.skill_desc.get(req));
 			} else {
@@ -454,8 +472,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a card with: 'apn bge {bge}'");
 				break;
 			}
-			String req = ptext.split("apn battlegroundeffect ")[1];
-			// TODO CHECK github bges.txt => Number yes no
+			String req = ptext.split("apn battlegroundeffect ")[1].toLowerCase().trim();
 			String url = getBGEUrl(req);
 			if (url == null) {
 				String lbge = Wget
@@ -490,7 +507,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a name with: 'apn list {name}'");
 				break;
 			}
-			String req = ptext.split("apn list ")[1];
+			String req = ptext.split("apn list ")[1].trim();
 			String rep = "card search: '" + req + "'\n\n";
 			for (Card c : Data.distinct_cards) {
 				if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
@@ -531,7 +548,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a card with: 'apn icard {card}'");
 				break;
 			}
-			String req = ptext.split("apn icard ")[1];
+			String req = ptext.split("apn icard ")[1].trim();
 			CardInstance ci = getCardInstance(req);
 
 			if (ci == null || ci == CardInstance.NULL) {
@@ -558,7 +575,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please pass a card with: 'apn card {card}'");
 				break;
 			}
-			String req = ptext.split("apn card ")[1];
+			String req = ptext.split("apn card ")[1].trim();
 			CardInstance ci = getCardInstance(req);
 
 			if (ci == null || ci == CardInstance.NULL) {
@@ -729,6 +746,16 @@ public class KitchenSinkController {
 			// this.pushText(event.getSource().getSenderId(), map);
 			break;
 		}
+		case "coins" : {
+			String msg = "";
+			for(String[] a : amazon_coin_urls)
+			{
+				int price = getAmazonCoinPrice(a[1]);
+				msg += a[0] + ":\t " + price + "(" + (100-((double)price)/5) + "%)\n"; 
+			}
+			this.replyText(replyToken, msg);
+			break;
+		}
 		case "tuo": {
 			String json = Wget.wGet("https://api.github.com/repos/APN-Pucky/tyrant_optimize/releases/latest");
 			String tuojson = json.replaceAll("\n", "");
@@ -831,7 +858,7 @@ public class KitchenSinkController {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"),
+							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"), //TODO replace with dr_F3ll whe works
 							new MessageAction("Random", "apn random"),
 							new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/%40xdc0493y")
@@ -861,6 +888,20 @@ public class KitchenSinkController {
 			break;
 		}
 		System.gc();
+	}
+	
+	private static int getAmazonCoinPrice(String url) {
+		String web = Wget.wGet(url);
+    	String[] lines = web.split("\n");
+    	String cur = "";
+    	for(String l : lines)
+    	{
+    		cur = l;
+    		if(cur.matches(".*id=\"priceblock_ourprice\".*"))break;
+    	}
+    	String m = cur.substring(cur.indexOf("\">"), cur.indexOf("</span>"));
+    	String value = m.replaceAll(".*(\\d\\d\\d).*", "$1");
+    	return Integer.parseInt(value);
 	}
 
 	private void reddit(String replyToken, String tag) {
