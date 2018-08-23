@@ -379,6 +379,9 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
 			break;
 		}
+		case "inew" : {
+			break;
+		}
 		case "new": {
 			int skip = 0;
 			int number = 5;
@@ -861,7 +864,7 @@ public class KitchenSinkController {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/%40archi_85"), //TODO replace with dr_F3ll whe works
+							new URIAction("Visit DR_F3LL", "line://ti/p/%40cGOI7BBPeE"), //TODO replace with dr_F3ll whe works
 							new MessageAction("Random", "apn random"),
 							//new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/@xdc0493y")
