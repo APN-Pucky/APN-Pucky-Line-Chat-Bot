@@ -109,6 +109,7 @@ public class KitchenSinkController {
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if(System.getenv("HEROKU_RELEASE_VERSION")==null)
 		{//local tests
+			/*pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Test Card: ");
 			BufferedImage bi = KitchenSinkApplication.render.render(Data.getCardInstanceByNameAndLevel("Miasma Master"));
 			DownloadedContent d = createTempFile("png");
 			try {
@@ -121,7 +122,7 @@ public class KitchenSinkController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri, d.uri));
+			this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri, d.uri));*/
 		}
 	}
 
@@ -1202,7 +1203,7 @@ public class KitchenSinkController {
 		}
 	}
 
-	private static DownloadedContent createTempFile(String ext) {
+	public static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
 		tempFile.toFile().deleteOnExit();

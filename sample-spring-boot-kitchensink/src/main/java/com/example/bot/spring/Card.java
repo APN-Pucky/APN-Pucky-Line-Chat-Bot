@@ -47,6 +47,16 @@ public class Card {
                 return name;
         }
 
+    	public String getPicture()
+    	{
+    		return picture;
+    	}
+    	
+    	public int getAssetBundle()
+    	{
+    		return asset_bundle;
+    	}
+
         public int getFusionLevel() {
                 return fusion_level;
         }
