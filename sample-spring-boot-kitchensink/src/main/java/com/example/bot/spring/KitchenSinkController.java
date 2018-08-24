@@ -925,6 +925,7 @@ public class KitchenSinkController {
 	
 	private static int getAmazonCoinPrice(String url) {
 		String web = Wget.wGet(url);
+		if(web==null)return -1;
     	String[] lines = web.split("\n");
     	String cur = "";
     	for(String l : lines)
