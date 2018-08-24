@@ -228,7 +228,7 @@ public class Render {
 		p.waitFor();
 		// System.out.println(byaml.toString());
 		String yaml = byaml.toString();
-		System.out.println(yaml);
+		//System.out.println(yaml);
 		//yaml = yaml.replace("!PPtr", "m_ptr:");
 		//yaml = yaml.replace("!!python/tuple", "m_tuple:");
 		//yaml = yaml.toString().replaceAll("!unitypack:(.+?)(\\s)", "$1:$2");
@@ -306,7 +306,7 @@ public class Render {
 		//int atlas = toAtlasID(ids, s_id);
 		System.out.println("s_id: " + s_id);
 		System.out.println("Image: " + "atlas0" + atlas + ".png" );
-		Image all = ImageIO.read(new File(pic.getPath().toString() + "/atlas0" + atlas + ".png"));
+		Image all = ImageIO.read(pic.getPath().toFile());
 		img = new BufferedImage(160, 220, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = img.createGraphics();
 		double[] bord = getBorderScale(all, s_d);
