@@ -788,11 +788,11 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		case "dark": {
+		/*case "dark": {
 			String url = getRedditTagUrl("OffensiveMemes");
 			this.reply(replyToken, new ImageMessage(url, url));
 			break;
-		}
+		}*/
 		case "nude": {
 			String url = getRedditTagUrl("hardwareporn");
 			this.reply(replyToken, new ImageMessage(url, url));
