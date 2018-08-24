@@ -350,7 +350,11 @@ public class Render {
 	}
 
 	private static void getUnityCardPack(int num, DownloadedContent unity3d) {
-		String name = "cardpack" + num + "_Unity5_4_2_WebGL.unity3d";
+		String name = "";
+		if(num<900)
+			name = "cardpack" + num + "_Unity5_4_2_WebGL.unity3d";
+		else
+			name = "oldcards" + (num-900) + "_Unity5_4_2_WebGL.unity3d";
 		Wget.wGet(unity3d.getPath().toString(), "http://cdn.synapse-games.com/unleashed/asset_bundles/5_4_2/" + name);
 		//return "cardpack" + num + "-" + unity3d+"/" + name;
 	}
