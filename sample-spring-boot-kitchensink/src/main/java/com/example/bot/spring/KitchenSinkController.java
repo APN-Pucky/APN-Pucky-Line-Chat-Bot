@@ -107,6 +107,22 @@ public class KitchenSinkController {
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
+		if(System.getenv("HEROKU_RELEASE_VERSION")==null)
+		{//local tests
+			BufferedImage bi = KitchenSinkApplication.render.render(Data.getCardInstanceByNameAndLevel("Miasma Master"));
+			DownloadedContent d = createTempFile("png");
+			try {
+				ImageIO.write(bi, "png", d.path.toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.path);
+				String perm_uri = (String) uploadResult.get("secure_url");
+				this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(perm_uri, perm_uri));
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri, d.uri));
+		}
 	}
 
 	@EventMapping
