@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -107,22 +108,20 @@ public class KitchenSinkController {
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
-		if(System.getenv("HEROKU_RELEASE_VERSION")==null)
-		{//local tests
-			/*pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Test Card: ");
-			BufferedImage bi = KitchenSinkApplication.render.render(Data.getCardInstanceByNameAndLevel("Miasma Master"));
-			DownloadedContent d = createTempFile("png");
-			try {
-				ImageIO.write(bi, "png", d.path.toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.path);
-				String perm_uri = (String) uploadResult.get("secure_url");
-				this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(perm_uri, perm_uri));
-				return;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri, d.uri));*/
+		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
+			/*
+			 * pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Test Card: "); BufferedImage
+			 * bi = KitchenSinkApplication.render.render(Data.
+			 * getCardInstanceByNameAndLevel("Miasma Master")); DownloadedContent d =
+			 * createTempFile("png"); try { ImageIO.write(bi, "png", d.path.toFile()); Map
+			 * uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri,
+			 * ObjectUtils.emptyMap()); Files.deleteIfExists(d.path); String perm_uri =
+			 * (String) uploadResult.get("secure_url");
+			 * this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(perm_uri,
+			 * perm_uri)); return; } catch (Exception e) { e.printStackTrace(); }
+			 * this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri,
+			 * d.uri));
+			 */
 		}
 	}
 
@@ -235,27 +234,28 @@ public class KitchenSinkController {
 	private void pushLongText(@NonNull String id, @NonNull String message) {
 		String[] lines = message.split("\n");
 		String cur = "";
-		for(String l : lines)
-		{
-			if(cur.length()+l.length()<1500) {
-				cur+=l + "\n";
-			}else{
-				pushText(id,cur); //TODO check for order issues
-				cur = l + "\n"; //one long line here, but broken, maybe TODO split new line @ spaces
-			}	
+		for (String l : lines) {
+			if (cur.length() + l.length() < 1500) {
+				cur += l + "\n";
+			} else {
+				pushText(id, cur); // TODO check for order issues
+				cur = l + "\n"; // one long line here, but broken, maybe TODO split new line @ spaces
+			}
 		}
-		pushText(id,cur);
+		pushText(id, cur);
 	}
 
 	private void pushText(@NonNull String id, @NonNull String message) {
-		if (message.equals(""))return;
+		if (message.equals(""))
+			return;
 		log.info("Pushing to '" + id + "'");
 		if (id.isEmpty()) {
 			throw new IllegalArgumentException("id must not be empty");
 		}
-			
 
-		if (message.length() > 2000) { message = message.substring(0, 2000 - 2) + "……"; }
+		if (message.length() > 2000) {
+			message = message.substring(0, 2000 - 2) + "……";
+		}
 		this.push(id, new TextMessage(message.trim()));
 	}
 
@@ -273,12 +273,15 @@ public class KitchenSinkController {
 	}
 
 	private void replyText(@NonNull String replyToken, @NonNull String message) {
-		if (message.equals(""))return;
+		if (message.equals(""))
+			return;
 		if (replyToken.isEmpty()) {
 			throw new IllegalArgumentException("replyToken must not be empty");
 		}
-		if (message.length() > 2000) { message = message.substring(0, 2000 - 2) + "……"; }
-		 
+		if (message.length() > 2000) {
+			message = message.substring(0, 2000 - 2) + "……";
+		}
+
 		this.reply(replyToken, new TextMessage(message.trim()));
 	}
 
@@ -293,7 +296,7 @@ public class KitchenSinkController {
 		 */
 	}
 
-	private static int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },
+	private static final int[][] stickerids = new int[][] { { 1, 103 }, { 1, 102 }, { 1, 101 }, { 1, 100 }, { 1, 109 },
 			{ 1, 405 }, { 1, 406 }, { 1, 402 }, { 1, 116 }, { 1, 404 }, { 1, 411 }, { 1, 420 }, { 2, 47 }, { 2, 39 },
 			{ 2, 161 }, { 2, 165 }, { 2, 30 }, { 2, 28 }, { 2, 34 }, { 2, 526 }, { 2, 502 }, { 2, 520 }, { 2, 521 },
 			{ 2, 512 }, { 2, 178 }, { 2, 179 }, { 3, 225 }, { 3, 226 }, { 3, 223 }, { 3, 224 }, { 3, 227 }, { 3, 220 },
@@ -301,60 +304,44 @@ public class KitchenSinkController {
 			{ 4, 288 }, { 4, 300 }, { 4, 291 }, { 4, 298 }, { 4, 608 }, { 4, 282 } };
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
-		if(Math.random() > 0.9)sticker(replyToken);
+		if (Math.random() > 0.9)
+			sticker(replyToken);
 	}
-	
-	
 
-	private static String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
-			{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-			{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" },{"coins","amazon","buy"}, { "random", "fun", "lol"},
-			{ "joke", "geek" }, { "nude", "nudes" },{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
-			{ "options", "-o", "opts" }, };
-	private static String[][] help = new String[][] { { "card", "display a card" }, { "icard", "display a card with image" },
-			{ "materials", "displays materials for card" }, { "new", "displays latest quads" }, {"bge", "display a bge"}, {"skill", "display a skill"},
+	private static final String[][] help = new String[][] { { "card", "display a card" },
+			{ "icard", "display a card with image" }, { "materials", "displays materials for card" },
+			{ "new", "displays latest quads" }, { "bge", "display a bge" }, { "skill", "display a skill" },
 			{ "roadmap", "tu roadmap + link" }, { "current", "current tu event" }, { "next", "next tu event" },
 			{ "release", "next tu release" }, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
-	private static String[][] large_help = new String[][] { { "xml", "show the date of xmls" },
+	private static final String[][] large_help = new String[][] { { "xml", "show the date of xmls" },
 			{ "update", "reload xmls" }, { "alias", "enlist alias" }, { "random", "random" }, { "joke", "geeky joke" },
 			{ "fail", "fail gif" }, { "art", "art image" }, { "pic", "some image" }, { "xkcd", "xkcd image" },
 			{ "meme", "meme image" }, { "version", "version of this bot" }, };
 
-	private static String[][] amazon_coin_urls = new String[][] {{"USA","https://www.amazon.com/Amazon-50-000-Coins/dp/B018HB6E80"},
-		{"DE","https://www.amazon.de/dp/B018GWRCV8"}, {"UK","https://www.amazon.co.uk/dp/B018GRDG5O"}, {"FR","https://www.amazon.fr/dp/B018EZT2YM"}
-	};
-	
+	private static final String[][] amazon_coin_urls = new String[][] {
+			{ "USA", "https://www.amazon.com/Amazon-50-000-Coins/dp/B018HB6E80" },
+			{ "DE", "https://www.amazon.de/dp/B018GWRCV8" }, { "UK", "https://www.amazon.co.uk/dp/B018GRDG5O" },
+			{ "FR", "https://www.amazon.fr/dp/B018EZT2YM" } };
+
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		final String ftext = content.getText().toLowerCase();
-		if (!ftext.startsWith("apn ")) {
+		final APNMessageHandler apn = new APNMessageHandler(replyToken, event, content);
+		// final String ftext = content.getText().toLowerCase();
+		if (!apn.getArg(0).equals("apn")) {
 			return;
 		}
-		String userId = event.getSource().getUserId();
-		if (userId != null)
-			lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
+		// String userId = event.getSource().getUserId();
+		if (apn.getUserID() != null)
+			lineMessagingClient.getProfile(apn.getUserID()).whenComplete((profile, throwable) -> {
 				if (throwable != null) {
 					log.info("Got text error:{}", throwable.getMessage());
 					return;
 				}
-				log.info("Got text message from {}: {}", profile.getDisplayName(), ftext);
+				log.info("Got text message from {}: {}", profile.getDisplayName(), apn.getMessage());
 			});
 		else
-			log.info("Got text message from {}: {}", "Unknown", ftext);
-		String ptext = ftext;
-		// alias
-		for (String[] sa : alias) {
-			for (String s : sa) {
-				ptext = ptext.replaceAll("apn " + s, "apn " + sa[0]);
-			}
-		}
+			log.info("Got text message from {}: {}", "Unknown", apn.getMessage());
 
-		String[] arr = ptext.split("apn ");
-		if (arr.length < 2) {
-			return;
-		}
-		String[] args = arr[1].split(" ");
-		String text = args[0];
-		switch (text) {
+		switch (apn.getArg(1)) {
 		case "help": {
 			String rep = "TU line chat bot apn:\n" + "Usage: 'apn {option}'\n" + "\nOptions:\n";
 			for (String[] sa : help)
@@ -378,7 +365,7 @@ public class KitchenSinkController {
 		}
 		case "alias": {
 			String msg = "Alias list:\n\n";
-			for (String[] sa : alias) {
+			for (String[] sa : APNMessageHandler.alias) {
 				msg += "\t - " + sa[0] + ": \n\t\t\t\t\t\t ";
 				for (int i = 1; i < sa.length; i++)
 					msg += "'" + sa[i] + "', ";
@@ -396,90 +383,23 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
 			break;
 		}
-		case "inew" : {
+		case "inew": {
+			case_new(apn, true);
 			break;
 		}
 		case "new": {
-			int skip = 0;
-			int number = 5;
-			int offset = Data.all_cards.length;
-			if (!(args.length < 2)) {
-				if (!args[1].matches("\\d+")) {
-					switch (args[1]) {
-					case "help": {
-						this.replyText(replyToken,
-								"Usage: 'apn new {dom(inion)/struct(ure)/commander/cmd/assault} {number} {skip}'");
-						return;
-					}
-					case "dom":
-					case "dominion": {
-						offset = 55001;
-						break;
-					}
-					case "struct":
-					case "structure": {
-						offset = 25000;
-						break;
-					}
-					case "cmd":
-					case "commander": {
-						offset = 30000;
-						break;
-					}
-					default: {
-						offset = Data.all_cards.length;
-						break;
-					}
-					}
-					if (!(args.length < 3) && args[2].matches("\\d+")) {
-						number = Integer.parseInt(args[2]);
-						if (!(args.length < 4) && args[3].matches("\\d+")) {
-							skip = Integer.parseInt(args[3]);
-						}
-					}
-				} else {
-					number = Integer.parseInt(args[1]);
-					if (!(args.length < 3) && args[2].matches("\\d+")) {
-						skip = Integer.parseInt(args[2]);
-					}
-				}
-
-			}
-			if (number > 10)
-				number = 10;
-			String msg = "";
-			ArrayList<Card> printed = new ArrayList<Card>();
-			for (int i = 1; i < Data.all_cards.length && number > 0; i++) {
-				Card c = Data.all_cards[offset - i];
-				if (c != null && c.fusion_level == 2 && !printed.contains(c)
-						&& !c.getName().toLowerCase().startsWith("test")
-						&& !c.getName().toLowerCase().startsWith("revolt ranger")
-						&& !c.getName().toLowerCase().startsWith("cephalodjinn")) {
-					printed.add(c);
-					if (skip > 0) {
-						skip--;
-					} else {
-
-						this.pushText(event.getSource().getSenderId(), c.description());
-						// msg += + "\n---------------------------------------"+"\n";
-						number--;
-					}
-				}
-			}
-			// msg = StringUtil.removeLastCharacter(msg,42);
-			// this.replyText(replyToken,msg);
+			case_new(apn, false);
 			break;
 		}
 		case "skill": {
-			if (args.length < 2) {
+			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");
 				break;
 			}
-			if(args[1].equals("full"))
-			{
-				
+			if (apn.equals(2, "full")) {
+				// TODO
 			}
-			String req = ptext.split("apn skill ")[1].toLowerCase().trim();;
+			String req = apn.getFrom(2);// ptext.split("apn skill ")[1].toLowerCase().trim();
 			if (Data.skill_desc.containsKey(req)) {
 				this.replyText(replyToken, "'" + req + "': " + Data.skill_desc.get(req));
 			} else {
@@ -488,46 +408,15 @@ public class KitchenSinkController {
 			break;
 		}
 		case "battlegroundeffect": {
-			if (args.length < 2) {
-				this.replyText(replyToken, "Please pass a card with: 'apn bge {bge}'");
-				break;
-			}
-			String req = ptext.split("apn battlegroundeffect ")[1].toLowerCase().trim();
-			String url = getBGEUrl(req);
-			if (url == null) {
-				String lbge = Wget
-						.wGet("https://raw.githubusercontent.com/APN-Pucky/tyrant_optimize/merged/data/bges.txt");
-				String[] dbges = lbge.split("\n");
-				for (int i = 0; i < dbges.length; i++) {
-					String b = dbges[i];
-					String[] inf = b.split(":");
-					if (inf.length > 1 && StringUtil.containsIgnoreSpecial(inf[0], req)) {
-						this.replyText(replyToken, b);
-						break;
-					}
-				}
-				this.replyText(replyToken, "Unknown bge: '" + req + "'");
-				break;
-			}
-			String map = getFirstKongPost(url);
-			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
-			String ret = "";
-			String[] lines = map.split("\n");
-			lines[0] = lines[0].replaceAll("\\*+", "");
-			for (String l : lines) {
-				if (l.contains("will start") || l.contains("will affect all modes"))
-					break;
-				ret += l + "\n\n";
-			}
-			this.replyText(replyToken, ret);
+			case_bge(apn);
 			break;
 		}
 		case "list": {
-			if (args.length < 2) {
+			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a name with: 'apn list {name}'");
 				break;
 			}
-			String req = ptext.split("apn list ")[1].trim();
+			String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
 			String rep = "card search: '" + req + "'\n\n";
 			for (Card c : Data.distinct_cards) {
 				if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
@@ -542,11 +431,11 @@ public class KitchenSinkController {
 			break;
 		}
 		case "materials": {
-			if (args.length < 2) {
+			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a card with: 'apn materials {card}'");
 				break;
 			}
-			String card_name = ptext.split("apn materials ")[1];
+			String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 			CardInstance ci = getCardInstance(card_name);
 			if (ci == null || ci == CardInstance.NULL) {
 				this.replyText(replyToken, "Unknown card: '" + card_name + "'");
@@ -564,192 +453,31 @@ public class KitchenSinkController {
 			break;
 		}
 		case "icard": {
-			if (args.length < 2) {
-				this.replyText(replyToken, "Please pass a card with: 'apn icard {card}'");
-				break;
-			}
-			String req = ptext.split("apn icard ")[1].trim();
-			CardInstance ci = getCardInstance(req);
-
-			if (ci == null || ci == CardInstance.NULL) {
-				this.replyText(replyToken, "Unknown card: '" + req + "'");
-				break;
-			}
-			BufferedImage bi = KitchenSinkApplication.render.render(ci);
-			DownloadedContent d = createTempFile("png");
-			ImageIO.write(bi, "png", d.path.toFile());
-			try {
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.path);
-				String perm_uri = (String) uploadResult.get("secure_url");
-				this.reply(replyToken, new ImageMessage(perm_uri, perm_uri));
-				break;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			this.reply(replyToken, new ImageMessage(d.uri, d.uri));
+			case_card(apn, true);
 			break;
 		}
 		case "card": {
-			if (args.length < 2) {
-				this.replyText(replyToken, "Please pass a card with: 'apn card {card}'");
-				break;
-			}
-			String req = ptext.split("apn card ")[1].trim();
-			CardInstance ci = getCardInstance(req);
-
-			if (ci == null || ci == CardInstance.NULL) {
-				this.replyText(replyToken, "Unknown card: '" + req + "'");
-				break;
-			}
-			this.replyText(replyToken, ci.description());
+			case_card(apn, false);
 			break;
 		}
 		case "change": {
-			String map = getRoadMap();
-			String rep = "";
-			String[] sections = map.split("\\*\\*");
-			Date min = null;
-			for (int i = 3; i < sections.length; i += 2) {
-				String title = sections[i];
-				String msg = sections[i + 1];
-				String[] split = msg.split("\\*");
-				String date = split[1];
-				String conten = split[2];
-				for (int j = 3; j < split.length; j++)
-					conten += "*" + split[j];
-				conten = conten.trim();
-				// rep += title + "\n";
-				// rep += date + "\n\n";
-
-				SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-				String[] dates = date.split("-");
-				String d1 = dates[0];
-				d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-
-				Date dd1 = parser.parse(d1);
-				if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
-					min = dd1;
-					rep = title + "\n" + date + "\n\n" + conten;
-				}
-				// System.out.println(dd1);
-				if (dates.length > 1) {
-					String d2 = dates[1];
-					d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(),
-							"(\\d)(st|nd|rd|th)", "$1");
-					Date dd2 = parser.parse(d2);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(dd2);
-					cal.add(Calendar.DATE, 1);
-					dd2 = cal.getTime();
-					// System.out.println(dd2);
-					// if(Calendar.getInstance().getTime().before(dd2) &&
-					// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
-					// + date + "\n\n" + content);
-				}
-			}
-			this.replyText(replyToken, rep);
+			case_change(apn);
 			break;
 		}
 
 		case "next": {
-			String map = getRoadMap();
-			String rep = "";
-			String[] sections = map.split("\\*\\*");
-			Date min = null;
-			for (int i = 3; i < sections.length; i += 2) {
-				String title = sections[i];
-				String msg = sections[i + 1];
-				String[] split = msg.split("\\*");
-				String date = split[1];
-				String conten = split[2];
-				for (int j = 3; j < split.length; j++)
-					conten += "*" + split[j];
-				conten = conten.trim();
-				// rep += title + "\n";
-				// rep += date + "\n\n";
-
-				SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-				String[] dates = date.split("-");
-				String d1 = dates[0];
-				d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-
-				Date dd1 = parser.parse(d1);
-				// System.out.println(dd1);
-				if (dates.length > 1) {
-					String d2 = dates[1];
-					d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(),
-							"(\\d)(st|nd|rd|th)", "$1");
-					Date dd2 = parser.parse(d2);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(dd2);
-					cal.add(Calendar.DATE, 1);
-					dd2 = cal.getTime();
-					if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
-						min = dd1;
-						rep = title + "\n" + date + "\n\n" + conten;
-					}
-					// System.out.println(dd2);
-					// if(Calendar.getInstance().getTime().before(dd2) &&
-					// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
-					// + date + "\n\n" + content);
-				}
-			}
-			if(rep.equals(""))
-				this.replyText(replyToken, "No next event. Check 'apn today'.");
-			else
-				this.replyText(replyToken, rep);
+			case_next(apn);
 			break;
 		}
 		case "today": {
-			String map = getRoadMap();
-			String rep = "";
-			String[] sections = map.split("\\*\\*");
-			for (int i = 3; i < sections.length; i += 2) {
-				String title = sections[i];
-				String msg = sections[i + 1];
-				String[] split = msg.split("\\*");
-				String date = split[1];
-				String conten = split[2];
-				for (int j = 3; j < split.length; j++)
-					conten += "*" + split[j];
-				conten = conten.trim();
-				// rep += title + "\n";
-				// rep += date + "\n\n";
-
-				SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-				String[] dates = date.split("-");
-				String d1 = dates[0];
-				d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-
-				Date dd1 = parser.parse(d1);
-				if (dates.length > 1) {
-					String d2 = dates[1];
-					d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(),
-							"(\\d)(st|nd|rd|th)", "$1");
-					Date dd2 = parser.parse(d2);
-					Calendar cal = Calendar.getInstance();// jump one day for borders
-					cal.setTime(dd2);
-					cal.add(Calendar.DATE, 1);
-					dd2 = cal.getTime();
-					if (Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1))
-						rep += title + "\n" + date + "\n\n" + conten + "\n\n";
-				}
-
-			}
-			if (rep.equals(""))
-				rep = "No event today";
-			this.replyText(replyToken, rep);
+			case_today(apn);
 			break;
 		}
 		case "roadmap": {
 			String url = getRoadMapUrl();
 			String map = getRoadMap(url);
 
-			if (!(args.length < 2) && args[1].equals("full")) {
+			if (apn.getArgs().length >= 3 && apn.equals(2, "full")) {
 				this.replyText(replyToken, map + "\n\n" + url);
 				break;
 			}
@@ -769,12 +497,11 @@ public class KitchenSinkController {
 			// this.pushText(event.getSource().getSenderId(), map);
 			break;
 		}
-		case "coins" : {
+		case "coins": {
 			String msg = "";
-			for(String[] a : amazon_coin_urls)
-			{
+			for (String[] a : amazon_coin_urls) {
 				int price = getAmazonCoinPrice(a[1]);
-				msg += a[0] + ":\t " + price + "(" + (100-((double)price)/5) + "%)\n"; 
+				msg += a[0] + ":\t " + price + "(" + (100 - ((double) price) / 5) + "%)\n";
 			}
 			this.replyText(replyToken, msg);
 			break;
@@ -788,11 +515,10 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "TUO " + tag_name + " - " + commit);
 			break;
 		}
-		/*case "dark": {
-			String url = getRedditTagUrl("OffensiveMemes");
-			this.reply(replyToken, new ImageMessage(url, url));
-			break;
-		}*/
+		/*
+		 * case "dark": { String url = getRedditTagUrl("OffensiveMemes");
+		 * this.reply(replyToken, new ImageMessage(url, url)); break; }
+		 */
 		case "nude": {
 			String url = getRedditTagUrl("hardwareporn");
 			this.reply(replyToken, new ImageMessage(url, url));
@@ -805,95 +531,97 @@ public class KitchenSinkController {
 		}
 		case "random": {
 			Random r = new Random();
-			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama", "sticker" };
+			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama",
+					"sticker" };
 			switch (opt[r.nextInt(opt.length)]) {
 			case "art":
-				art(replyToken);
+				art(apn);
 				break;
 			case "pic":
-				pic(replyToken);
+				pic(apn);
 				break;
 			case "sticker":
-				sticker(replyToken);
+				sticker(apn.getReplyToken());
 				break;
 			case "insult":
-				insult(replyToken);
+				insult(apn);
 				break;
 			case "joke":
-				joke(replyToken);
+				joke(apn);
 				break;
 			case "mama":
-				mama(replyToken);
+				mama(apn);
 				break;
 			case "gif":
-				gif(replyToken, new String[] { args[0] });
+				gif(apn, "random");
 				break;
 			case "fail":
-				fail(replyToken);
+				fail(apn);
 				break;
 			case "meme":
-				meme(replyToken);
+				meme(apn);
 				break;
 			case "xkcd":
-				xkcd(replyToken);
+				xkcd(apn);
 				break;
 			}
 			break;
 		}
 		case "art": {
-			art(replyToken);
+			art(apn);
 			break;
 		}
 		case "pic": {
-			pic(replyToken);
+			pic(apn);
 			break;
 		}
 		case "reddit": {
-			reddit(replyToken, args);
+			reddit(apn);
 			break;
 		}
 		case "gif": {
-			gif(replyToken, args);
+			gif(apn);
 			break;
 		}
 		case "fail": {
-			fail(replyToken);
+			fail(apn);
 			break;
 		}
 		case "insult": {
-			if (!(args.length < 2)) {
+			if (apn.getArgs().length >= 3) {
 				String insult = getInsult();
 				String name = content.getText().substring(10);
 				String msg = insult.replace("You are", name + " is");
-				this.replyText(replyToken, msg);
+				this.replyText(apn.getReplyToken(), msg);
 				break;
 			}
-			insult(replyToken);
+			insult(apn);
 			break;
 		}
 		case "mama": {
-			mama(replyToken);
+			mama(apn);
 			break;
 		}
 		case "joke": {
-			joke(replyToken);
+			joke(apn);
 			break;
 		}
 		case "xkcd": {
-			xkcd(replyToken);
+			xkcd(apn);
 			break;
 		}
 		case "meme": {
-			meme(replyToken);
+			meme(apn);
 			break;
 		}
 		case "dad": {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
 					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/cGOI7BBPeE"), //TODO replace with dr_F3ll whe works
+							new URIAction("Visit DR_F3LL", "line://ti/p/cGOI7BBPeE"), // TODO replace with dr_F3ll whe
+																						// works
 							new MessageAction("Random", "apn random"),
-							//new MessageAction("Help", "apn help"),
+							// new MessageAction("Help", "apn help"),
 							new URIAction("Share", "line://nv/recommendOA/@xdc0493y")
 
 					));
@@ -916,80 +644,355 @@ public class KitchenSinkController {
 			break;
 		}
 		default:
-			log.info("Unknown command {}: {}", replyToken, text);
-			this.replyText(replyToken, "Unknown command '" + text + "'.\nUse apn help for a list of options.");
+			log.info("Unknown command {}: {}", replyToken, apn.getArg(1));
+			this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn help for a list of options.");
 			break;
 		}
+		//apn = null;
 		System.gc();
 	}
-	
+
+	private void case_card(APNMessageHandler apn, boolean image) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a card with: 'apn card {card}'");
+			return;
+		}
+		String req = apn.getFrom(2);// ptext.split("apn card ")[1].trim();
+		CardInstance ci = getCardInstance(req);
+
+		if (ci == null || ci == CardInstance.NULL) {
+			this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+		} else {
+			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
+		}
+	}
+
+	private void case_bge(APNMessageHandler apn) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a card with: 'apn bge {bge}'");
+			return;
+		}
+		String req = apn.getFrom(2);// ptext.split("apn battlegroundeffect ")[1].toLowerCase().trim();
+		String url = getBGEUrl(req);
+		if (url == null) {
+			String lbge = Wget.wGet("https://raw.githubusercontent.com/APN-Pucky/tyrant_optimize/merged/data/bges.txt");
+			String[] dbges = lbge.split("\n");
+			for (int i = 0; i < dbges.length; i++) {
+				String b = dbges[i];
+				String[] inf = b.split(":");
+				if (inf.length > 1 && StringUtil.containsIgnoreSpecial(inf[0], req)) {
+					this.replyText(apn.getReplyToken(), b);
+					return;
+				}
+			}
+			this.replyText(apn.getReplyToken(), "Unknown bge: '" + req + "'");
+		} else {
+			String map = getFirstKongPost(url);
+			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
+			String ret = "";
+			String[] lines = map.split("\n");
+			lines[0] = lines[0].replaceAll("\\*+", "");
+			for (String l : lines) {
+				if (l.contains("will start") || l.contains("will affect all modes"))
+					break;
+				ret += l + "\n\n";
+			}
+			this.replyText(apn.getReplyToken(), ret);
+		}
+	}
+
+	private void case_new(APNMessageHandler apn, boolean image) {
+		int skip = 0;
+		int number = 5;
+		int offset = Data.all_cards.length;
+		if (apn.getArgs().length >= 3) {// !(args.length < 2)) {
+			if (!apn.isNumber(2)) {
+				switch (apn.getArg(2)) {
+				case "help": {
+					this.replyText(apn.getReplyToken(),
+							"Usage: 'apn new {dom(inion)/struct(ure)/commander/cmd/assault} {number} {skip}'");
+					return;
+				}
+				case "dom":
+				case "dominion": {
+					offset = 55001;
+					break;
+				}
+				case "struct":
+				case "structure": {
+					offset = 25000;
+					break;
+				}
+				case "cmd":
+				case "commander": {
+					offset = 30000;
+					break;
+				}
+				default: {
+					offset = Data.all_cards.length;
+					break;
+				}
+				}
+				if (apn.getArgs().length >= 4 && apn.isNumber(3)) {
+					number = apn.getNumber(3);// Integer.parseInt(apn.getArg(3));
+					if (apn.getArgs().length >= 5 && apn.isNumber(4)) {
+						skip = apn.getNumber(4);// Integer.parseInt(apn.getArg(4));
+					}
+				}
+			} else {
+				number = Integer.parseInt(apn.getArg(2));
+				if (apn.getArgs().length >= 4 && apn.isNumber(3)) {
+					skip = apn.getNumber(3);// Integer.parseInt(args[2]);
+				}
+			}
+
+		}
+		if (number > 10)
+			number = 10;
+		String msg = "";
+		ArrayList<Card> printed = new ArrayList<Card>();
+		ArrayList<Message> msgs = new ArrayList<Message>();
+		for (int i = 1; i < Data.all_cards.length && number > 0; i++) {
+			Card c = Data.all_cards[offset - i];
+			if (c != null && c.fusion_level == 2 && !printed.contains(c)
+					&& !c.getName().toLowerCase().startsWith("test")
+					&& !c.getName().toLowerCase().startsWith("revolt ranger")
+					&& !c.getName().toLowerCase().startsWith("cephalodjinn")) {
+				printed.add(c);
+				if (skip > 0) {
+					skip--;
+				} else {
+					msgs.add(genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
+					// this.pushText(apn.getSenderID(), c.description());
+					// msg += + "\n---------------------------------------"+"\n";
+					number--;
+				}
+			}
+		}
+		reply(apn.getReplyToken(), msgs);
+		// msg = StringUtil.removeLastCharacter(msg,42);
+		// this.replyText(replyToken,msg);
+	}
+
+	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
+		if (image) {
+			BufferedImage bi = KitchenSinkApplication.render.render(ci);
+			DownloadedContent d = createTempFile("png");
+			try {
+				ImageIO.write(bi, "png", d.path.toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.path);
+				String perm_uri = (String) uploadResult.get("secure_url");
+				return new ImageMessage(perm_uri, perm_uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new ImageMessage(d.uri, d.uri);
+		} else {
+			return new TextMessage(ci.description());
+		}
+	}
+
+	private void case_change(APNMessageHandler apn) throws ParseException {
+		String map = getRoadMap();
+		String rep = "";
+		String[] sections = map.split("\\*\\*");
+		Date min = null;
+		for (int i = 3; i < sections.length; i += 2) {
+			String title = sections[i];
+			String msg = sections[i + 1];
+			String[] split = msg.split("\\*");
+			String date = split[1];
+			String conten = split[2];
+			for (int j = 3; j < split.length; j++)
+				conten += "*" + split[j];
+			conten = conten.trim();
+			// rep += title + "\n";
+			// rep += date + "\n\n";
+
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			String[] dates = date.split("-");
+			String d1 = dates[0];
+			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
+					"$1");
+
+			Date dd1 = parser.parse(d1);
+			if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
+				min = dd1;
+				rep = title + "\n" + date + "\n\n" + conten;
+			}
+			// System.out.println(dd1);
+			if (dates.length > 1) {
+				String d2 = dates[1];
+				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
+						"$1");
+				Date dd2 = parser.parse(d2);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dd2);
+				cal.add(Calendar.DATE, 1);
+				dd2 = cal.getTime();
+				// System.out.println(dd2);
+				// if(Calendar.getInstance().getTime().before(dd2) &&
+				// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
+				// + date + "\n\n" + content);
+			}
+		}
+		this.replyText(apn.getReplyToken(), rep);
+	}
+
+	private void case_next(APNMessageHandler apn) throws ParseException {
+		String map = getRoadMap();
+		String rep = "";
+		String[] sections = map.split("\\*\\*");
+		Date min = null;
+		for (int i = 3; i < sections.length; i += 2) {
+			String title = sections[i];
+			String msg = sections[i + 1];
+			String[] split = msg.split("\\*");
+			String date = split[1];
+			String conten = split[2];
+			for (int j = 3; j < split.length; j++)
+				conten += "*" + split[j];
+			conten = conten.trim();
+			// rep += title + "\n";
+			// rep += date + "\n\n";
+
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			String[] dates = date.split("-");
+			String d1 = dates[0];
+			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
+					"$1");
+
+			Date dd1 = parser.parse(d1);
+			// System.out.println(dd1);
+			if (dates.length > 1) {
+				String d2 = dates[1];
+				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
+						"$1");
+				Date dd2 = parser.parse(d2);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dd2);
+				cal.add(Calendar.DATE, 1);
+				dd2 = cal.getTime();
+				if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
+					min = dd1;
+					rep = title + "\n" + date + "\n\n" + conten;
+				}
+				// System.out.println(dd2);
+				// if(Calendar.getInstance().getTime().before(dd2) &&
+				// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
+				// + date + "\n\n" + content);
+			}
+		}
+		if (rep.equals(""))
+			this.replyText(apn.getReplyToken(), "No next event. Check 'apn today'.");
+		else
+			this.replyText(apn.getReplyToken(), rep);
+	}
+
+	private void case_today(APNMessageHandler apn) throws ParseException {
+		String map = getRoadMap();
+		String rep = "";
+		String[] sections = map.split("\\*\\*");
+		for (int i = 3; i < sections.length; i += 2) {
+			String title = sections[i];
+			String msg = sections[i + 1];
+			String[] split = msg.split("\\*");
+			String date = split[1];
+			String conten = split[2];
+			for (int j = 3; j < split.length; j++)
+				conten += "*" + split[j];
+			conten = conten.trim();
+			// rep += title + "\n";
+			// rep += date + "\n\n";
+
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			String[] dates = date.split("-");
+			String d1 = dates[0];
+			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
+					"$1");
+
+			Date dd1 = parser.parse(d1);
+			if (dates.length > 1) {
+				String d2 = dates[1];
+				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
+						"$1");
+				Date dd2 = parser.parse(d2);
+				Calendar cal = Calendar.getInstance();// jump one day for borders
+				cal.setTime(dd2);
+				cal.add(Calendar.DATE, 1);
+				dd2 = cal.getTime();
+				if (Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1))
+					rep += title + "\n" + date + "\n\n" + conten + "\n\n";
+			}
+
+		}
+		if (rep.equals(""))
+			rep = "No event today";
+		this.replyText(apn.getReplyToken(), rep);
+	}
+
 	private static int getAmazonCoinPrice(String url) {
 		String web = Wget.wGet(url);
-		if(web==null)return -1;
-    	String[] lines = web.split("\n");
-    	String cur = "";
-    	for(String l : lines)
-    	{
-    		cur = l;
-    		if(cur.matches(".*id=\"priceblock_ourprice\".*"))break;
-    	}
-    	String m = cur.substring(cur.indexOf("\">"), cur.indexOf("</span>"));
-    	String value = m.replaceAll(".*(\\d\\d\\d).*", "$1");
-    	return Integer.parseInt(value);
-	}
-
-	private void reddit(String replyToken, String tag) {
-		String url = getRedditTagUrl(tag);
-		this.reply(replyToken, new ImageMessage(url, url));
-	}
-
-	private void reddit(String replyToken, String[] args) {
-		String url = null;
-		if (!(args.length < 2)) {
-			url = getRedditTagUrl(args[1]);
-		} else {
-			url = getRedditTagUrl("pics");
+		if (web == null)
+			return -1;
+		String[] lines = web.split("\n");
+		String cur = "";
+		for (String l : lines) {
+			cur = l;
+			if (cur.matches(".*id=\"priceblock_ourprice\".*"))
+				break;
 		}
-		this.reply(replyToken, new ImageMessage(url, url));
+		String m = cur.substring(cur.indexOf("\">"), cur.indexOf("</span>"));
+		String value = m.replaceAll(".*(\\d\\d\\d).*", "$1");
+		return Integer.parseInt(value);
 	}
 
-	private void art(String replyToken) {
-		reddit(replyToken, "Art");
+	private void reddit(APNMessageHandler apn, String tag) {
+		String url = getRedditTagUrl(tag);
+		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 	}
 
-	private void pic(String replyToken) {
-		reddit(replyToken, "pic");
+	private void reddit(APNMessageHandler apn) {
+		reddit(apn, apn.getArgs().length >= 3 ? apn.getArg(2) : "pics");
 	}
-	
+
+	private void art(APNMessageHandler apn) {
+		reddit(apn, "Art");
+	}
+
+	private void pic(APNMessageHandler apn) {
+		reddit(apn, "pic");
+	}
+
 	private void sticker(String replyToken) {
 		int pi = r.nextInt(stickerids.length);
-		if (Math.random() > 0.9)
-			reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
+		reply(replyToken, new StickerMessage("" + stickerids[pi][0], "" + stickerids[pi][1]));
 	}
 
-	private void gif(String replyToken, String tag) {
+	private void gif(APNMessageHandler apn, String tag) {
 		Pair<String, String> url = getGIFTagUrl(tag);
-		this.reply(replyToken, new VideoMessage(url.t, url.u));
+		this.reply(apn.getReplyToken(), new VideoMessage(url.t, url.u));
 	}
 
-	private void gif(String replyToken, String[] args) {
+	private void gif(APNMessageHandler apn) {
 		Pair<String, String> url = null;
-		if (!(args.length < 2)) {
-			url = getGIFTagUrl(args[1]);
+		if (apn.getArgs().length >= 3) {
+			url = getGIFTagUrl(apn.getArg(2));
 			if (url.u == url.t && url.u == null) {
-				this.replyText(replyToken, "No gif for '" + args[1] + "'");
+				this.replyText(apn.getReplyToken(), "No gif for '" + apn.getArg(2) + "'");
 				return;
 			}
 		} else {
 			url = getGIFUrl();
 		}
-		this.reply(replyToken, new VideoMessage(url.t, url.u));
+		this.reply(apn.getReplyToken(), new VideoMessage(url.t, url.u));
 	}
 
-	private void fail(String replyToken) {
-		gif(replyToken, "fail");
+	private void fail(APNMessageHandler apn) {
+		gif(apn, "fail");
 	}
-	
+
 	private static String getInsult() {
 		String msg = Wget.sendGet("https://insult.mattbas.org/api/insult");
 		// System.out.println(msg);
@@ -997,35 +1000,35 @@ public class KitchenSinkController {
 		return msg;
 	}
 
-	private void insult(String replyToken) {
-		
+	private void insult(APNMessageHandler apn) {
+
 		// System.out.println(msg);
-		this.replyText(replyToken, getInsult());
+		this.replyText(apn.getReplyToken(), getInsult());
 	}
 
-	private void mama(String replyToken) {
+	private void mama(APNMessageHandler apn) {
 		String msg = Wget.sendGet("http://api.yomomma.info/");
 		JSONObject j = new JSONObject(msg);
 		msg = j.getString("joke");
-		this.replyText(replyToken, msg);
+		this.replyText(apn.getReplyToken(), msg);
 	}
 
-	private void joke(String replyToken) {
+	private void joke(APNMessageHandler apn) {
 		String msg = Wget.sendGet("https://geek-jokes.sameerkumar.website/api");
 		// System.out.println(msg);
 		msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
 		// System.out.println(msg);
-		this.replyText(replyToken, msg);
+		this.replyText(apn.getReplyToken(), msg);
 	}
 
-	private void meme(String replyToken) {
+	private void meme(APNMessageHandler apn) {
 		String url = getMEMEUrl();
-		this.reply(replyToken, new ImageMessage(url, url));
+		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 	}
 
-	private void xkcd(String replyToken) {
+	private void xkcd(APNMessageHandler apn) {
 		String url = getXKCDUrl();
-		this.reply(replyToken, new ImageMessage(url, url));
+		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 	}
 
 	private static String getRedditTagUrl(String tag) {
@@ -1216,4 +1219,5 @@ public class KitchenSinkController {
 		Path path;
 		String uri;
 	}
+	
 }
