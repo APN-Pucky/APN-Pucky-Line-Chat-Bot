@@ -2,9 +2,6 @@ package com.example.bot.spring;
 
 import java.util.ArrayList;
 
-import de.neuwirthinformatik.Alexander.TU.Card;
-import de.neuwirthinformatik.Alexander.TU.Card.CardInstance;
-
 public class Card {
         public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})},"",0);
         public final int[] ids;
