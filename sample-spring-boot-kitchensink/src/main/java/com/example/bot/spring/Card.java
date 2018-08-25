@@ -2,6 +2,9 @@ package com.example.bot.spring;
 
 import java.util.ArrayList;
 
+import de.neuwirthinformatik.Alexander.TU.Card;
+import de.neuwirthinformatik.Alexander.TU.Card.CardInstance;
+
 public class Card {
         public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})},"",0);
         public final int[] ids;
@@ -93,6 +96,28 @@ public class Card {
         public CardInstance.Info[] getInfos() {
                 return infos;
         }
+
+    	@Override
+    	public int hashCode() {
+    		final int prime = 31;
+    		int result = 1;
+    		result = prime * result + getHighestID();
+    		return result;
+    	}
+
+    	@Override
+    	public boolean equals(Object obj) {
+    		if (this == obj)
+    			return true;
+    		if (obj == null)
+    			return false;
+    		if (getClass() != obj.getClass())
+    			return false;
+    		Card other = (Card) obj;
+    		if (getHighestID() != other.getHighestID())
+    			return false;
+    		return true;
+    	}
 
         public boolean equals(Card c) {
                 return c != null && ids[0] == c.getIDs()[0];
@@ -401,6 +426,28 @@ public class Card {
                 public boolean equals(CardInstance c) {
                         return c.getID() == id;
                 }
+        		
+        		@Override
+        		public boolean equals(Object obj) {
+        			if (this == obj)
+        				return true;
+        			if (obj == null)
+        				return false;
+        			if (getClass() != obj.getClass())
+        				return false;
+        			CardInstance other = (CardInstance) obj;
+        			if (id != other.id)
+        				return false;
+        			return true;
+        		}
+
+        		@Override
+        		public int hashCode() {
+        			final int prime = 31;
+        			int result = 1;
+        			result = prime * result + id;
+        			return result;
+        		}
 
                 public CardInstance clone() {
                         return new CardInstance(id, c);

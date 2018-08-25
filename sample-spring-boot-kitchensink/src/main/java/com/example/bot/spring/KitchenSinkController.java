@@ -430,26 +430,12 @@ public class KitchenSinkController {
 			this.replyText(replyToken, rep);
 			break;
 		}
+		case "imaterials" : {
+			case_materials(apn,true);
+			break;
+		}
 		case "materials": {
-			if (apn.getArgs().length < 3) {
-				this.replyText(replyToken, "Please pass a card with: 'apn materials {card}'");
-				break;
-			}
-			String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
-			CardInstance ci = getCardInstance(card_name);
-			if (ci == null || ci == CardInstance.NULL) {
-				this.replyText(replyToken, "Unknown card: '" + card_name + "'");
-				break;
-			}
-			this.replyText(replyToken, "Card: " + ci + "\n" + "Fused by: \n["
-					+ StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials()))
-							.replaceAll("\n", ", "), 2)
-					+ "]\n\n" + "Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n["
-					+ StringUtil.removeLastCharacter(Data
-							.getInvString(Data
-									.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {})))
-							.replaceAll("\n", ", "), 2)
-					+ "]\n");
+			case_materials(apn,false);
 			break;
 		}
 		case "icard": {
@@ -651,6 +637,21 @@ public class KitchenSinkController {
 		//apn = null;
 		System.gc();
 	}
+	
+	private void case_materials(APNMessageHandler apn, boolean image) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a card with: 'apn materials {card}'");
+			return;
+		}
+		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
+		CardInstance ci = getCardInstance(card_name);
+		if (ci == null || ci == CardInstance.NULL) {
+			this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
+		}
+		else {
+			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
+		}
+	}
 
 	private void case_card(APNMessageHandler apn, boolean image) {
 		if (apn.getArgs().length < 3) {
@@ -790,6 +791,33 @@ public class KitchenSinkController {
 			return new ImageMessage(d.uri, d.uri);
 		} else {
 			return new TextMessage(ci.description());
+		}
+	}
+	
+	private Message genCardInstanceTreeMessage(boolean image, CardInstance ci) {
+		if (image) {
+			BufferedImage bi = KitchenSinkApplication.render.renderTree(ci);
+			DownloadedContent d = createTempFile("png");
+			try {
+				ImageIO.write(bi, "png", d.path.toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.path);
+				String perm_uri = (String) uploadResult.get("secure_url");
+				return new ImageMessage(perm_uri, perm_uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new ImageMessage(d.uri, d.uri);
+		} else {
+			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n["
+					+ StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials()))
+							.replaceAll("\n", ", "), 2)
+					+ "]\n\n" + "Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n["
+					+ StringUtil.removeLastCharacter(Data
+							.getInvString(Data
+									.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {})))
+							.replaceAll("\n", ", "), 2)
+					+ "]\n");
 		}
 	}
 

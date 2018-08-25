@@ -1,18 +1,23 @@
 package com.example.bot.spring;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -35,7 +40,110 @@ public class Render {
 			e.printStackTrace();
 		}
 	}
+	public BufferedImage renderTree(CardInstance c)
+	{
+		int offset_y=10;
+		int width = 1500;
+		int height = 1500;
+		BufferedImage img =
+				  new BufferedImage(width,height,
+				                    BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.getGraphics();
+		g.setColor(Color.gray);
+		g.fillRect(0, 0, width, height);
+		HashMap<CardInstance,BufferedImage> hm = new HashMap<CardInstance,BufferedImage>();
+		fillRenderTreeHashMap(hm,c);
+		ArrayList<CardInstance> cur_cards = new ArrayList<CardInstance>();
+		ArrayList<Integer> cards_per_level = new ArrayList<Integer>();
+		cur_cards.add(c);
+		int j = 0;//vertical
+		while(cur_cards.size()>0) 
+		{
+			CardInstance[] cis = cur_cards.toArray(new CardInstance[] {});
+			for(int i =0; i < cis.length;i++) //horizontal
+			{
+				g.drawImage(hm.get(cis[i]), (int) ((double)width*(i+1))/(cis.length+1)-80,(int)((double)300*(j)+offset_y),Color.GREEN,null);
+				cur_cards.addAll(Arrays.asList(cis[i].getMaterials()));
+			}
+			cards_per_level.add(j, cis.length);
+			cur_cards.removeAll(Arrays.asList(cis));
+			j++;
+		}
+		g.setColor(Color.RED);
+		//TODO ARROWS
+		//for(int i : cards_per_level) {System.out.println(i);}
+		cur_cards.add(c);
+		j=0;
+		while(cur_cards.size()>0) 
+		{
+			CardInstance[] cis = cur_cards.toArray(new CardInstance[] {});
+			int ck = 0;
+			for(int i =0; i < cis.length;i++) //horizontal
+			{
+				//System.out.println("render " + cis[i].getName() + " @ " + (int) ((double)width*(i+1))/(cis.length+1) +" "+(int)((double)250*(j)));
+				//g.drawImage(hm.get(cis[i]), (int) ((double)width*(i+1))/(cis.length+1),(int)((double)300*(j)),Color.GREEN,null);
+				CardInstance[] cim = cis[i].getMaterials();
+				if(cim.length>0)
+				{
+					for(int k =0; k< cim.length;k++)
+					{
+						//System.out.println((j+1) +": " + cards_per_level.get(j+1));
+						drawArrowLine(g,(int) ((double)width*(ck+1))/(cards_per_level.get(j+1)+1),(int)((double)300*(j+1))+offset_y,(int) ((double)width*(i+1))/(cis.length+1),(int)((double)300*(j)+220+offset_y),10,10);
+						ck++;
+					}
+				}
+				cur_cards.addAll(Arrays.asList(cis[i].getMaterials()));
+			}
+			//cards_per_level.add(j, cis.length);
+			cur_cards.removeAll(Arrays.asList(cis));
+			j++;
+		}
+		//TODO PLUSES
+		return img;
+	}
+	
+	private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+	    int dx = x2 - x1, dy = y2 - y1;
+	    double D = Math.sqrt(dx*dx + dy*dy);
+	    double xm = D - d, xn = xm, ym = h, yn = -h, x;
+	    double sin = dy / D, cos = dx / D;
 
+	    x = xm*cos - ym*sin + x1;
+	    ym = xm*sin + ym*cos + y1;
+	    xm = x;
+
+	    x = xn*cos - yn*sin + x1;
+	    yn = xn*sin + yn*cos + y1;
+	    xn = x;
+
+	    int[] xpoints = {x2, (int) xm, (int) xn};
+	    int[] ypoints = {y2, (int) ym, (int) yn};
+	    g.fillPolygon(xpoints, ypoints, 3);
+	    Graphics2D g2 = (Graphics2D)g;
+	    g2.setStroke(new BasicStroke(5));
+	    g2.draw(new Line2D.Float(x1, y1, x2, y2));
+	}
+	
+	public void fillRenderTreeHashMap(HashMap<CardInstance,BufferedImage> hm, CardInstance c)
+	{
+		if(!hm.containsKey(c))
+		{
+			//System.out.println("Loaded " + c + " Hash: " + c.hashCode());
+			//Test
+			/*BufferedImage img = 
+					  new BufferedImage(160,220,
+			                    BufferedImage.TYPE_INT_ARGB);
+			Graphics g = img.getGraphics();
+			g.setColor(Color.green);
+			g.drawRect(0, 0, 160, 220);
+			hm.put(c, img);*/
+			hm.put(c, render(c));
+			for(CardInstance ci : c.getMaterials())
+			{
+				fillRenderTreeHashMap(hm,ci);
+			}
+		}
+	}
 	public BufferedImage render(CardInstance c)
 	{
 		BufferedImage img =
