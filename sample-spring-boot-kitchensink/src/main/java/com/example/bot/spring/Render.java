@@ -44,7 +44,7 @@ public class Render {
 	{
 		int offset_y=10;
 		int width = 1500;
-		int height = 1500;
+		int height = 1000;
 		BufferedImage img =
 				  new BufferedImage(width,height,
 				                    BufferedImage.TYPE_INT_ARGB);
