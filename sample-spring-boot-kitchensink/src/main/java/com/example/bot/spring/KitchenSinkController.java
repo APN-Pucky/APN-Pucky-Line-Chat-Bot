@@ -664,7 +664,7 @@ public class KitchenSinkController {
 		if (ci == null || ci == CardInstance.NULL) {
 			this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
-			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
+			this.push(apn.getSenderID(), genCardInstanceMessage(image, ci));
 		}
 	}
 
