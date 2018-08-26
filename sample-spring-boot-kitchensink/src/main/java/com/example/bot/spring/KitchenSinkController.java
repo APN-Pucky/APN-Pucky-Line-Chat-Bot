@@ -664,7 +664,7 @@ public class KitchenSinkController {
 		if (ci == null || ci == CardInstance.NULL) {
 			this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
-			this.push(apn.getSenderID(), genCardInstanceMessage(image, ci));
+			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
 		}
 	}
 
@@ -770,7 +770,7 @@ public class KitchenSinkController {
 				}
 			}
 		}
-		reply(apn.getReplyToken(), msgs);
+		push(apn.getReplyToken(), msgs);
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
