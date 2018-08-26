@@ -70,11 +70,15 @@ import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.message.VideoMessageContent;
 import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapArea;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
@@ -802,11 +806,23 @@ public class KitchenSinkController {
 				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.path);
 				String perm_uri = (String) uploadResult.get("secure_url");
-				return new ImageMessage(perm_uri, perm_uri);
+				return new ImagemapMessage(perm_uri,"This is alt text",new ImagemapBaseSize(1500,1150),Arrays.asList(
+                        new URIImagemapAction(
+                                perm_uri,
+                                new ImagemapArea(
+                                        0, 0, 1500, 1150
+                                )
+                        )));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.uri, d.uri);
+			return new ImagemapMessage(d.uri,"This is alt text",new ImagemapBaseSize(1500,1150),Arrays.asList(
+                    new URIImagemapAction(
+                            d.uri,
+                            new ImagemapArea(
+                                    0, 0, 1500, 1150
+                            )
+                    )));
 		} else {
 			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n["
 					+ StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials()))
