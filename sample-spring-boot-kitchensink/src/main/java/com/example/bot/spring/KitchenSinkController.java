@@ -770,7 +770,7 @@ public class KitchenSinkController {
 				}
 			}
 		}
-		push(apn.getReplyToken(), msgs);
+		push(apn.getUserID(), msgs);
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
