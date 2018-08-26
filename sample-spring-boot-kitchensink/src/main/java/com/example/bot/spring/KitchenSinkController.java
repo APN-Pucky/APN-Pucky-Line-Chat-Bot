@@ -752,7 +752,7 @@ public class KitchenSinkController {
 			number = 10;
 		String msg = "";
 		ArrayList<Card> printed = new ArrayList<Card>();
-		ArrayList<Message> msgs = new ArrayList<Message>();
+		//ArrayList<Message> msgs = new ArrayList<Message>();
 		for (int i = 1; i < Data.all_cards.length && number > 0; i++) {
 			Card c = Data.all_cards[offset - i];
 			if (c != null && c.fusion_level == 2 && !printed.contains(c)
@@ -763,14 +763,14 @@ public class KitchenSinkController {
 				if (skip > 0) {
 					skip--;
 				} else {
-					msgs.add(genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
+					push(apn.getUserID(), genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
 					number--;
 				}
 			}
 		}
-		push(apn.getUserID(), msgs);
+		//push(apn.getUserID(), msgs);
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
