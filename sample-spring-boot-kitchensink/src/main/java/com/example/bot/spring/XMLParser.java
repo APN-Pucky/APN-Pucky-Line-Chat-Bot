@@ -18,9 +18,6 @@ import org.w3c.dom.NodeList;
 
 import com.example.bot.spring.Card.CardInstance;
 
-import de.neuwirthinformatik.Alexander.TU.Data;
-import de.neuwirthinformatik.Alexander.TU.Fusion;
-
 public class XMLParser {
 	public static final int CARD_SECTIONS_COUNT = 16; // TODO: load from data
 	private int card_count = 1;
