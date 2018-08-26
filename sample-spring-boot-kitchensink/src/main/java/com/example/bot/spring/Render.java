@@ -60,13 +60,13 @@ public class Render {
 		while(cur_cards.size()>0) 
 		{
 			CardInstance[] cis = cur_cards.toArray(new CardInstance[] {});
+			cur_cards.removeAll(Arrays.asList(cis));
 			for(int i =0; i < cis.length;i++) //horizontal
 			{
 				g.drawImage(hm.get(cis[i]), (int) ((double)width*(i+1))/(cis.length+1)-80,(int)((double)300*(j)+offset_y),Color.GREEN,null);
 				cur_cards.addAll(Arrays.asList(cis[i].getMaterials()));
 			}
 			cards_per_level.add(j, cis.length);
-			cur_cards.removeAll(Arrays.asList(cis));
 			j++;
 		}
 		g.setColor(Color.RED);
@@ -77,6 +77,7 @@ public class Render {
 		while(cur_cards.size()>0) 
 		{
 			CardInstance[] cis = cur_cards.toArray(new CardInstance[] {});
+			cur_cards.removeAll(Arrays.asList(cis));
 			int ck = 0;
 			for(int i =0; i < cis.length;i++) //horizontal
 			{
@@ -95,7 +96,6 @@ public class Render {
 				cur_cards.addAll(Arrays.asList(cis[i].getMaterials()));
 			}
 			//cards_per_level.add(j, cis.length);
-			cur_cards.removeAll(Arrays.asList(cis));
 			j++;
 		}
 		//TODO PLUSES
