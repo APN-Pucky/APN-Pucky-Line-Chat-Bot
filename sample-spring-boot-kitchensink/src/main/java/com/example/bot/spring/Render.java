@@ -79,7 +79,7 @@ public class Render {
 				  new BufferedImage(width,height,
 				                    BufferedImage.TYPE_INT_ARGB);
 		Graphics g = img.getGraphics();
-		g.setColor(Color.gray);
+		g.setColor(Color.white);
 		g.fillRect(0, 0, width, height);
 		HashMap<CardInstance,BufferedImage> hm = new HashMap<CardInstance,BufferedImage>();
 		fillRenderTreeHashMap(hm,c);
