@@ -18,6 +18,9 @@ import org.w3c.dom.NodeList;
 
 import com.example.bot.spring.Card.CardInstance;
 
+import de.neuwirthinformatik.Alexander.TU.Data;
+import de.neuwirthinformatik.Alexander.TU.Fusion;
+
 public class XMLParser {
 	public static final int CARD_SECTIONS_COUNT = 16; // TODO: load from data
 	private int card_count = 1;
@@ -286,8 +289,10 @@ public class XMLParser {
 							}
 						}
 
+	                	Fusion path = Data.getFusionByID(ids[0]);	
+	        			if(path == Fusion.NULL) path = Data.getFusionByID(ids[ids.length-1]);
 						distinct_cards[cur] = new Card(ids, name, rarity, fusion_level,
-								Data.getFusionByID(ids[0]).getMaterials(), fort_type, set, f, info,picture,bundle);
+								path.getMaterials(), fort_type, set, f, info,picture,bundle);
 						cur++;
 					}
 				}
