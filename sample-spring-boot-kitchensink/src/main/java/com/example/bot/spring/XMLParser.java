@@ -123,7 +123,7 @@ public class XMLParser {
 							set = Integer.parseInt(eElement.getElementsByTagName("set").item(0).getTextContent());
 						else
 							set = 0;
-	        			if(eElement.getElementsByTagName("asset_bundle").getLength() > 0 && !eElement.getElementsByTagName("asset_bundle").item(0).getTextContent().equals(""))bundle = Integer.parseInt(eElement.getElementsByTagName("asset_bundle").item(0).getTextContent())-100;
+	        			if(eElement.getElementsByTagName("asset_bundle").getLength() > 0 && !eElement.getElementsByTagName("asset_bundle").item(0).getTextContent().equals(""))bundle = Integer.parseInt(eElement.getElementsByTagName("asset_bundle").item(0).getTextContent());
 	        			else
 	        				bundle = 0;
 						if (eElement.getElementsByTagName("fortress_type").getLength() > 0)

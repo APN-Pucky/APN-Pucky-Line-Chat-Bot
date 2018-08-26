@@ -326,7 +326,7 @@ public class Render {
 	public static BufferedImage getCardImage(int card_bundle, String picture) {
 		if(card_bundle==0)return null;
 		BufferedImage img = null;
-		String card_name = picture;
+		String card_name = picture.split("\\.")[0];
 		int card_pack = card_bundle;
 		DownloadedContent unity3d = null;;
 		DownloadedContent  pic = null;
@@ -349,7 +349,7 @@ public class Render {
 		System.out.println("Exec extract");
 		Process p = builder.start();*/
 
-		ProcessBuilder builder = new ProcessBuilder("python3", "unitypuck.py", "--name", picture,
+		ProcessBuilder builder = new ProcessBuilder("python3", "unitypuck.py", "--name", card_name,
 				"--outdir", pic.getPath().getParent().toString(), "--file",pic.getPath().getFileName().toString(), unity3d.getPath().toString());
 		// builder.redirectError(ProcessBuilder.Redirect.INHERIT);
 		// builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -489,10 +489,26 @@ public class Render {
 
 	private static void getUnityCardPack(int num, DownloadedContent unity3d) {
 		String name = "";
-		if(num<900)
-			name = "cardpack" + num + "_Unity5_4_2_WebGL.unity3d";
+		if(num<1000)
+			if(num <119)
+				name = "cardpack" + (num-100) + "_Unity5_4_2_WebGL.unity3d";
+			else if (num <156)
+				name = "cardpack" + (num-101) + "_Unity5_4_2_WebGL.unity3d";
+			else if (num <209)
+				name = "cardpack" + (num-102) + "_Unity5_4_2_WebGL.unity3d";
+			else if (num <272)
+				name = "cardpack" + (num-101) + "_Unity5_4_2_WebGL.unity3d";
+			else 
+				name = "cardpack" + (num-100) + "_Unity5_4_2_WebGL.unity3d";
 		else
-			name = "oldcards" + (num-900) + "_Unity5_4_2_WebGL.unity3d";
+			if(num < 2000)
+				name = "oldcards" + (num-1000) + "_Unity5_4_2_WebGL.unity3d";
+			else if (num<2500)
+				name = "conquestmap" + (num-2005) + "_Unity5_4_2_WebGL.unity3d";
+			else if (num < 3000)
+				name = "conquest_cards" + (num-2500) + "_Unity5_4_2_WebGL.unity3d";
+			else
+				name = "dominion_and_shard_icons_Unity5_4_2_WebGL.unity3d";
 		Wget.wGet(unity3d.getPath().toString(), "http://cdn.synapse-games.com/unleashed/asset_bundles/5_4_2/" + name);
 		//return "cardpack" + num + "-" + unity3d+"/" + name;
 	}
