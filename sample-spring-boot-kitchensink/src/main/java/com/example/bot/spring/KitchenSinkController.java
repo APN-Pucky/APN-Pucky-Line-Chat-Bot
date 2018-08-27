@@ -16,7 +16,6 @@
 
 package com.example.bot.spring;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.cloudinary.Api;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.bot.spring.Card.CardInstance;
 import com.google.common.io.ByteStreams;
@@ -100,11 +100,44 @@ public class KitchenSinkController {
 	public void finalEnd() {
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Stop " + System.getenv("HEROKU_RELEASE_VERSION"));
 	}
+	
+	private void cloudinaryCleanup()
+	{
+		try {
+		Api api = KitchenSinkApplication.cloudinary.api();
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		Map map =null;
+		while(map==null || map.containsKey("next_cursor"))
+		map= api.resources(map==null?ObjectUtils.asMap("max_results", 500):ObjectUtils.asMap("max_results", 500, "next_cursor",map.get("next_cursor")));
+		ArrayList al = (ArrayList)map.get("resources");
+		for(Object o : al)
+		{
+			Map m = (Map)o;
+			String date = (String)m.get("created_at");
+			Date create = parser.parse(date);
+			cal.setTime(create);
+			cal.add(Calendar.DATE, 5);
+			Date create7 = cal.getTime();
+			//System.out.println(create);
+			if(create7.before(Calendar.getInstance().getTime()))
+			{
+				ArrayList a = new ArrayList(1);
+				a.add(m.get("public_id"));
+				//System.out.println("Deleting: " + a.get(0));
+				Map ma = api.deleteResources(a, ObjectUtils.emptyMap());
+				//System.out.println(ma);
+			}
+			
+		}
+		}catch(Exception e) {e.printStackTrace();}
+	}
 
 	@PostConstruct
 	public void init() {
 		KitchenSinkApplication.resourceLoader = rl;
 		Data.init();
+		cloudinaryCleanup();
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));

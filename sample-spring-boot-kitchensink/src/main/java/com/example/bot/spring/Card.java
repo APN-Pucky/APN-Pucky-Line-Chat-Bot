@@ -242,7 +242,7 @@ public class Card {
                            }*/
                 }
 
-                public CardInstance(int id, Card card) {
+                private CardInstance(int id, Card card) {
                         this(id, card, card.getInfos()[card.getPositionID(id)]);
                 }
 
