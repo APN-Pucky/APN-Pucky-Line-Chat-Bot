@@ -763,7 +763,7 @@ public class KitchenSinkController {
 				if (skip > 0) {
 					skip--;
 				} else {
-					push(apn.getUserID(), genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
+					push(apn.getSenderID(), genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
 					number--;
