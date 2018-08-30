@@ -16,8 +16,8 @@ public class APNMessageHandler
 	@Getter @NonNull private final String[] args;
 	
 	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
-		{ "today", "current" }, { "change", "release" }, { "update", "-u" }, { "list", "search" },
-		{ "card", "-c", "show", "display" }, { "battlegroundeffect", "bge" },{"coins","amazon","buy"}, { "random", "fun", "lol"},
+		{ "today", "current" }, { "change", "release" }, { "next", "upcoming" }, { "update", "-u" }, { "list", "search" },
+		{ "card", "-c", "show", "display" }, {"icard","-ic"}, {"imaterials","-im"}, {"inext","-in"}, { "battlegroundeffect", "bge" },{"coins","amazon","buy"}, { "random", "fun", "lol"},
 		{ "joke", "geek" }, { "nude", "nudes" },{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 		{ "options", "-o", "opts" }, };
 	protected APNMessageHandler(String msg) {
@@ -91,5 +91,4 @@ public class APNMessageHandler
 		}
 		return ret.trim();
 	}
-
 }

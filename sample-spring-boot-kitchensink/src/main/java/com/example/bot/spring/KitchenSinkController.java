@@ -100,41 +100,41 @@ public class KitchenSinkController {
 	public void finalEnd() {
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Stop " + System.getenv("HEROKU_RELEASE_VERSION"));
 	}
-	
-	private void cloudinaryCleanup()
-	{
+
+	private void cloudinaryCleanup() {
 		try {
-		Api api = KitchenSinkApplication.cloudinary.api();
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-		Map map =null;
-		while(map==null || map.containsKey("next_cursor"))
-		map= api.resources(map==null?ObjectUtils.asMap("max_results", 500):ObjectUtils.asMap("max_results", 500, "next_cursor",map.get("next_cursor")));
-		ArrayList al = (ArrayList)map.get("resources");
-		for(Object o : al)
-		{
-			Map m = (Map)o;
-			String date = (String)m.get("created_at");
-			Date create = parser.parse(date);
-			cal.setTime(create);
-			cal.add(Calendar.DATE, 5);
-			Date create7 = cal.getTime();
-			//System.out.println(create);
-			if(create7.before(Calendar.getInstance().getTime()))
-			{
-				ArrayList a = new ArrayList(1);
-				a.add(m.get("public_id"));
-				//System.out.println("Deleting: " + a.get(0));
-				Map ma = api.deleteResources(a, ObjectUtils.emptyMap());
-				//System.out.println(ma);
+			Api api = KitchenSinkApplication.cloudinary.api();
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+			Map map = null;
+			while (map == null || map.containsKey("next_cursor"))
+				map = api.resources(map == null ? ObjectUtils.asMap("max_results", 500)
+						: ObjectUtils.asMap("max_results", 500, "next_cursor", map.get("next_cursor")));
+			ArrayList al = (ArrayList) map.get("resources");
+			for (Object o : al) {
+				Map m = (Map) o;
+				String date = (String) m.get("created_at");
+				Date create = parser.parse(date);
+				cal.setTime(create);
+				cal.add(Calendar.DATE, 5);
+				Date create7 = cal.getTime();
+				// System.out.println(create);
+				if (create7.before(Calendar.getInstance().getTime())) {
+					ArrayList a = new ArrayList(1);
+					a.add(m.get("public_id"));
+					// System.out.println("Deleting: " + a.get(0));
+					Map ma = api.deleteResources(a, ObjectUtils.emptyMap());
+					// System.out.println(ma);
+				}
+
 			}
-			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		}catch(Exception e) {e.printStackTrace();}
 	}
 
 	@PostConstruct
-	public void init() {
+	public void init() throws ParseException {
 		KitchenSinkApplication.resourceLoader = rl;
 		Data.init();
 		cloudinaryCleanup();
@@ -142,19 +142,14 @@ public class KitchenSinkController {
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
-			/*
-			 * pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Test Card: "); BufferedImage
-			 * bi = KitchenSinkApplication.render.render(Data.
-			 * getCardInstanceByNameAndLevel("Miasma Master")); DownloadedContent d =
-			 * createTempFile("png"); try { ImageIO.write(bi, "png", d.path.toFile()); Map
-			 * uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri,
-			 * ObjectUtils.emptyMap()); Files.deleteIfExists(d.path); String perm_uri =
-			 * (String) uploadResult.get("secure_url");
-			 * this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(perm_uri,
-			 * perm_uri)); return; } catch (Exception e) { e.printStackTrace(); }
-			 * this.push("Uab4d6ff3d59aee3ce4869e894ca4e337", new ImageMessage(d.uri,
-			 * d.uri));
-			 */
+			APNMessageHandler apn = new APNMessageHandler("apn today");
+			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			apn = new APNMessageHandler("apn next");
+			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			apn = new APNMessageHandler("apn change");
+			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			
+
 		}
 	}
 
@@ -463,12 +458,12 @@ public class KitchenSinkController {
 			this.replyText(replyToken, rep);
 			break;
 		}
-		case "imaterials" : {
-			case_materials(apn,true);
+		case "imaterials": {
+			case_materials(apn, true);
 			break;
 		}
 		case "materials": {
-			case_materials(apn,false);
+			case_materials(apn, false);
 			break;
 		}
 		case "icard": {
@@ -480,16 +475,15 @@ public class KitchenSinkController {
 			break;
 		}
 		case "change": {
-			case_change(apn);
+			case_roadmaps(apn);
 			break;
 		}
-
 		case "next": {
-			case_next(apn);
+			case_roadmaps(apn);
 			break;
 		}
 		case "today": {
-			case_today(apn);
+			case_roadmaps(apn);
 			break;
 		}
 		case "roadmap": {
@@ -667,10 +661,10 @@ public class KitchenSinkController {
 			this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn help for a list of options.");
 			break;
 		}
-		//apn = null;
+		// apn = null;
 		System.gc();
 	}
-	
+
 	private void case_materials(APNMessageHandler apn, boolean image) {
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a card with: 'apn materials {card}'");
@@ -680,8 +674,7 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
 			this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
-		}
-		else {
+		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
 		}
 	}
@@ -785,7 +778,7 @@ public class KitchenSinkController {
 			number = 10;
 		String msg = "";
 		ArrayList<Card> printed = new ArrayList<Card>();
-		//ArrayList<Message> msgs = new ArrayList<Message>();
+		// ArrayList<Message> msgs = new ArrayList<Message>();
 		for (int i = 1; i < Data.all_cards.length && number > 0; i++) {
 			Card c = Data.all_cards[offset - i];
 			if (c != null && c.fusion_level == 2 && !printed.contains(c)
@@ -803,7 +796,7 @@ public class KitchenSinkController {
 				}
 			}
 		}
-		//push(apn.getUserID(), msgs);
+		// push(apn.getUserID(), msgs);
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
@@ -826,11 +819,11 @@ public class KitchenSinkController {
 			return new TextMessage(ci.description());
 		}
 	}
-	
+
 	private Message genCardInstanceTreeMessage(boolean image, CardInstance ci) {
 		if (image) {
 			BufferedImage bim = KitchenSinkApplication.render.renderTree(ci);
-			BufferedImage bi = Render.scaleBilinear(bim,((double)1000)/1150);
+			BufferedImage bi = Render.scaleBilinear(bim, ((double) 1000) / 1150);
 			DownloadedContent d = createTempFile("png");
 			try {
 				ImageIO.write(bi, "png", d.path.toFile());
@@ -854,13 +847,14 @@ public class KitchenSinkController {
 					+ "]\n");
 		}
 	}
-
+	/*
 	private void case_change(APNMessageHandler apn) throws ParseException {
 		String map = getRoadMap();
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
 		Date min = null;
-		for (int i = 3; i < sections.length; i += 2) {
+		boolean first = true;
+		for (int i = 1; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
 			String[] split = msg.split("\\*");
@@ -879,7 +873,8 @@ public class KitchenSinkController {
 					"$1");
 
 			Date dd1 = parser.parse(d1);
-			if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
+			if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())
+					&& (!first || (first = false))) {
 				min = dd1;
 				rep = title + "\n" + date + "\n\n" + conten;
 			}
@@ -907,7 +902,8 @@ public class KitchenSinkController {
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
 		Date min = null;
-		for (int i = 3; i < sections.length; i += 2) {
+		boolean first = true;
+		for (int i = 1; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
 			String[] split = msg.split("\\*");
@@ -936,7 +932,8 @@ public class KitchenSinkController {
 				cal.setTime(dd2);
 				cal.add(Calendar.DATE, 1);
 				dd2 = cal.getTime();
-				if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())) {
+				if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())
+						&& (!first || (first = false))) {
 					min = dd1;
 					rep = title + "\n" + date + "\n\n" + conten;
 				}
@@ -956,7 +953,8 @@ public class KitchenSinkController {
 		String map = getRoadMap();
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
-		for (int i = 3; i < sections.length; i += 2) {
+		boolean first = true;
+		for (int i = 1; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
 			String[] split = msg.split("\\*");
@@ -984,7 +982,8 @@ public class KitchenSinkController {
 				cal.setTime(dd2);
 				cal.add(Calendar.DATE, 1);
 				dd2 = cal.getTime();
-				if (Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1))
+				if (Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1)
+						&& (!first || (first = false)))
 					rep += title + "\n" + date + "\n\n" + conten + "\n\n";
 			}
 
@@ -992,6 +991,70 @@ public class KitchenSinkController {
 		if (rep.equals(""))
 			rep = "No event today";
 		this.replyText(apn.getReplyToken(), rep);
+	}
+	*/
+	private void case_roadmaps(APNMessageHandler apn) {
+		this.reply(apn.getReplyToken(), case_today_next_change(apn));
+	}
+	private Message case_today_next_change(APNMessageHandler apn){
+		String map = getRoadMap();
+		String rep = "";
+		String[] sections = map.split("\\*\\*");
+		Date min_next = null;
+		Date min_change = null;
+		boolean today = apn.equals(1, "today");
+		boolean change = apn.equals(1, "change");
+		boolean next = apn.equals(1, "next");
+		System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
+		boolean first = true;
+		try {
+		for (int i = 1; i < sections.length; i += 2) {
+			String title = sections[i];
+			String msg = sections[i + 1];
+			String[] split = msg.split("\\*");
+			String date = split[1];
+			String conten = split[2];
+			for (int j = 3; j < split.length; j++)
+				conten += "*" + split[j];
+			conten = conten.trim();
+			// rep += title + "\n";
+			// rep += date + "\n\n";
+
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			String[] dates = date.split("-");
+			String d1 = dates[0];
+			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
+					"$1");
+
+			Date dd1 = parser.parse(d1);
+			if (change && (min_change == null || dd1.before(min_change)) && dd1.after(Calendar.getInstance().getTime())) {
+				min_change = dd1;
+				rep = title + "\n" + date + "\n\n" + conten;
+			}
+			if (dates.length > 1) {
+				String d2 = dates[1];
+				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
+						"$1");
+				Date dd2 = parser.parse(d2);
+				Calendar cal = Calendar.getInstance();// jump one day for borders
+				cal.setTime(dd2);
+				cal.add(Calendar.DATE, 1);
+				dd2 = cal.getTime();
+				if (next && (min_next == null || dd1.before(min_next)) && dd1.after(Calendar.getInstance().getTime())) {
+					min_next = dd1;
+					rep = title + "\n" + date + "\n\n" + conten;
+				}
+				if (today && Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1)
+						&& (!first || (first = false)))
+					rep += title + "\n" + date + "\n\n" + conten + "\n\n";
+			}
+
+		}
+		}catch(Exception e) {e.printStackTrace();}
+		if (rep.equals(""))
+			rep = today?"No event today":next?"No next event. Check 'apn today'.":"No known changes";
+		return new TextMessage(rep);
+		//this.replyText(apn.getReplyToken(), rep);
 	}
 
 	private static int getAmazonCoinPrice(String url) {
@@ -1281,5 +1344,5 @@ public class KitchenSinkController {
 		Path path;
 		String uri;
 	}
-	
+
 }
