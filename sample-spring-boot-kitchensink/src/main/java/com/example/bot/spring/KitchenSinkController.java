@@ -440,22 +440,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "list": {
-			if (apn.getArgs().length < 3) {
-				this.replyText(replyToken, "Please pass a name with: 'apn list {name}'");
-				break;
-			}
-			String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
-			String rep = "card search: '" + req + "'\n\n";
-			for (Card c : Data.distinct_cards) {
-				if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
-					rep += c.getName() + "\n";
-					if (rep.length() > 1000) {
-						rep += "..........EOM..........";
-						break;
-					}
-				}
-			}
-			this.replyText(replyToken, rep);
+			case_list(apn);
 			break;
 		}
 		case "imaterials": {
@@ -673,7 +658,8 @@ public class KitchenSinkController {
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
-			this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
+			case_list(apn);
+			//this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
 		}
@@ -688,7 +674,8 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
-			this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+			case_list(apn);
+			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
 		}
@@ -726,6 +713,25 @@ public class KitchenSinkController {
 			}
 			this.replyText(apn.getReplyToken(), ret);
 		}
+	}
+	
+	private void case_list(APNMessageHandler apn) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
+			return;
+		}
+		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
+		String rep = "card search: '" + req + "'\n\n";
+		for (Card c : Data.distinct_cards) {
+			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
+				rep += c.getName() + "\n";
+				if (rep.length() > 1000) {
+					rep += "..........EOM..........";
+					break;
+				}
+			}
+		}
+		this.replyText(apn.getReplyToken(), rep);
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
