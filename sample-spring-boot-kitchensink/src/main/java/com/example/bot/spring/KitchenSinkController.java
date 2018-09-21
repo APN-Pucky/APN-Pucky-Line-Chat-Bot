@@ -1101,8 +1101,8 @@ public class KitchenSinkController {
 		return img.uri;
 	}
 
-	private static String getXKCDUrl() {
-		String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+	private String getXKCDUrl() {
+		String xkcd = Wget.wGet("https://xkcd.com/" + r.nextInt(2048) + "/");
 		String[] lines = xkcd.split("\n");
 		String fin = "";
 		for (String l : lines) {
