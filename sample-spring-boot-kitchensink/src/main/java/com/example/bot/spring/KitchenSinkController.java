@@ -716,14 +716,33 @@ public class KitchenSinkController {
 		}
 		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
 		String rep = "card search: '" + req + "'\n\n";
+		boolean changed = false;
 		for (Card c : Data.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
+				if(!changed)changed = true;
 				if (rep.length() > 1000) {
 					rep += "..........EOM..........";
 					break;
 				}
 			}
+		}
+		if(!changed)
+		{
+			Card close = null;
+	    	int min = -1;
+	    	for (Card c : Data.distinct_cards) {
+	    		int sc = StringUtil.calculate(c.getName(), req);
+				if (min ==-1 || sc < min) {
+					close = c;
+					min = sc;
+				}
+			}
+	    	if(close != null)
+	    	{
+		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
+		    	rep += close.description();
+	    	}
 		}
 		this.replyText(apn.getReplyToken(), rep);
 	}
