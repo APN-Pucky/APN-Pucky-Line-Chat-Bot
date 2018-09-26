@@ -9,11 +9,11 @@ import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 
 public class Gen {
 	// gen
-	private static final int pool_size = 25;
+	private static final int pool_size = 50;
 	private static final int generations = 10;
 	private static final double mutate_percentage = 0.3;
 	private static final double crossover_percentage = 0.3;
-	private static final double struct_probabilty = 0.50;
+	private static final double struct_probabilty = 0.25;
 	// card
 	private static final double mutate_attack_percent = 0.05;
 	private static final double mutate_health_percent = 0.05;
@@ -47,19 +47,18 @@ public class Gen {
 		 * System.out.println(is[0]); System.out.println(mutate(is[0]));
 		 * System.out.println(gen(is));
 		 */
-		/*for(int i = 0; i < 10;i++)
-		{
+		/*
 			System.out.println(varby1(0,mutate_cost_probability));
 		}
 		System.out.println(" \n");*/
-		System.out.println(gen());
+		for(int i = 0; i < 10;i++)
+		{
+		System.out.println(gen(i*i));}
 		System.exit(0);
 		// System.out.println(GlobalData.getCardInstanceByNameAndLevel("Obsidian
 		// Overlord").description());
 	}
-
-	public static String gen() {
-		r.setSeed(System.currentTimeMillis());
+	public static String gen(int seedr) {
 		ArrayList<Card> printed = new ArrayList<Card>();
 		int number = pool_size;
 		CardInstance.Info[] is = new CardInstance.Info[number];
@@ -75,6 +74,7 @@ public class Gen {
 				is[number] = GlobalData.getCardInstanceById(c.getHighestID()).getInfo();
 			}
 		}
+		r.setSeed(System.currentTimeMillis()+seedr);
 		int i = 1;
 		String msg = "";
 		String faction = "allfaction";
@@ -86,6 +86,14 @@ public class Gen {
 			summon = false;
 			CardInstance.Info t = is[i-1];
 			String desc = t.description();
+			String type;
+			if (couldBeStruct(t) && r.nextDouble() < struct_probabilty) {
+				t = new CardInstance.Info(0, t.getHealth(), t.getCost(), t.getLevel(), t.getSkills());
+				desc = t.description();
+				type = "Structure";
+			} else {
+				type= "Assault";
+			}
 			for (SkillSpec ss : t.getSkills()) {
 				if (!ss.getY().equals("allfactions")) {
 					faction = ss.getY();
@@ -97,17 +105,18 @@ public class Gen {
 			}
 			msg += "Gen #" + i + "\n";
 			msg += StringUtil.capitalizeOnlyFirstLetters(faction) + " ";
-			if (couldBeStruct(t) && r.nextDouble() < struct_probabilty) {
-				msg += "Structure";
-			} else {
-				msg += "Assault";
-			}
+			
+			msg += type;
 			msg += "\n";
 			msg += desc;
 			msg += "\n\n";
 			i++;
 		} while (summon && i < is.length);
 		return StringUtil.removeLastCharacter(msg, 2);
+	}
+
+	public static String gen() {
+		return gen(0);
 	}
 
 	private static CardInstance.Info gen(CardInstance.Info[] is) {
@@ -162,6 +171,8 @@ public class Gen {
 			}
 		}
 		if (wall) {
+			if (i.getAttack() != 0)
+				return -8;
 			if (!couldBeStruct(i))
 				return -7;
 		}
@@ -179,8 +190,6 @@ public class Gen {
 	}
 
 	private static boolean couldBeStruct(CardInstance.Info i) {
-		if (i.getAttack() != 0)
-			return false;
 		for (SkillSpec s : i.getSkills()) {
 			if (s.getId().equals("armor"))
 				return false;
@@ -378,4 +387,3 @@ public class Gen {
 		return new String[] { "activate", "play", "death", "attacked" }[r.nextInt(4)];
 	}
 }
-
