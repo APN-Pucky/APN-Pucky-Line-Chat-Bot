@@ -143,11 +143,12 @@ public class KitchenSinkController {
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
-			APNMessageHandler apn = new APNMessageHandler("apn today");
+			pushText("Uab4d6ff3d59aee3ce4869e894ca4e337",Gen.gen());
+			//APNMessageHandler apn = new APNMessageHandler("apn today");
 			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			apn = new APNMessageHandler("apn next");
+			//apn = new APNMessageHandler("apn next");
 			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			apn = new APNMessageHandler("apn change");
+			//apn = new APNMessageHandler("apn change");
 			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 			
 
