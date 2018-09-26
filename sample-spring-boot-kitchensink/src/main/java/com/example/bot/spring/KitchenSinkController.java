@@ -440,22 +440,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "list": {
-			if (apn.getArgs().length < 3) {
-				this.replyText(replyToken, "Please pass a name with: 'apn list {name}'");
-				break;
-			}
-			String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
-			String rep = "card search: '" + req + "'\n\n";
-			for (Card c : Data.distinct_cards) {
-				if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
-					rep += c.getName() + "\n";
-					if (rep.length() > 1000) {
-						rep += "..........EOM..........";
-						break;
-					}
-				}
-			}
-			this.replyText(replyToken, rep);
+			case_list(apn);
 			break;
 		}
 		case "imaterials": {
@@ -601,13 +586,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "insult": {
-			if (apn.getArgs().length >= 3) {
-				String insult = getInsult();
-				String name = content.getText().substring(10);
-				String msg = insult.replace("You are", name + " is");
-				this.replyText(apn.getReplyToken(), msg);
-				break;
-			}
+			
 			insult(apn);
 			break;
 		}
@@ -673,7 +652,8 @@ public class KitchenSinkController {
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
-			this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
+			case_list(apn);
+			//this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
 		}
@@ -688,7 +668,8 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
-			this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+			case_list(apn);
+			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
 		}
@@ -726,6 +707,44 @@ public class KitchenSinkController {
 			}
 			this.replyText(apn.getReplyToken(), ret);
 		}
+	}
+	
+	private void case_list(APNMessageHandler apn) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
+			return;
+		}
+		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
+		String rep = "card search: '" + req + "'\n\n";
+		boolean changed = false;
+		for (Card c : Data.distinct_cards) {
+			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
+				rep += c.getName() + "\n";
+				if(!changed)changed = true;
+				if (rep.length() > 1000) {
+					rep += "..........EOM..........";
+					break;
+				}
+			}
+		}
+		if(!changed)
+		{
+			Card close = null;
+	    	int min = -1;
+	    	for (Card c : Data.distinct_cards) {
+	    		int sc = StringUtil.calculate(c.getName(), req);
+				if (min ==-1 || sc < min) {
+					close = c;
+					min = sc;
+				}
+			}
+	    	if(close != null)
+	    	{
+		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
+		    	rep += close.description();
+	    	}
+		}
+		this.replyText(apn.getReplyToken(), rep);
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
@@ -847,152 +866,6 @@ public class KitchenSinkController {
 					+ "]\n");
 		}
 	}
-	/*
-	private void case_change(APNMessageHandler apn) throws ParseException {
-		String map = getRoadMap();
-		String rep = "";
-		String[] sections = map.split("\\*\\*");
-		Date min = null;
-		boolean first = true;
-		for (int i = 1; i < sections.length; i += 2) {
-			String title = sections[i];
-			String msg = sections[i + 1];
-			String[] split = msg.split("\\*");
-			String date = split[1];
-			String conten = split[2];
-			for (int j = 3; j < split.length; j++)
-				conten += "*" + split[j];
-			conten = conten.trim();
-			// rep += title + "\n";
-			// rep += date + "\n\n";
-
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-			String[] dates = date.split("-");
-			String d1 = dates[0];
-			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-					"$1");
-
-			Date dd1 = parser.parse(d1);
-			if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())
-					&& (!first || (first = false))) {
-				min = dd1;
-				rep = title + "\n" + date + "\n\n" + conten;
-			}
-			// System.out.println(dd1);
-			if (dates.length > 1) {
-				String d2 = dates[1];
-				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-				Date dd2 = parser.parse(d2);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dd2);
-				cal.add(Calendar.DATE, 1);
-				dd2 = cal.getTime();
-				// System.out.println(dd2);
-				// if(Calendar.getInstance().getTime().before(dd2) &&
-				// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
-				// + date + "\n\n" + content);
-			}
-		}
-		this.replyText(apn.getReplyToken(), rep);
-	}
-
-	private void case_next(APNMessageHandler apn) throws ParseException {
-		String map = getRoadMap();
-		String rep = "";
-		String[] sections = map.split("\\*\\*");
-		Date min = null;
-		boolean first = true;
-		for (int i = 1; i < sections.length; i += 2) {
-			String title = sections[i];
-			String msg = sections[i + 1];
-			String[] split = msg.split("\\*");
-			String date = split[1];
-			String conten = split[2];
-			for (int j = 3; j < split.length; j++)
-				conten += "*" + split[j];
-			conten = conten.trim();
-			// rep += title + "\n";
-			// rep += date + "\n\n";
-
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-			String[] dates = date.split("-");
-			String d1 = dates[0];
-			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-					"$1");
-
-			Date dd1 = parser.parse(d1);
-			// System.out.println(dd1);
-			if (dates.length > 1) {
-				String d2 = dates[1];
-				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-				Date dd2 = parser.parse(d2);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dd2);
-				cal.add(Calendar.DATE, 1);
-				dd2 = cal.getTime();
-				if ((min == null || dd1.before(min)) && dd1.after(Calendar.getInstance().getTime())
-						&& (!first || (first = false))) {
-					min = dd1;
-					rep = title + "\n" + date + "\n\n" + conten;
-				}
-				// System.out.println(dd2);
-				// if(Calendar.getInstance().getTime().before(dd2) &&
-				// Calendar.getInstance().getTime().after(dd1)) System.out.println(title + "\n"
-				// + date + "\n\n" + content);
-			}
-		}
-		if (rep.equals(""))
-			this.replyText(apn.getReplyToken(), "No next event. Check 'apn today'.");
-		else
-			this.replyText(apn.getReplyToken(), rep);
-	}
-
-	private void case_today(APNMessageHandler apn) throws ParseException {
-		String map = getRoadMap();
-		String rep = "";
-		String[] sections = map.split("\\*\\*");
-		boolean first = true;
-		for (int i = 1; i < sections.length; i += 2) {
-			String title = sections[i];
-			String msg = sections[i + 1];
-			String[] split = msg.split("\\*");
-			String date = split[1];
-			String conten = split[2];
-			for (int j = 3; j < split.length; j++)
-				conten += "*" + split[j];
-			conten = conten.trim();
-			// rep += title + "\n";
-			// rep += date + "\n\n";
-
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
-			String[] dates = date.split("-");
-			String d1 = dates[0];
-			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-					"$1");
-
-			Date dd1 = parser.parse(d1);
-			if (dates.length > 1) {
-				String d2 = dates[1];
-				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
-						"$1");
-				Date dd2 = parser.parse(d2);
-				Calendar cal = Calendar.getInstance();// jump one day for borders
-				cal.setTime(dd2);
-				cal.add(Calendar.DATE, 1);
-				dd2 = cal.getTime();
-				if (Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1)
-						&& (!first || (first = false)))
-					rep += title + "\n" + date + "\n\n" + conten + "\n\n";
-			}
-
-		}
-		if (rep.equals(""))
-			rep = "No event today";
-		this.replyText(apn.getReplyToken(), rep);
-	}
-	*/
 	private void case_roadmaps(APNMessageHandler apn) {
 		this.reply(apn.getReplyToken(), case_today_next_change(apn));
 	}
@@ -1118,17 +991,39 @@ public class KitchenSinkController {
 		gif(apn, "fail");
 	}
 
-	private static String getInsult() {
+	private static String getInsultLong() {
 		String msg = Wget.sendGet("https://insult.mattbas.org/api/insult");
 		// System.out.println(msg);
 		msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
 		return msg;
 	}
+	
+	private static String getInsultShort() {
+		String msg = Wget.wGet("http://www.robietherobot.com/insult-generator.htm");
+		msg = msg.split("Call them a...")[1].split("<h1>")[1].split("</h1>")[0].trim().replaceAll("\\s+", " ");
+		//msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
+		return msg;
+	}
 
-	private void insult(APNMessageHandler apn) {
-
+	private void insult(APNMessageHandler apn) 
+	{
+		String name = "";
+		if (apn.getArgs().length >= 3) {
+			name = apn.getFrom(2);
+		}
 		// System.out.println(msg);
-		this.replyText(apn.getReplyToken(), getInsult());
+		String insult = "";
+		if(r.nextBoolean() == true)
+		{
+			insult = getInsultLong();
+		}
+		else
+		{
+			insult = "You are a " + getInsultShort();
+		}
+		String msg = "";
+		if(name != "")msg = insult.replace("You are", name + " is");
+		this.replyText(apn.getReplyToken(), msg);
 	}
 
 	private void mama(APNMessageHandler apn) {
@@ -1225,8 +1120,8 @@ public class KitchenSinkController {
 		return img.uri;
 	}
 
-	private static String getXKCDUrl() {
-		String xkcd = Wget.wGet("https://c.xkcd.com/random/comic/");
+	private String getXKCDUrl() {
+		String xkcd = Wget.wGet("https://xkcd.com/" + r.nextInt(2048) + "/");
 		String[] lines = xkcd.split("\n");
 		String fin = "";
 		for (String l : lines) {
