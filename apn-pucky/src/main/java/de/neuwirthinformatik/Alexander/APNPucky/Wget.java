@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

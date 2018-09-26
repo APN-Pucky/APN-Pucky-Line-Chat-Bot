@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 public class Pair<T, U> {         
     public final T t;

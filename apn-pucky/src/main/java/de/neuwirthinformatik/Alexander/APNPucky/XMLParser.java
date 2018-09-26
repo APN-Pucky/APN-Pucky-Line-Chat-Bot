@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.example.bot.spring.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 
 public class XMLParser {
 	public static final int CARD_SECTIONS_COUNT = 17; // TODO: load from data

@@ -1,11 +1,5 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
-import com.example.bot.spring.Card.CardType;
-import com.example.bot.spring.Card.CardCategory;
-import com.example.bot.spring.Card.CardInstance;
-import com.example.bot.spring.Card.CardInstance.Info;
-import com.example.bot.spring.Card;
-import com.example.bot.spring.Deck;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,6 +26,13 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import de.neuwirthinformatik.Alexander.APNPucky.Card;
+import de.neuwirthinformatik.Alexander.APNPucky.Deck;
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardCategory;
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardType;
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance.Info;
 
 import java.util.HashMap;
 
@@ -459,19 +460,7 @@ public static boolean isFortress(int fort)
         return ret;
 }
 
-/*public static int getNullCount(Bot[] bs)
-   {
-    int c = 0;
-    for(Bot i : bs)if(i == null)c++;
-    return c;
-   }
 
-   /*public static <T> int getCount(T[] ids, T id)
-   {
-    int c = 0;
-    for(T i : ids)if(i.equals(id))c++;
-    return c;
-   }*/
 
 public static int getCount(int[] ids, int id)
 {
@@ -573,44 +562,6 @@ public static String getCookie(String name,String folder)
         return text;
 }
 
-public static String[] getBotList()
-{
-        File folder = new File("cookies");
-
-        File[] listOfFiles = folder.listFiles();
-        String[] ret = new String[listOfFiles.length];
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                        ret[i] = listOfFiles[i].getName().split("cookie_")[1];
-                }
-        }
-        return ret;
-}
-
-/*public static Bot getBotByName(String n)
-   {
-    for(Bot b : Data.bots)
-    {
-        if(b !=null && b.getName().equals(n))return b;
-    }
-    return null;
-   }*/
-
-public static String[] getBotList(String sfolder)
-{
-        File folder = new File(sfolder);
-
-        File[] listOfFiles = folder.listFiles();
-        String[] ret = new String[listOfFiles.length];
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                        ret[i] = listOfFiles[i].getName().split("cookie_")[1];
-                }
-        }
-        return ret;
-}
 
 public static void deleteFile(String file)
 {
@@ -823,169 +774,4 @@ public static int getSPNeededToMax(Card c)     //TODO return by int id based on 
         }
 }
 
-/*public static Bot[] getGuildLeaders()
-   {
-    ArrayList<Bot> l = new ArrayList<Bot>();
-    for(Bot b : bots)
-    {
-        if(b.isLeader())l.add(b);
-    }
-    return l.toArray(new Bot[]{});
-   }*/
-
-/*public static String[] getLeadGuildNames()
-   {
-    Bot[] ls  = getGuildLeaders();
-    String[] r = new String[ls.length];
-    for(int i =0;i < ls.length;i++)
-    {
-        r[i] = ls[i].getGuild();
-    }
-    return r;
-   }
-
-   public static Bot[] getGuildOfficers()
-   {
-    ArrayList<Bot> l = new ArrayList<Bot>();
-    for(Bot b : bots)
-    {
-        if(b.isLeader() || b.isOfficer())l.add(b);
-    }
-    return l.toArray(new Bot[]{});
-   }
-
-   public static String[] getInviteGuildNames()
-   {
-    Bot[] ls  = getGuildOfficers();
-    //String[] r = new String[ls.length];
-    List<String> al = new ArrayList<>();
-    for(int i =0;i < ls.length;i++)
-    {
-        al.add(ls[i].getGuild());
-        //r[i] = ls[i].getGuild();
-    }
-    Set<String> hs = new HashSet<>();
-    hs.addAll(al);
-    al.clear();
-    al.addAll(hs);
-    return hs.toArray(new String[]{});
-   }
-
-   private static File c = new File("data/customdecks.txt");
-   private static File c_tmp = new File("data/customdecks_tmp.txt");
-
-   public static void saveGauntletRaw(String gaunt_name, String deck_line)
-   {
-    saveGauntletRaw(gaunt_name,new String[]{deck_line});
-   }
-
-   public static void saveGauntletRaw(String gaunt_name, String[] deck_lines) //TODO better syncs
-   {
-    System.out.println("Queeing Gauntlet"+ gaunt_name);
-    Task.start(() -> {
-        synchronized(c)
-        {
-            System.out.println("EOQ Gauntlet"+ gaunt_name);
-            try
-            {
-                if(!c.exists())
-                {
-
-                    if(c_tmp.exists())
-                    {
-                        System.out.println("Interruption in saving deck, tring to restore it", gaunt_name+ "saveGauntletRaw");
-                        c_tmp.renameTo(c);
-                    }
-                    else
-                    {
-                        System.out.println("Interruption in saving deck, manual restore needed", gaunt_name+ "saveGauntletRaw");
-                        createFile("data/customdecks.txt"); //Does it work?
-                    }
-                }
-                BufferedReader reader = new BufferedReader(new FileReader(c));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(c_tmp));
-
-                String lineToRemove = gaunt_name;
-                String currentLine;
-
-                while((currentLine = reader.readLine()) != null) {
-                    // trim newline when comparing with lineToRemove
-                    String trimmedLine = currentLine.trim();
-                    if(trimmedLine.startsWith(lineToRemove))
-                    {
-                        continue;
-                    }
-                    writer.write(currentLine + System.getProperty("line.separator"));
-                }
-                for(String w : deck_lines)
-                {
-                    writer.write(w + System.getProperty("line.separator"));
-                }
-                writer.close();
-                reader.close();
-                c.delete();
-                c_tmp.renameTo(c);
-                //Thread.sleep(1000);
-                System.out.println("Saved Gauntlet"+ gaunt_name);
-            }catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    });
-   }
-   public static void saveGauntlet(String gaunt_name, String deck)
-   {
-    saveGauntlet(gaunt_name,deck,Data.constructDeckArray(deck));
-   }
-   public static void saveGauntlet(String gaunt_name,String deck, int[] ids)
-   {
-    /*if(ids[1]==ids[2] && isAN(ids[1]))
-    {
-        int[] tmp = ids.clone();
-        tmp[2]=0;
-        deck = Data.getDeckString(tmp);
-    }
-    if(ids[0]==ids[1])deck = deck.substring(deck.indexOf(",")+1);
-    final String deck_line = gaunt_name + ": " + deck;
-    saveGauntletRaw(gaunt_name,deck_line);
-
-   }
-   public static void saveGauntlet(String gaunt_name, int[] ids)
-   {
-    saveGauntlet(gaunt_name,Data.getDeckString(ids),ids);
-   }
-   public static void saveGauntlet(Bot b, int[] ids)
-   {
-    String gaunt_name = "gauntlet_" + b.getGuild() + "_" + b.getName();
-    saveGauntlet(gaunt_name,ids);
-   }
-
-   public static void saveOwnedCards(Bot b, int[] ids)
-   {
-    synchronized(b.inv)
-    {
-        try
-        {
-            File o = new File("data/ownedcards_" + b.getName() + ".txt");
-            File o_tmp = new File("data/ownedcards_" + b.getName() + "_tmp.txt");
-
-            String inv = Data.getInvString(ids);
-
-            o.delete();
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(o_tmp));
-
-            writer.write(inv.replace("\n", System.getProperty("line.separator")));
-
-            writer.close();
-
-            o_tmp.renameTo(o);
-            System.out.println("Saved Ownedcards"+ b.getName());
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-   }*/
 }

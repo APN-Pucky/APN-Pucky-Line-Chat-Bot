@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.message.TextMessageContent;

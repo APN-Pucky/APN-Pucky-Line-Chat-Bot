@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import static java.util.Arrays.asList;
 

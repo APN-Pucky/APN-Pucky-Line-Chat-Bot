@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 
 public class Deck 
@@ -35,29 +35,7 @@ public class Deck
 		
 	}
 	
-	public int[] A_H_Deck()
-	{
-		int[] ret = toIDArray();
-		if(isANC())
-		{
-			/*int[] n_deck = new int[ret.length-1];
-			n_deck[0] = ret[0];//com
-			for(int i =1; i< n_deck.length;i++)
-			{
-				n_deck[i] = ret[i+1];
-			}
-			ret = n_deck;*/
-			
-			ret[1] = ret[2];
-			
-		}
-		int card_id = ret[ret.length-1];
-		for(int i = 2; i < ret.length;i++)
-		{
-			if(ret[i] != ret[1])card_id = ret[i];
-		}
-		return new int[]{ret[0],ret[1],card_id};
-	}
+	
 	
 	public int[] fixDominionDeck()
 	{

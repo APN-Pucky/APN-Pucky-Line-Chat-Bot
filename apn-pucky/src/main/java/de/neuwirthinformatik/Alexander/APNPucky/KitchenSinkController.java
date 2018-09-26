@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -49,7 +49,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.bot.spring.Card.CardInstance;
 import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
@@ -81,6 +80,7 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -143,11 +143,11 @@ public class KitchenSinkController {
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
 			APNMessageHandler apn = new APNMessageHandler("apn today");
-			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 			apn = new APNMessageHandler("apn next");
-			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 			apn = new APNMessageHandler("apn change");
-			push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 			
 
 		}

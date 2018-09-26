@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

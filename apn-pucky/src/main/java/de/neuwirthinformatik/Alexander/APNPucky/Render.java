@@ -1,4 +1,4 @@
-package com.example.bot.spring;
+package de.neuwirthinformatik.Alexander.APNPucky;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,8 +26,9 @@ import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
-import com.example.bot.spring.Card.CardInstance;
-import com.example.bot.spring.KitchenSinkController.DownloadedContent;
+
+import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.APNPucky.KitchenSinkController.DownloadedContent;
 
 
 public class Render {
