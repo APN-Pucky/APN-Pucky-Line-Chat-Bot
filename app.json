@@ -1,7 +1,7 @@
 {
-    "name": "echo bot - LINE Messaging API",
-    "description": "This is a sample application for the LINE Messaging API",
-    "keywords": ["chatbot", "line", "java"],
+    "name": "APN-Pucky - Line Chat Bot for Tyrant Unleashed",
+    "description": "Line Chat Bot for Tyrant Unleashed",
+    "keywords": ["chatbot", "line", "java", "tyrant","unleashed"],
     "env": {
         "LINE_BOT_CHANNEL_TOKEN": {
             "description": "LINE bot Channel access token from the Channel Console",
