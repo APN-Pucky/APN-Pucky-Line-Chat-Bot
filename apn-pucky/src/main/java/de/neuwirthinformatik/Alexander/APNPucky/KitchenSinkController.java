@@ -755,7 +755,7 @@ public class KitchenSinkController {
 	
 	private void case_generate(APNMessageHandler apn)
 	{
-		pushText(apn.getReplyToken(),Gen.gen());
+		replyText(apn.getReplyToken(),Gen.gen());
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
