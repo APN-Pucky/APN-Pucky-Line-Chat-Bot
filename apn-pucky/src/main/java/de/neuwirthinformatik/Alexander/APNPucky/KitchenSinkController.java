@@ -342,7 +342,7 @@ public class KitchenSinkController {
 			{ "icard", "display a card with image" }, { "materials", "displays materials for card" },
 			{ "new", "displays latest quads" }, { "bge", "display a bge" }, { "skill", "display a skill" },
 			{ "roadmap", "tu roadmap + link" }, { "current", "current tu event" }, { "next", "next tu event" },
-			{ "release", "next tu release" }, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
+			{ "release", "next tu release" }, {"generate", "generates a new TU card"}, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
 	private static final String[][] large_help = new String[][] { { "xml", "show the date of xmls" },
 			{ "update", "reload xmls" }, { "alias", "enlist alias" }, { "random", "random" }, { "joke", "geeky joke" },
 			{ "fail", "fail gif" }, { "art", "art image" }, { "pic", "some image" }, { "xkcd", "xkcd image" },
