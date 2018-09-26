@@ -421,6 +421,10 @@ public class KitchenSinkController {
 			case_new(apn, false);
 			break;
 		}
+		case "generate": {
+			case_generate(apn);
+			break;
+		}
 		case "skill": {
 			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");
@@ -747,6 +751,11 @@ public class KitchenSinkController {
 	    	}
 		}
 		this.replyText(apn.getReplyToken(), rep);
+	}
+	
+	private void case_generate(APNMessageHandler apn)
+	{
+		pushText(apn.getReplyToken(),Gen.gen());
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
