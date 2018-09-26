@@ -136,7 +136,8 @@ public class KitchenSinkController {
 	@PostConstruct
 	public void init() throws ParseException {
 		KitchenSinkApplication.resourceLoader = rl;
-		Data.init();
+		r.setSeed(System.currentTimeMillis());
+		GlobalData.init();
 		cloudinaryCleanup();
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
@@ -403,12 +404,12 @@ public class KitchenSinkController {
 			break;
 		}
 		case "xml": {
-			this.replyText(replyToken, "load dev-xml @" + Data.xml_time);
+			this.replyText(replyToken, "load dev-xml @" + GlobalData.xml_time);
 			break;
 		}
 		case "update": {
-			Data.init();
-			this.replyText(replyToken, "load new dev-xml @" + Data.xml_time);
+			GlobalData.init();
+			this.replyText(replyToken, "load new dev-xml @" + GlobalData.xml_time);
 			break;
 		}
 		case "inew": {
@@ -428,8 +429,8 @@ public class KitchenSinkController {
 				// TODO
 			}
 			String req = apn.getFrom(2);// ptext.split("apn skill ")[1].toLowerCase().trim();
-			if (Data.skill_desc.containsKey(req)) {
-				this.replyText(replyToken, "'" + req + "': " + Data.skill_desc.get(req));
+			if (GlobalData.skill_desc.containsKey(req)) {
+				this.replyText(replyToken, "'" + req + "': " + GlobalData.skill_desc.get(req));
 			} else {
 				this.replyText(replyToken, "Unknown skill: '" + req + "'");
 			}
@@ -717,7 +718,7 @@ public class KitchenSinkController {
 		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
 		String rep = "card search: '" + req + "'\n\n";
 		boolean changed = false;
-		for (Card c : Data.distinct_cards) {
+		for (Card c : GlobalData.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
 				if(!changed)changed = true;
@@ -731,7 +732,7 @@ public class KitchenSinkController {
 		{
 			Card close = null;
 	    	int min = -1;
-	    	for (Card c : Data.distinct_cards) {
+	    	for (Card c : GlobalData.distinct_cards) {
 	    		int sc = StringUtil.calculate(c.getName(), req);
 				if (min ==-1 || sc < min) {
 					close = c;
@@ -750,7 +751,7 @@ public class KitchenSinkController {
 	private void case_new(APNMessageHandler apn, boolean image) {
 		int skip = 0;
 		int number = 5;
-		int offset = Data.all_cards.length;
+		int offset = GlobalData.all_cards.length;
 		if (apn.getArgs().length >= 3) {// !(args.length < 2)) {
 			if (!apn.isNumber(2)) {
 				switch (apn.getArg(2)) {
@@ -775,7 +776,7 @@ public class KitchenSinkController {
 					break;
 				}
 				default: {
-					offset = Data.all_cards.length;
+					offset = GlobalData.all_cards.length;
 					break;
 				}
 				}
@@ -798,8 +799,8 @@ public class KitchenSinkController {
 		String msg = "";
 		ArrayList<Card> printed = new ArrayList<Card>();
 		// ArrayList<Message> msgs = new ArrayList<Message>();
-		for (int i = 1; i < Data.all_cards.length && number > 0; i++) {
-			Card c = Data.all_cards[offset - i];
+		for (int i = 1; i < GlobalData.all_cards.length && number > 0; i++) {
+			Card c = GlobalData.all_cards[offset - i];
 			if (c != null && c.fusion_level == 2 && !printed.contains(c)
 					&& !c.getName().toLowerCase().startsWith("test")
 					&& !c.getName().toLowerCase().startsWith("revolt ranger")
@@ -808,7 +809,7 @@ public class KitchenSinkController {
 				if (skip > 0) {
 					skip--;
 				} else {
-					push(apn.getSenderID(), genCardInstanceMessage(image, Data.getCardInstanceById(c.getHighestID())));
+					push(apn.getSenderID(), genCardInstanceMessage(image, GlobalData.getCardInstanceById(c.getHighestID())));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
 					number--;
@@ -856,11 +857,11 @@ public class KitchenSinkController {
 			return new ImageMessage(d.uri, d.uri);
 		} else {
 			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n["
-					+ StringUtil.removeLastCharacter(Data.getInvString(Data.getIDsFromCardInstances(ci.getMaterials()))
+					+ StringUtil.removeLastCharacter(GlobalData.getInvString(GlobalData.getIDsFromCardInstances(ci.getMaterials()))
 							.replaceAll("\n", ", "), 2)
 					+ "]\n\n" + "Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n["
-					+ StringUtil.removeLastCharacter(Data
-							.getInvString(Data
+					+ StringUtil.removeLastCharacter(GlobalData
+							.getInvString(GlobalData
 									.getIDsFromCardInstances(ci.getLowestMaterials().toArray(new CardInstance[] {})))
 							.replaceAll("\n", ", "), 2)
 					+ "]\n");
@@ -1192,7 +1193,7 @@ public class KitchenSinkController {
 		if (idorname.matches("\\d+")) {
 			return new CardInstance(Integer.parseInt(idorname));
 		} else {
-			return Data.getCardInstanceByNameAndLevel(StringUtil.capitalizeOnlyFirstLetters(idorname));
+			return GlobalData.getCardInstanceByNameAndLevel(StringUtil.capitalizeOnlyFirstLetters(idorname));
 		}
 	}
 

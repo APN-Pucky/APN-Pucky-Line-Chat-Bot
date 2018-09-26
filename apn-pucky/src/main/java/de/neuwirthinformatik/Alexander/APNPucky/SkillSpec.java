@@ -1,6 +1,8 @@
 package de.neuwirthinformatik.Alexander.APNPucky;
 
+import lombok.Data;
 
+@Data
 public class SkillSpec {
 	final String id;
 	final int x;
@@ -10,8 +12,8 @@ public class SkillSpec {
 	final String s;
 	final String s2;
 	final boolean all;
-	final String trigger;
 	final int card_id;
+	final String trigger;
 
 	public String toString()
 	{
@@ -37,7 +39,7 @@ public class SkillSpec {
 		if(x>0)result += " " + this.x;
 		if(card_id>0)
 		{
-			result += " " + Data.getNameAndLevelByID(card_id);
+			result += " " + GlobalData.getNameAndLevelByID(card_id);
 		}
 		if(c>0)result += " every " + this.c;
 		return result;
@@ -56,7 +58,7 @@ public class SkillSpec {
 		if(x>0)result += " " + this.x;
 		if(card_id>0)
 		{
-			result += " " + Data.getNameByID(card_id);
+			result += " " + GlobalData.getNameByID(card_id);
 		}
 		if(c>0)result += " every " + this.c;
 		return result;

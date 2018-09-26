@@ -65,7 +65,7 @@ public class Deck
 	 */
 	private boolean isANC()
 	{
-		return Data.isANC(dominion_id,commander_id);
+		return GlobalData.isANC(dominion_id,commander_id);
 	}
 	
 	public int getCommander(){return commander_id;};
@@ -73,6 +73,6 @@ public class Deck
 	
 	public String toString()
 	{
-		return Data.getDeckString(toIDArray());
+		return GlobalData.getDeckString(toIDArray());
 	}
 }

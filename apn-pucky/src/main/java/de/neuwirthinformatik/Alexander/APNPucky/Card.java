@@ -2,6 +2,8 @@ package de.neuwirthinformatik.Alexander.APNPucky;
 
 import java.util.ArrayList;
 
+import lombok.Data;
+
 public class Card {
         public static final Card NULL = new Card(new int[] { 0 }, "NULL", 0, 0, new int[] {}, 0, 0,0,new CardInstance.Info[] {new CardInstance.Info(0,0,0,0,new SkillSpec[] {})},"",0);
         public final int[] ids;
@@ -212,17 +214,29 @@ public class Card {
         }
 
         public static class CardInstance {
+        	@Data
                 public static class Info {
-                        final int attack, health, level, cost;
+                        final int attack, health, cost,level;
                         final SkillSpec[] skills;
 
-                        public Info(int attack, int health,int cost,int level, SkillSpec[] skills) {
+                        /*public Info(int attack, int health,int cost,int level, SkillSpec[] skills) {
                                 this.attack = attack;
                                 this.health = health;
                                 this.level = level;
                                 this.cost = cost;
                                 this.skills = skills;
-                        }
+                        }*/
+
+            			public String description() {
+            				String ret = "";
+            				ret += attack + "/" + health + "/"+ cost + "\n";
+            				for(SkillSpec s : skills)
+            				{
+            					ret += s + "\n";
+            				}
+            				ret += "\n";
+            				return StringUtil.removeLastCharacter(ret,2);
+            			}
                 }
 
                 public static final CardInstance NULL = new CardInstance(0, Card.NULL,Card.NULL.getInfos()[0]);
@@ -247,7 +261,7 @@ public class Card {
                 }
 
                 public CardInstance(int id) {
-                        this(id, Data.getCardByID(id));
+                        this(id, GlobalData.getCardByID(id));
                 }
                 
                 public static CardInstance get(int id)
@@ -342,10 +356,10 @@ public class Card {
 
                 public String description() {
                         String ret = getName() + "\n";
-                        ret += StringUtil.capitalizeOnlyFirstLetters(Data.factionToString(getFaction())) + " ";
-                        ret += StringUtil.capitalizeOnlyFirstLetters(Data.rarityToString(getRarity())) + " ";
+                        ret += StringUtil.capitalizeOnlyFirstLetters(GlobalData.factionToString(getFaction())) + " ";
+                        ret += StringUtil.capitalizeOnlyFirstLetters(GlobalData.rarityToString(getRarity())) + " ";
                         ret += StringUtil.capitalizeOnlyFirstLetters(getCardType().toString()) +" ";
-                        ret += StringUtil.capitalizeOnlyFirstLetters(Data.fusionToString(getFusionLevel()))+ "\n";
+                        ret += StringUtil.capitalizeOnlyFirstLetters(GlobalData.fusionToString(getFusionLevel()))+ "\n";
                         ret += info.attack + "/" + info.health + "/"+ info.cost + "\n";
                         for(SkillSpec s : info.skills)
                         {
@@ -394,7 +408,7 @@ public class Card {
                 }
 
                 public CardInstance[] getMaterials() {
-                        return Data.getCardInstancesFromIDs(c.getMaterials());
+                        return GlobalData.getCardInstancesFromIDs(c.getMaterials());
                 }
 
                 public ArrayList<CardInstance> getLowestMaterials() {
@@ -410,7 +424,7 @@ public class Card {
                 }
 
                 public int getCostFromLowestMaterials() {
-                        int cost = Data.getSPNeededToLevelTo(getLowest(), this);
+                        int cost = GlobalData.getSPNeededToLevelTo(getLowest(), this);
                         if (c.materials.length == 0) {
                                 return cost;
                         }

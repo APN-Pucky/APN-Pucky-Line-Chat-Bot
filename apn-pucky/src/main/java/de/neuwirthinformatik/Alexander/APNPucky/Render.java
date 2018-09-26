@@ -181,10 +181,10 @@ public class Render {
 				  new BufferedImage(160, 220,
 				                    BufferedImage.TYPE_INT_ARGB);
 		Graphics g = img.createGraphics();
-		int[] style = Data.style_borders[c.getFaction()][c.getRarity()];
-		int[] frame = Data.frame_borders[c.getFusionLevel()];
-		int[] icon = Data.icon_borders.get("icon_" + c.getUnitType().toLowerCase()+ "_common");
-		int[] costs = Data.icon_borders.get("cost_container");
+		int[] style = GlobalData.style_borders[c.getFaction()][c.getRarity()];
+		int[] frame = GlobalData.frame_borders[c.getFusionLevel()];
+		int[] icon = GlobalData.icon_borders.get("icon_" + c.getUnitType().toLowerCase()+ "_common");
+		int[] costs = GlobalData.icon_borders.get("cost_container");
 		BufferedImage bi = null;
 		try {
 			bi = getCardImage(c.getCard().getAssetBundle(), c.getCard().getPicture());
@@ -215,7 +215,7 @@ public class Render {
 		}
 		drawRightAlignedString(g,""+c.getHealth(),136,215,optimus.deriveFont(Font.PLAIN,16));
 		drawArialText(g,c.getCard().getName(),35,18,120,arial.deriveFont(Font.BOLD,12));
-		drawArialText(g, StringUtil.capitalizeOnlyFirstLetters(Data.factionToString(c.getFaction())), 10, 140, 140,arial.deriveFont(Font.BOLD,12));
+		drawArialText(g, StringUtil.capitalizeOnlyFirstLetters(GlobalData.factionToString(c.getFaction())), 10, 140, 140,arial.deriveFont(Font.BOLD,12));
 		drawSkill(g,c,arial.deriveFont(Font.BOLD,12));
 		return img;
 	}
@@ -238,7 +238,7 @@ public class Render {
 		SkillSpec[] ss = c.getSkills();
 		for(int i =0; i < ss.length;i++)
 		{
-			int[] skill = Data.skill_borders.get(ss[i].id);
+			int[] skill = GlobalData.skill_borders.get(ss[i].id);
 			draw(g,"skills0",skill,new int[] {14, 148 + 16 * i, 16, 16});
 
 			drawArialText(g,ss[i].text(),32, 160 + 16 * i, 115,font );
@@ -318,7 +318,7 @@ public class Render {
 			}
 			int filled = (i<ci.getLevel()) ? 1 : 0;
 			//var path = "/root/icon[fused=" + fused + " and filled=" + filled + "]/source[1]"
-			int[] icon = Data.icon_borders.get("icon_" + (fused>0?"fused":"unfused") + "_" + (filled>0?"full":"empty"));
+			int[] icon = GlobalData.icon_borders.get("icon_" + (fused>0?"fused":"unfused") + "_" + (filled>0?"full":"empty"));
 			draw(g,"cardResources",icon, new int[] {(int)x,y,dxy,dxy});
 			x += dxy;
 		}

@@ -182,7 +182,7 @@ public class XMLParser {
 									? Integer.parseInt(((Element) skillList.item(j)).getAttribute("card_id"))
 									: 0;
 							String faction = ((Element) skillList.item(j)).hasAttribute("y")
-									? Data.factionToString(
+									? GlobalData.factionToString(
 											Integer.parseInt(((Element) skillList.item(j)).getAttribute("y")))
 									: "allfactions";
 							int n = ((Element) skillList.item(j)).hasAttribute("n")
@@ -253,7 +253,7 @@ public class XMLParser {
 											? Integer.parseInt(((Element) skillList.item(h)).getAttribute("card_id"))
 											: 0;
 									String faction = ((Element) skillList.item(h)).hasAttribute("y")
-											? Data.factionToString(
+											? GlobalData.factionToString(
 													Integer.parseInt(((Element) skillList.item(h)).getAttribute("y")))
 											: "allfactions";
 									int n = ((Element) skillList.item(h)).hasAttribute("n")
@@ -286,8 +286,8 @@ public class XMLParser {
 							}
 						}
 
-	                	Fusion path = Data.getFusionByID(ids[0]);	
-	        			if(path == Fusion.NULL) path = Data.getFusionByID(ids[ids.length-1]);
+	                	Fusion path = GlobalData.getFusionByID(ids[0]);	
+	        			if(path == Fusion.NULL) path = GlobalData.getFusionByID(ids[ids.length-1]);
 						distinct_cards[cur] = new Card(ids, name, rarity, fusion_level,
 								path.getMaterials(), fort_type, set, f, info,picture,bundle);
 						cur++;

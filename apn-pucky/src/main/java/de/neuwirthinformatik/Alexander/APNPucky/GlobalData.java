@@ -37,7 +37,7 @@ import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance.Info;
 import java.util.HashMap;
 
 
-public class Data
+public class GlobalData
 {
 //end crypto
 public static String line_seperator = System.getProperty("line.seperator");
@@ -331,7 +331,7 @@ public static String getDeckString(int[] deck)
         String decks = "";
         for(int i : deck)
         {
-                if(i!=0) decks += Data.getNameAndLevelByID(i) + ", ";
+                if(i!=0) decks += GlobalData.getNameAndLevelByID(i) + ", ";
         }
         return decks;
 }
@@ -343,8 +343,8 @@ public static String getInvString(int[] ids)
         String inv = "";
         for(int j=0; j< ids.length;)
         {
-                count = Data.getCount(ids,ids[j]);
-                if(ids[j]!=0 ) inv += Data.getNameAndLevelByID(ids[j]) + "#" + count + "\n";
+                count = GlobalData.getCount(ids,ids[j]);
+                if(ids[j]!=0 ) inv += GlobalData.getNameAndLevelByID(ids[j]) + "#" + count + "\n";
                 j+=count;
         }
         return inv;
@@ -400,26 +400,26 @@ public static int[] constructDeckArray(String deck)
 
 public static Deck constructDeck(String deck)
 {
-        deck = Data.removeHash(deck);
+        deck = GlobalData.removeHash(deck);
         String[] ss = deck.split(", *");
-        int com = Data.getIDByNameAndLevel(ss[0]);
-        int dom = Data.getIDByNameAndLevel(ss[1]);
+        int com = GlobalData.getIDByNameAndLevel(ss[0]);
+        int dom = GlobalData.getIDByNameAndLevel(ss[1]);
         int[] ids = new int[ss.length-2];
         for(int i =2; i < ss.length; i++)
         {
-                ids[i-2] =  Data.getIDByNameAndLevel(ss[i]);
+                ids[i-2] =  GlobalData.getIDByNameAndLevel(ss[i]);
         };
         return new Deck(com,dom,ids);
 }
 
 public static Card[] constructCardArray(String deck)
 {
-        deck = Data.removeHash(deck);
+        deck = GlobalData.removeHash(deck);
         String[] ss = deck.split(", *");
         Card[] ids = new Card[ss.length];
         for(int i =0; i < ss.length; i++)
         {
-                ids[i] =  Data.getCardByName(ss[i]);
+                ids[i] =  GlobalData.getCardByName(ss[i]);
         };
         return ids;
 }
@@ -431,14 +431,14 @@ public static boolean isANC(int dominion_id,int commander_id)
 @Deprecated
 public static boolean isANOld(int dominion_id)
 {
-        Card d = Data.getCardByID(dominion_id);
+        Card d = GlobalData.getCardByID(dominion_id);
         if(d == null) return false;
         return d.getName().contains("Alpha") || d.getName().contains("Nexus");
 }
 
 public static boolean isDominion(int dom_id)
 {
-        Card d = Data.getCardByID(dom_id);
+        Card d = GlobalData.getCardByID(dom_id);
         if(d==null) {System.out.println("NULL == DOM ||| UPDATE XMLS?!?! ||| "+ dom_id+ "DATA"); return false;}
         boolean ret = d.category == CardCategory.DOMINION;
         //if(TUM.settings.ASSERT && ret != isANOld(dom_id))throw new NullPointerException("Unsure if dominion or not " + dom_id);
@@ -447,14 +447,14 @@ public static boolean isDominion(int dom_id)
 
 public static boolean isCommander(int cmd)
 {
-        Card d = Data.getCardByID(cmd);
+        Card d = GlobalData.getCardByID(cmd);
         boolean ret = d.type == CardType.COMMANDER;
         return ret;
 }
 
 public static boolean isFortress(int fort)
 {
-        Card d = Data.getCardByID(fort);
+        Card d = GlobalData.getCardByID(fort);
         if(d==null) {System.out.println("NULL == DOM ||| UPDATE XMLS?!?! ||| "+ fort+ "DATA"); return false;}
         boolean ret = d.category == CardCategory.FORTRESS_DEFENSE || d.category == CardCategory.FORTRESS_SIEGE|| d.category == CardCategory.FORTRESS_CONQUEST;
         return ret;
@@ -653,7 +653,7 @@ public static int[] removeDuplicates(int[] arr)
 
 public static int[] removeDuplicates(int t,int[] arr)
 {
-        int num  = Data.getCount(arr,t);
+        int num  = GlobalData.getCount(arr,t);
         if(num==0) return arr;
         int[] n = new int[arr.length+1-num];
         boolean added = false;
@@ -725,7 +725,7 @@ public static int getSPNeededToMax(CardInstance ci)
 @Deprecated
 public static int getSalvageValue(int id)
 {
-        return getSalvageValue(Data.getCardByID(id));
+        return getSalvageValue(GlobalData.getCardByID(id));
 }
 
 //LEVELSXML
@@ -748,7 +748,7 @@ public static int getSalvageValue(Card c)
 public static int getSPNeededToMax(int id)
 {
         Card c = getCardByID(id);
-        int level = Data.getCardLevel(id);
+        int level = GlobalData.getCardLevel(id);
         switch( level)
         {
         case (1): return 275;
