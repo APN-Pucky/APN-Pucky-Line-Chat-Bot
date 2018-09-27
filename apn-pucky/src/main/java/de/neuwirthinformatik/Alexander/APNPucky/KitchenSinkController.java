@@ -535,7 +535,7 @@ public class KitchenSinkController {
 		}
 		case "random": {
 			Random r = new Random();
-			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama",
+			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama","poop",
 					"sticker" };
 			switch (opt[r.nextInt(opt.length)]) {
 			case "art":
@@ -568,7 +568,14 @@ public class KitchenSinkController {
 			case "xkcd":
 				xkcd(apn);
 				break;
+			case "poop":
+				poop(apn);
+				break;
 			}
+			break;
+		}
+		case "poop": {
+			poop(apn);
 			break;
 		}
 		case "art": {
@@ -968,6 +975,16 @@ public class KitchenSinkController {
 
 	private void art(APNMessageHandler apn) {
 		reddit(apn, "Art");
+	}
+	
+	private void poop(APNMessageHandler apn) {
+		if(r.nextDouble()<0.05)
+		{
+			reply(apn.getReplyToken(), genCardInstanceMessage(true, GlobalData.getCardInstanceByNameAndLevel("Marshal Kylen")));
+		}
+		{
+			reddit(apn, "poop");
+		}
 	}
 
 	private void pic(APNMessageHandler apn) {
