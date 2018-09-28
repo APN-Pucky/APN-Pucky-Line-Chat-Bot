@@ -978,7 +978,7 @@ public class KitchenSinkController {
 	}
 	
 	private void poop(APNMessageHandler apn) {
-		if(r.nextDouble()<0.05)
+		if(r.nextDouble()<0.01)
 		{
 			reply(apn.getReplyToken(), genCardInstanceMessage(true, GlobalData.getCardInstanceByNameAndLevel("Marshal Kylen")));
 		}
