@@ -37,6 +37,9 @@ import org.json.JSONObject;
 import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 
+import ai.api.AIConfiguration;
+import ai.api.AIDataService;
+
 @SpringBootApplication
 public class KitchenSinkApplication {
 
@@ -45,7 +48,7 @@ public class KitchenSinkApplication {
 	public static Cloudinary cloudinary = new Cloudinary(
 			ObjectUtils.asMap("cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"), "api_key",
 					System.getenv("CLOUDINARY_API_KEY"), "api_secret", System.getenv("CLOUDINARY_API_SECRET")));
-
+	public static AIDataService dataService = new AIDataService(new AIConfiguration(System.getenv("DIALOGFLOW_CLIENT_ACCESS_TOKEN")));
 	static Path downloadedContentDir;
 
 	public static void main(String[] args) throws IOException {

@@ -80,6 +80,8 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+import ai.api.model.AIRequest;
+import ai.api.model.AIResponse;
 import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 import lombok.NonNull;
 import lombok.Value;
@@ -650,11 +652,29 @@ public class KitchenSinkController {
 		}
 		default:
 			log.info("Unknown command {}: {}", replyToken, apn.getArg(1));
-			this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn help for a list of options.");
+			case_default(apn);
+			//this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn help for a list of options.");
 			break;
 		}
 		// apn = null;
 		System.gc();
+	}
+	
+	private void case_default(APNMessageHandler apn)
+	{
+		try {
+	          AIRequest request = new AIRequest(apn.getFrom(1));
+
+	          AIResponse response = KitchenSinkApplication.dataService.request(request);
+
+	          if (response.getStatus().getCode() == 200) {
+	        	  this.replyText(apn.getReplyToken(), response.getResult().getFulfillment().getSpeech());
+	          } else {
+	            System.err.println(response.getStatus().getErrorDetails());
+	          }
+	        } catch (Exception ex) {
+	          ex.printStackTrace();
+	        }
 	}
 
 	private void case_materials(APNMessageHandler apn, boolean image) {
