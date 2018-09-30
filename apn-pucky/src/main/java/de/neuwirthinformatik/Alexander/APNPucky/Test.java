@@ -31,7 +31,7 @@ public class Test {
       showHelp("Please specify API key", ERROR_EXIT_CODE);
     }
 
-    AIConfiguration configuration = new AIConfiguration("3e99b2e2591d49fbb2cbada2677518ea");
+    AIConfiguration configuration = new AIConfiguration("");
 
     AIDataService dataService = new AIDataService(configuration);
 
