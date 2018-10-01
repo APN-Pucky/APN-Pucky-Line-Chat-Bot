@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -69,6 +70,7 @@ import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.message.VideoMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.StickerMessage;
@@ -76,6 +78,7 @@ import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.profile.MembersIdsResponse;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
@@ -527,12 +530,35 @@ public class KitchenSinkController {
 		 */
 		case "nude": {
 			String url = getRedditTagUrl("hardwareporn");
-			this.reply(replyToken, new ImageMessage(url, url));
+			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 			break;
 		}
 		case "rip": {
 			String url = getRedditTagUrl("techsupportgore");
-			this.reply(replyToken, new ImageMessage(url, url));
+			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+			break;
+		}
+		case "roulette": {
+			CompletableFuture<MembersIdsResponse> resp = null;
+			List<String> ids;
+			if(apn.getEvent().getSource() instanceof GroupSource)
+			{
+				resp = lineMessagingClient.getGroupMembersIds(apn.getEvent().getSource().getSenderId(), null);
+				MembersIdsResponse mrids = resp.get();
+				ids = mrids.getMemberIds();
+				while(mrids.getNext().isPresent())
+				{
+					resp = lineMessagingClient.getGroupMembersIds(apn.getEvent().getSource().getSenderId(), mrids.getNext().get());
+					mrids = resp.get();
+					ids.addAll(mrids.getMemberIds());
+				}
+				String msg = "";
+				for(String s : ids)
+				{
+					msg += lineMessagingClient.getGroupMemberProfile(apn.getEvent().getSource().getSenderId(),s).get().getDisplayName() + "\n";
+				}
+				replyText(apn.getReplyToken(),msg);
+			}
 			break;
 		}
 		case "random": {
