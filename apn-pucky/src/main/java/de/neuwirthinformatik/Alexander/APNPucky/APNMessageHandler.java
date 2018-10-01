@@ -77,7 +77,7 @@ public class APNMessageHandler
 			{
 				n = new String[HM_USER_NUMBER_SAVE];
 				System.arraycopy(cur, 1, n, 0, HM_USER_NUMBER_SAVE-1);
-				n[9] = event.getSource().getUserId(); 
+				n[HM_USER_NUMBER_SAVE-1] = event.getSource().getUserId(); 
 			}
 			else
 			{
