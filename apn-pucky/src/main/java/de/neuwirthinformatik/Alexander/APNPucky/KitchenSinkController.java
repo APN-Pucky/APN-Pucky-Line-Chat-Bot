@@ -538,11 +538,19 @@ public class KitchenSinkController {
 			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 			break;
 		}
+		case "sender" : {
+			this.replyText(apn.getReplyToken(), apn.getSenderId());
+			break;
+		}
+		case "user" : {
+			this.replyText(apn.getReplyToken(), apn.getUserId());
+			break;
+		}
 		case "roulette": {
+			String msg = "";
 			if(apn.getEvent().getSource() instanceof GroupSource)
 			{
 				String[] names = apn.getRecentNames();
-				String msg = "";
 				int shot = r.nextInt(names.length);
 				for(int i =0 ; i < names.length;i++ )
 				{
@@ -558,6 +566,11 @@ public class KitchenSinkController {
 					}
 				}
 			}
+			else
+			{
+				msg = "Only available in Groups";
+			}
+			replyText(apn.getReplyToken(), msg);
 			break;
 		}
 		case "random": {
