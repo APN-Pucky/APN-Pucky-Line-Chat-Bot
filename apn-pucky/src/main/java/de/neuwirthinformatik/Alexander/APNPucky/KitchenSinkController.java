@@ -551,7 +551,7 @@ public class KitchenSinkController {
 				this.replyText(apn.getReplyToken(), "Usage: apn push id msg");
 				break;
 			}
-			this.pushText(apn.getArg(2), apn.getFrom(3));
+			this.pushText(apn.getArg(2,true), apn.getFrom(3,true));
 			break;
 		}
 		case "roulette": {

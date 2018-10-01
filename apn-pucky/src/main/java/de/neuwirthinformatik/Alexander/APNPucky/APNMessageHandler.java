@@ -19,6 +19,7 @@ public class APNMessageHandler
 	@Getter private final TextMessageContent content;
 	@Getter @NonNull private final String message;
 	@Getter @NonNull private final String[] args;
+	@Getter @NonNull private final String[] cargs;
 
 	private static final int HM_USER_NUMBER_SAVE = 6;
 	@Getter @NonNull private final static HashMap<String,String[]> hm_userid = new HashMap<String, String[]>();
@@ -35,6 +36,7 @@ public class APNMessageHandler
 		this.content = null;
 		this.message = msg;
 		this.args = msg.toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
+		this.cargs = msg.trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
 	}
 	public APNMessageHandler(LineMessagingClient lmc,String replyToken, Event event, TextMessageContent content) {
@@ -44,6 +46,7 @@ public class APNMessageHandler
 		this.content = content;
 		this.message = getContent().getText();
 		this.args = getContent().getText().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
+		this.cargs = getContent().getText().trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
 		applyHashMap();
 	}
@@ -118,12 +121,14 @@ public class APNMessageHandler
 		if(index<args.length)
 		{
 			args[index]=value;
+			cargs[index] = value;
 		}
 	}
-	
-	public String getArg(int index)
+
+	public String getArg(int index) {return getArg(index,false);};
+	public String getArg(int index,boolean c)
 	{
-		return index<args.length?args[index]:"";
+		return index<args.length? c?cargs[index]:args[index]:"";
 	}
 	
 	public int getNumber(int index) 
@@ -138,12 +143,13 @@ public class APNMessageHandler
 	public boolean isNumber(int index) {
 		return getArg(index).matches("\\d+");
 	}
-	
-	public String getFrom(int index) {
+
+	public String getFrom(int index) {return getFrom(index,false);}
+	public String getFrom(int index,boolean c) {
 		String ret = "";
 		for(int i = index;i<args.length;i++)
 		{
-			ret += getArg(i) +" ";
+			ret += getArg(i,c) +" ";
 		}
 		return ret.trim();
 	}
