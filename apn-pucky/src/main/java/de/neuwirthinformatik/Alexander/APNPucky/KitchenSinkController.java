@@ -543,7 +543,9 @@ public class KitchenSinkController {
 			List<String> ids;
 			if(apn.getEvent().getSource() instanceof GroupSource)
 			{
-				resp = lineMessagingClient.getGroupMembersIds(apn.getEvent().getSource().getSenderId(), null);
+				replyText(apn.getReplyToken(),lineMessagingClient.getGroupMemberProfile(apn.getEvent().getSource().getSenderId(), "Uab4d6ff3d59aee3ce4869e894ca4e337").get().getDisplayName());
+				
+				/*resp = lineMessagingClient.getGroupMembersIds("", null);
 				MembersIdsResponse mrids = resp.get();
 				ids = mrids.getMemberIds();
 				while(mrids.getNext().isPresent())
@@ -557,7 +559,7 @@ public class KitchenSinkController {
 				{
 					msg += lineMessagingClient.getGroupMemberProfile(apn.getEvent().getSource().getSenderId(),s).get().getDisplayName() + "\n";
 				}
-				replyText(apn.getReplyToken(),msg);
+				replyText(apn.getReplyToken(),msg);*/
 			}
 			break;
 		}
