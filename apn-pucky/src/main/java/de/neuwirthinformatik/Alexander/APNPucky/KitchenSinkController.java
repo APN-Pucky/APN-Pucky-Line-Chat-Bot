@@ -538,6 +538,12 @@ public class KitchenSinkController {
 			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
 			break;
 		}
+		case "info": {
+			this.replyText(apn.getReplyToken(), "Sent");
+			this.pushText(apn.getUserId(), "Group id: "  + apn.getSenderId());
+			this.pushText(apn.getUserId(), "User id: "  + apn.getUserId());
+			break;
+		}
 		case "sender" : {
 			this.replyText(apn.getReplyToken(), apn.getSenderId());
 			break;
