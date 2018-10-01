@@ -13,6 +13,11 @@ import lombok.NonNull;
 
 public class APNMessageHandler 
 {
+	/*
+	 * Banter: Cdf5335b17a5af6f50a33e6a4ee447b4a
+	 * Pirate: C097503a423eb9ecfc7daed9c3a146b93
+	 * DT: Cf6da5174ac7070e3b158eb918cdcaa15
+	 */
 	private final LineMessagingClient lmc;
 	@Getter private final String replyToken;
 	@Getter private final Event event;
@@ -38,6 +43,7 @@ public class APNMessageHandler
 		this.args = msg.toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
 		this.cargs = msg.trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
+		applyHashMap();
 	}
 	public APNMessageHandler(LineMessagingClient lmc,String replyToken, Event event, TextMessageContent content) {
 		this.lmc = lmc;
