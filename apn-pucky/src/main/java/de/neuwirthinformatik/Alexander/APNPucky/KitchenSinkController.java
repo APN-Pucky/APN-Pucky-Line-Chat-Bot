@@ -552,6 +552,7 @@ public class KitchenSinkController {
 				break;
 			}
 			this.pushText(apn.getArg(2), apn.getFrom(3));
+			break;
 		}
 		case "roulette": {
 			String msg = "";
