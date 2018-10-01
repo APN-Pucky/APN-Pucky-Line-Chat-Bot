@@ -629,10 +629,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "poop": {
-			if(apn.getSenderId().equals("Cdf5335b17a5af6f50a33e6a4ee447b4"))
-				poop(apn);
-			else
-				replyText(apn.getReplyToken(),"Limited to Banter, sorry, not sorry.");
+			poop(apn);
 			break;
 		}
 		case "chicken": {
@@ -1060,6 +1057,8 @@ public class KitchenSinkController {
 	}
 	
 	private void poop(APNMessageHandler apn) {
+		if(!apn.getSenderId().equals("Cdf5335b17a5af6f50a33e6a4ee447b4"))
+			replyText(apn.getReplyToken(),"Limited to Banter, sorry, not sorry.");
 		if(r.nextDouble()<0.01)
 		{
 			reply(apn.getReplyToken(), genCardInstanceMessage(true, GlobalData.getCardInstanceByNameAndLevel("Marshal Kylen")));
