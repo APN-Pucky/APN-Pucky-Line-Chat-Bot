@@ -18,7 +18,7 @@ public class APNMessageHandler
 	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" }, {"insult", "destroy", "shut", "dumb", "dump", "kill"},
 		{ "today", "current" }, { "change", "release" }, { "next", "upcoming" }, { "update", "-u" }, { "list", "search" },
 		{ "card", "-c", "show", "display" }, {"icard","-ic"}, {"imaterials","-im"}, {"inext","-in"}, { "battlegroundeffect", "bge" },{"generate","gen","design","make","create","mk","rich"},{"coins","amazon","buy"}, { "random", "crazy", "fun","drunk", "lol"},
-		{ "joke", "geek" }, { "nude", "nudes" },{"poop","shit","shite","poopy","pop","dyn"},{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
+		{ "joke", "geek" }, { "nude", "nudes","xxx","porn" },{"donkey","mule","ass"},{"chicken","rooster", "cock"},{"poop","shit","shite","poopy","pop","dyn"},{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 		{ "options", "-o", "opts" }, };
 	protected APNMessageHandler(String msg) {
 		this.replyToken = "";

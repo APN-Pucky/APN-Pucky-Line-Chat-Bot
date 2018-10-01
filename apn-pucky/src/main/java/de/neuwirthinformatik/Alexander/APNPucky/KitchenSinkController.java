@@ -573,6 +573,12 @@ public class KitchenSinkController {
 			case "poop":
 				poop(apn);
 				break;
+			case "chicken":
+				chicken(apn);
+				break;
+			case "donkey":
+				donkey(apn);
+				break;
 			}
 			break;
 		}
@@ -580,6 +586,13 @@ public class KitchenSinkController {
 			poop(apn);
 			break;
 		}
+		case "chicken": {
+			chicken(apn);
+			break;
+		}
+		case "donkey":
+			donkey(apn);
+			break;
 		case "art": {
 			art(apn);
 			break;
@@ -1005,6 +1018,13 @@ public class KitchenSinkController {
 		{
 			reddit(apn, "poop");
 		}
+	}
+	
+	private void chicken(APNMessageHandler apn) {
+		reddit(apn, "chickens");
+	}
+	private void donkey(APNMessageHandler apn) {
+		reddit(apn, "donkeys");
 	}
 
 	private void pic(APNMessageHandler apn) {
