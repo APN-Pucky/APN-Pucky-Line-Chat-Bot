@@ -629,7 +629,10 @@ public class KitchenSinkController {
 			break;
 		}
 		case "poop": {
-			poop(apn);
+			if(apn.getSenderId().equals("Cdf5335b17a5af6f50a33e6a4ee447b4"))
+				poop(apn);
+			else
+				replyText(apn.getReplyToken(),"Limited to Banter, sorry, not sorry.");
 			break;
 		}
 		case "chicken": {

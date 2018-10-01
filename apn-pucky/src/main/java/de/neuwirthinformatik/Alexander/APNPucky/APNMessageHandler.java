@@ -75,12 +75,16 @@ public class APNMessageHandler
 		if(hm_userid.containsKey(getSenderId()))
 		{
 			String[] cur = hm_userid.get(getSenderId());
+			for(String c : cur)
+			{
+				if(c.equals(getUserId()))return;
+			}
 			String[] n;
 			if(cur.length>=HM_USER_NUMBER_SAVE)
 			{
 				n = new String[HM_USER_NUMBER_SAVE];
 				System.arraycopy(cur, 1, n, 0, HM_USER_NUMBER_SAVE-1);
-				n[HM_USER_NUMBER_SAVE-1] = event.getSource().getUserId(); 
+				n[HM_USER_NUMBER_SAVE-1] = getUserId(); 
 			}
 			else
 			{
