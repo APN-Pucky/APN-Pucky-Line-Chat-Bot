@@ -69,21 +69,28 @@ public class APNMessageHandler
 	
 	private void applyHashMap()
 	{
-		String[] cur = hm_userid.get(event.getSource().getSenderId());
-		String[] n;
-		if(cur.length>=HM_USER_NUMBER_SAVE)
+		if(hm_userid.containsKey(getSenderId()))
 		{
-			n = new String[HM_USER_NUMBER_SAVE];
-			System.arraycopy(cur, 1, n, 0, HM_USER_NUMBER_SAVE-1);
-			n[9] = event.getSource().getUserId(); 
+			String[] cur = hm_userid.get(getSenderId());
+			String[] n;
+			if(cur.length>=HM_USER_NUMBER_SAVE)
+			{
+				n = new String[HM_USER_NUMBER_SAVE];
+				System.arraycopy(cur, 1, n, 0, HM_USER_NUMBER_SAVE-1);
+				n[9] = event.getSource().getUserId(); 
+			}
+			else
+			{
+				n = new String[cur.length+1];
+				System.arraycopy(cur, 0, n, 0, cur.length);
+				n[cur.length] = getUserId();
+			}
+			hm_userid.put(getSenderId(), n);
 		}
 		else
 		{
-			n = new String[cur.length+1];
-			System.arraycopy(cur, 0, n, 0, cur.length);
-			n[cur.length] = event.getSource().getUserId();
+			hm_userid.put(getSenderId(), new String[] {getUserId()});
 		}
-		hm_userid.put(event.getSource().getSenderId(), n);
 	}
 	
 	private void applyAlias()
@@ -99,7 +106,7 @@ public class APNMessageHandler
 		}
 	}
 	
-	public String getUserID() {
+	public String getUserId() {
 		return getEvent().getSource().getUserId();
 	}
 	public String getSenderId() {

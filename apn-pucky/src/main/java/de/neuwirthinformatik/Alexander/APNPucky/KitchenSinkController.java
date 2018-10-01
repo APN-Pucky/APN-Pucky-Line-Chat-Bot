@@ -365,8 +365,8 @@ public class KitchenSinkController {
 			return;
 		}
 		// String userId = event.getSource().getUserId();
-		if (apn.getUserID() != null)
-			lineMessagingClient.getProfile(apn.getUserID()).whenComplete((profile, throwable) -> {
+		if (apn.getUserId() != null)
+			lineMessagingClient.getProfile(apn.getUserId()).whenComplete((profile, throwable) -> {
 				if (throwable != null) {
 					log.info("Got text error:{}", throwable.getMessage());
 					return;
@@ -546,13 +546,15 @@ public class KitchenSinkController {
 				int shot = r.nextInt(names.length);
 				for(int i =0 ; i < names.length;i++ )
 				{
-					if(i ==shot)
+					if(i==shot)
 					{
-						
+						String t = new String[] {"died", "was not so lucky", "has been shot","shot himself","commited suicide","is dead"}[r.nextInt(6)];
+						msg += names[i] + " "+ t + "\n";
 					}
 					else
 					{
-						
+						String t = new String[] {"lives to tell the tale", "survived", "was lucky today", "is alive"}[r.nextInt(4)];
+						msg += names[i] + " " + t + "\n";
 					}
 				}
 			}
