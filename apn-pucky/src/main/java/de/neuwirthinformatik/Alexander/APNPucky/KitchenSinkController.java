@@ -359,7 +359,7 @@ public class KitchenSinkController {
 			{ "FR", "https://www.amazon.fr/dp/B018EZT2YM" } };
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		final APNMessageHandler apn = new APNMessageHandler(replyToken, event, content);
+		final APNMessageHandler apn = new APNMessageHandler(lineMessagingClient,replyToken, event, content);
 		// final String ftext = content.getText().toLowerCase();
 		if (!apn.getArg(0).equals("apn")) {
 			return;
@@ -539,33 +539,28 @@ public class KitchenSinkController {
 			break;
 		}
 		case "roulette": {
-			CompletableFuture<MembersIdsResponse> resp = null;
-			List<String> ids;
 			if(apn.getEvent().getSource() instanceof GroupSource)
 			{
-				replyText(apn.getReplyToken(),lineMessagingClient.getGroupMemberProfile(apn.getEvent().getSource().getSenderId(),null).get().getDisplayName());
-				/*
-				resp = lineMessagingClient.getGroupMembersIds(apn.getEvent().getSource().getSenderId(), null);
-				MembersIdsResponse mrids = resp.get();
-				ids = mrids.getMemberIds();
-				while(mrids.getNext().isPresent())
-				{
-					resp = lineMessagingClient.getGroupMembersIds(apn.getEvent().getSource().getSenderId(), mrids.getNext().get());
-					mrids = resp.get();
-					ids.addAll(mrids.getMemberIds());
-				}
+				String[] names = apn.getRecentNames();
 				String msg = "";
-				for(String s : ids)
+				int shot = r.nextInt(names.length);
+				for(int i =0 ; i < names.length;i++ )
 				{
-					msg += lineMessagingClient.getGroupMemberProfile(apn.getEvent().getSource().getSenderId(),s).get().getDisplayName() + "\n";
+					if(i ==shot)
+					{
+						
+					}
+					else
+					{
+						
+					}
 				}
-				replyText(apn.getReplyToken(),msg);*/
 			}
 			break;
 		}
 		case "random": {
 			Random r = new Random();
-			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama","poop",
+			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama","chicken","donkey",
 					"sticker" };
 			switch (opt[r.nextInt(opt.length)]) {
 			case "art":
@@ -598,9 +593,9 @@ public class KitchenSinkController {
 			case "xkcd":
 				xkcd(apn);
 				break;
-			case "poop":
+			/*case "poop":
 				poop(apn);
-				break;
+				break;*/
 			case "chicken":
 				chicken(apn);
 				break;
@@ -887,7 +882,7 @@ public class KitchenSinkController {
 				if (skip > 0) {
 					skip--;
 				} else {
-					push(apn.getSenderID(), genCardInstanceMessage(image, GlobalData.getCardInstanceById(c.getHighestID())));
+					push(apn.getSenderId(), genCardInstanceMessage(image, GlobalData.getCardInstanceById(c.getHighestID())));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
 					number--;

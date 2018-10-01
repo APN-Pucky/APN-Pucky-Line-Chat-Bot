@@ -1,5 +1,9 @@
 package de.neuwirthinformatik.Alexander.APNPucky;
 
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
+import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 
@@ -9,18 +13,23 @@ import lombok.NonNull;
 
 public class APNMessageHandler 
 {
+	private final LineMessagingClient lmc;
 	@Getter private final String replyToken;
 	@Getter private final Event event;
 	@Getter private final TextMessageContent content;
 	@Getter @NonNull private final String message;
 	@Getter @NonNull private final String[] args;
+
+	private static final int HM_USER_NUMBER_SAVE = 6;
+	@Getter @NonNull private final static HashMap<String,String[]> hm_userid = new HashMap<String, String[]>();
 	
 	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" }, {"insult", "destroy", "shut", "dumb", "dump", "kill"},
 		{ "today", "current" }, { "change", "release" }, { "next", "upcoming" }, { "update", "-u" }, { "list", "search" },
 		{ "card", "-c", "show", "display" }, {"icard","-ic"}, {"imaterials","-im"}, {"inext","-in"}, { "battlegroundeffect", "bge" },{"generate","gen","design","make","create","mk","rich"},{"coins","amazon","buy"}, { "random", "crazy", "fun","drunk", "lol"},
 		{ "joke", "geek" }, { "nude", "nudes","xxx","porn" },{"donkey","mule","ass"},{"chicken","rooster", "cock"},{"rip", "die", "stop"},{"poop","shit","shite","poopy","pop","dyn"},{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 		{ "options", "-o", "opts" }, };
-	protected APNMessageHandler(String msg) {
+	protected APNMessageHandler(LineMessagingClient lmc,String msg) {
+		this.lmc = lmc;
 		this.replyToken = "";
 		this.event = null;
 		this.content = null;
@@ -28,13 +37,53 @@ public class APNMessageHandler
 		this.args = msg.toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
 	}
-	public APNMessageHandler(String replyToken, Event event, TextMessageContent content) {
+	public APNMessageHandler(LineMessagingClient lmc,String replyToken, Event event, TextMessageContent content) {
+		this.lmc = lmc;
 		this.replyToken = replyToken;
 		this.event = event;
 		this.content = content;
 		this.message = getContent().getText();
 		this.args = getContent().getText().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
+		applyHashMap();
+	}
+	
+	public String[] getRecentNames() {
+		String[] ids = getRecentGroupIds();
+		String[] ret = new String[ids.length];
+		for(int i = 0; i < ids.length;i++)
+		{
+			try {
+				ret[i] = lmc.getGroupMemberProfile(getSenderId(),ids[i]).get().getDisplayName();
+			} catch (InterruptedException | ExecutionException e) {
+				ret[i] = "APN-Pucky";
+			}
+		}
+		return ret;
+	}
+	public String[] getRecentGroupIds() {return getRecentGroupIds(getSenderId());}
+	public String[] getRecentGroupIds(String gid)
+	{
+		return hm_userid.get(gid);
+	}
+	
+	private void applyHashMap()
+	{
+		String[] cur = hm_userid.get(event.getSource().getSenderId());
+		String[] n;
+		if(cur.length>=HM_USER_NUMBER_SAVE)
+		{
+			n = new String[HM_USER_NUMBER_SAVE];
+			System.arraycopy(cur, 1, n, 0, HM_USER_NUMBER_SAVE-1);
+			n[9] = event.getSource().getUserId(); 
+		}
+		else
+		{
+			n = new String[cur.length+1];
+			System.arraycopy(cur, 0, n, 0, cur.length);
+			n[cur.length] = event.getSource().getUserId();
+		}
+		hm_userid.put(event.getSource().getSenderId(), n);
 	}
 	
 	private void applyAlias()
@@ -53,7 +102,7 @@ public class APNMessageHandler
 	public String getUserID() {
 		return getEvent().getSource().getUserId();
 	}
-	public String getSenderID() {
+	public String getSenderId() {
 		return getEvent().getSource().getSenderId();
 	}
 	
