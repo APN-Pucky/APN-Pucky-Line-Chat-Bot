@@ -14,6 +14,7 @@ import lombok.NonNull;
 public class APNMessageHandler 
 {
 	/*
+	 * Cdf5335b17a5af6f50a33e6a4ee447b4a
 	 * Banter: Cdf5335b17a5af6f50a33e6a4ee447b4a
 	 * Pirate: C097503a423eb9ecfc7daed9c3a146b93
 	 * DT: Cf6da5174ac7070e3b158eb918cdcaa15
@@ -83,7 +84,7 @@ public class APNMessageHandler
 			String[] cur = hm_userid.get(getSenderId());
 			for(String c : cur)
 			{
-				if(c.equals(getUserId()))return;
+				if( c!= null && c.equals(getUserId()))return;
 			}
 			String[] n;
 			if(cur.length>=HM_USER_NUMBER_SAVE)
