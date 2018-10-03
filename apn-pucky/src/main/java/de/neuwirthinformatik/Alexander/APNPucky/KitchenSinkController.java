@@ -168,7 +168,7 @@ public class KitchenSinkController {
 
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-		new APNMessageHandler(lineMessagingClient, "");
+		new APNMessageHandler(lineMessagingClient,event, "");
 		handleSticker(event.getReplyToken(), event.getMessage());
 	}
 
@@ -184,7 +184,7 @@ public class KitchenSinkController {
 
 	@EventMapping
 	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
-		new APNMessageHandler(lineMessagingClient, "");
+		new APNMessageHandler(lineMessagingClient,event, "");
 		// You need to install ImageMagick
 		/*
 		 * handleHeavyContent(event.getReplyToken(), event.getMessage().getId(),

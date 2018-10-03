@@ -44,6 +44,17 @@ public class APNMessageHandler
 		this.args = msg.toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
 		this.cargs = msg.trim().replaceAll("\\s+", " ").split(" ");
 		applyAlias();
+		//applyHashMap();
+	}
+	protected APNMessageHandler(LineMessagingClient lmc,Event event,String msg) {
+		this.lmc = lmc;
+		this.replyToken = "";
+		this.event = event;
+		this.content = null;
+		this.message = msg;
+		this.args = msg.toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
+		this.cargs = msg.trim().replaceAll("\\s+", " ").split(" ");
+		applyAlias();
 		applyHashMap();
 	}
 	public APNMessageHandler(LineMessagingClient lmc,String replyToken, Event event, TextMessageContent content) {
