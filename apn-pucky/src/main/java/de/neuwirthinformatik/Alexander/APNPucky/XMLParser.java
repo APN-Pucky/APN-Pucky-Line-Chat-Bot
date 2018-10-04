@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 
 public class XMLParser {
-	public static final int CARD_SECTIONS_COUNT = 17; // TODO: load from data
+	private int CARD_SECTIONS_COUNT = 0;
 	private int card_count = 1;
 	private int fusion_count = 0;
 	private int mission_count = 0;
@@ -34,15 +34,26 @@ public class XMLParser {
 		try {
 			System.out.println("XMLParser DOWNLOAD");
 			System.out.println("XMLParser Start");
-			for (int i = 1; i <= CARD_SECTIONS_COUNT; i++) {
+			boolean stop = false;
+			int i =0;
+			while(!stop) {
 				// File inputFile = new File("data/cards_section_"+i+".xml");
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				card_documents[i] = dBuilder.parse(new BufferedInputStream(
-						new URL("http://mobile-dev.tyrantonline.com/assets/cards_section_" + i + ".xml").openStream()));
-				card_documents[i].getDocumentElement().normalize();
-				NodeList nList = card_documents[i].getElementsByTagName("unit");
-				card_count += nList.getLength();
+				try
+				{
+					i++;
+					card_documents[i] = dBuilder.parse(new BufferedInputStream(
+							new URL("http://mobile-dev.tyrantonline.com/assets/cards_section_" + i + ".xml").openStream()));
+					CARD_SECTIONS_COUNT++;
+					card_documents[i].getDocumentElement().normalize();
+					NodeList nList = card_documents[i].getElementsByTagName("unit");
+					card_count += nList.getLength();
+				}
+				catch(Exception e)
+				{
+					stop = true;
+				}
 			}
 
 			// File inputFile = new File("data/fusion_recipes_cj2.xml");

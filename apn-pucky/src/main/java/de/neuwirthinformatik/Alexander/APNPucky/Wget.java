@@ -3,6 +3,7 @@ package de.neuwirthinformatik.Alexander.APNPucky;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public class Wget {
             e.printStackTrace();
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
+        	if(!(e instanceof FileNotFoundException))e.printStackTrace();
             return null;
         } finally {
             try {
@@ -80,7 +81,7 @@ public class Wget {
             e.printStackTrace();
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
+        	if(!(e instanceof FileNotFoundException))e.printStackTrace();
             return null;
         } finally {
             try {
@@ -125,7 +126,7 @@ public class Wget {
             e.printStackTrace();
             return Wget.Status.MalformedUrl;
         } catch (IOException e) {
-            e.printStackTrace();
+        	if(!(e instanceof FileNotFoundException))e.printStackTrace();
             return Wget.Status.IoException;
         } finally {
             try {

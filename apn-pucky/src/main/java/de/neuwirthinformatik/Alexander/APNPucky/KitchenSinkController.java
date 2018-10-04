@@ -853,6 +853,7 @@ public class KitchenSinkController {
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
+		GlobalData.init();
 		int skip = 0;
 		int number = 5;
 		int offset = GlobalData.all_cards.length;
