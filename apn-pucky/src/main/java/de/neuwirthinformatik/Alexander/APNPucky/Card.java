@@ -368,7 +368,7 @@ public class Card {
                         ret += "\n";
                         for(SkillSpec s : info.skills)
                         {
-                                if(s.card_id>0) ret += new CardInstance(s.card_id).description() + "\n\n";
+                                //if(s.card_id>0) ret += new CardInstance(s.card_id).description() + "\n\n";
                         }
                         return StringUtil.removeLastCharacter(ret,2);
                 }

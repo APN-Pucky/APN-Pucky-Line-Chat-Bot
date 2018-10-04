@@ -914,9 +914,15 @@ public class KitchenSinkController {
 				if (skip > 0) {
 					skip--;
 				} else {
-					push(apn.getSenderId(), genCardInstanceMessage(image, GlobalData.getCardInstanceById(c.getHighestID())));
+					CardInstance ci = GlobalData.getCardInstanceById(c.getHighestID());
+					//push(apn.getSenderId(), genCardInstanceMessage(image, ci));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
+					/*for(SkillSpec s : ci.getInfo().skills)
+                    {
+                            if(s.card_id>0) push(apn.getSenderId(), genCardInstanceMessage(image,new CardInstance(s.card_id)));
+                    }*/
+					recursivePushCI(apn, image, ci);
 					number--;
 				}
 			}
@@ -924,6 +930,15 @@ public class KitchenSinkController {
 		// push(apn.getUserID(), msgs);
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
+	}
+	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
+	{
+		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
+		for(SkillSpec s : ci.getInfo().skills)
+        {
+                if(s.card_id>0) recursivePushCI(apn,image,new CardInstance(s.card_id));
+        }
+		
 	}
 
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
