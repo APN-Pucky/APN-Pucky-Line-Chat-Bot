@@ -20,7 +20,8 @@ import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 
 public class XMLParser {
 	private int CARD_SECTIONS_COUNT = 0;
-	private int card_count = 1;
+	//private int card_count = 1;
+	private Integer[] card_per_sec = new Integer[CARD_SECTIONS_COUNT + 1];
 	private int fusion_count = 0;
 	private int mission_count = 0;
 	private Document[] card_documents = new Document[CARD_SECTIONS_COUNT + 1];
@@ -30,6 +31,35 @@ public class XMLParser {
 	private Document skill_document;
 	private Document document;
 
+	public int card_count()
+	{
+		int sum = 0;
+		for (Integer i : card_per_sec)
+		{
+			sum += i;
+		}
+		return sum;
+	}
+	public void reloadLatestCardSection() {reloadLatestCardSection(CARD_SECTIONS_COUNT);}
+	public void reloadLatestCardSection(int sec) {
+		try
+		{
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		
+			card_documents[sec]= dBuilder.parse(new BufferedInputStream(
+					new URL("http://mobile-dev.tyrantonline.com/assets/cards_section_" + sec+ ".xml").openStream()));
+			card_documents[sec].getDocumentElement().normalize();
+			NodeList nList = card_documents[sec].getElementsByTagName("unit");
+			card_per_sec[sec] = nList.getLength();
+			//card_count += nList.getLength();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public XMLParser() {
 		try {
 			System.out.println("XMLParser DOWNLOAD");
@@ -37,7 +67,9 @@ public class XMLParser {
 			boolean stop = false;
 			int i =0;
 			ArrayList<Document> al = new ArrayList<Document>();
+			ArrayList<Integer> aint = new ArrayList<Integer>();
 			al.add(null);
+			aint.add(1);
 			while(!stop) {
 				// File inputFile = new File("data/cards_section_"+i+".xml");
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -52,7 +84,8 @@ public class XMLParser {
 					CARD_SECTIONS_COUNT++;
 					card_document.getDocumentElement().normalize();
 					NodeList nList = card_document.getElementsByTagName("unit");
-					card_count += nList.getLength();
+					aint.add(nList.getLength());
+					//card_count += nList.getLength();
 				}
 				catch(Exception e)
 				{
@@ -60,6 +93,7 @@ public class XMLParser {
 				}
 			}
 			card_documents = al.toArray(card_documents);
+			card_per_sec = aint.toArray(card_per_sec);
 
 			// File inputFile = new File("data/fusion_recipes_cj2.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -107,11 +141,12 @@ public class XMLParser {
 		System.out.println("XMLParser Done");
 
 	}
+	
 
 	public Pair<Card[], Card[]> loadCards() {
 		System.out.println("Loading Cards");
 		int max_id = 0;
-		Card[] distinct_cards = new Card[card_count];
+		Card[] distinct_cards = new Card[card_count()];
 		int id, rarity, fusion_level, fort_type, set,bundle;
 		String name,picture;
 		int f;
@@ -128,7 +163,8 @@ public class XMLParser {
 				for (int temp = 0; temp < nList.getLength(); temp++) {
 					Node nNode = nList.item(temp);
 
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) 
+					{
 						Element eElement = (Element) nNode;
 						name = eElement.getElementsByTagName("name").item(0).getTextContent();
 	        			picture = eElement.getElementsByTagName("picture").item(0).getTextContent();

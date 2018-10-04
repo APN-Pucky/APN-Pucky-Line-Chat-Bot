@@ -33,13 +33,11 @@ import de.neuwirthinformatik.Alexander.APNPucky.Card.CardCategory;
 import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
 import de.neuwirthinformatik.Alexander.APNPucky.Card.CardType;
 import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance.Info;
-
 import java.util.HashMap;
 
 
 public class GlobalData
 {
-//end crypto
 public static String line_seperator = System.getProperty("line.seperator");
 public static String file_seperator = File.separator;
 public static String xml_time = "";
@@ -73,6 +71,14 @@ public static void init() {
         xml = null;
         xml_time = Task.time();
         //for(Fusion f : fusions)all_cards[f.getID()].setMaterials(f.getMaterials());
+}
+
+public static void simple_update() {
+	xml.reloadLatestCardSection();
+	Pair<Card[],Card[]> p = xml.loadCards();
+	distinct_cards = p.t;
+	all_cards = p.u;
+	xml = null;
 }
 
 
