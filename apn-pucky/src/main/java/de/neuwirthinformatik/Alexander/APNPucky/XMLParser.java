@@ -36,18 +36,21 @@ public class XMLParser {
 			System.out.println("XMLParser Start");
 			boolean stop = false;
 			int i =0;
+			ArrayList<Document> al = new ArrayList<Document>();
 			while(!stop) {
 				// File inputFile = new File("data/cards_section_"+i+".xml");
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document card_document;
 				try
 				{
 					i++;
-					card_documents[i] = dBuilder.parse(new BufferedInputStream(
-							new URL("http://mobile-dev.tyrantonline.com/assets/cards_section_" + i + ".xml").openStream()));
+					al.add(
+					card_document= dBuilder.parse(new BufferedInputStream(
+							new URL("http://mobile-dev.tyrantonline.com/assets/cards_section_" + i + ".xml").openStream())));
 					CARD_SECTIONS_COUNT++;
-					card_documents[i].getDocumentElement().normalize();
-					NodeList nList = card_documents[i].getElementsByTagName("unit");
+					card_document.getDocumentElement().normalize();
+					NodeList nList = card_document.getElementsByTagName("unit");
 					card_count += nList.getLength();
 				}
 				catch(Exception e)
@@ -55,6 +58,7 @@ public class XMLParser {
 					stop = true;
 				}
 			}
+			card_documents = al.toArray(card_documents);
 
 			// File inputFile = new File("data/fusion_recipes_cj2.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
