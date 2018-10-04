@@ -37,9 +37,10 @@ public class XMLParser {
 			boolean stop = false;
 			int i =0;
 			ArrayList<Document> al = new ArrayList<Document>();
+			al.add(null);
 			while(!stop) {
 				// File inputFile = new File("data/cards_section_"+i+".xml");
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactoryx.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document card_document;
 				try
