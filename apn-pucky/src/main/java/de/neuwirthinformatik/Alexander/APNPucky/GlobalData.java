@@ -41,7 +41,7 @@ public class GlobalData
 public static String line_seperator = System.getProperty("line.seperator");
 public static String file_seperator = File.separator;
 public static String xml_time = "";
-static XMLParser xml = null;
+private static XMLParser xml = null;
 public static Card[] distinct_cards;
 public static Card[] all_cards;
 public static Fusion[] fusions = new Fusion[] {};
@@ -68,7 +68,7 @@ public static void init() {
         Pair<Card[],Card[]> p = xml.loadCards();
         distinct_cards = p.t;
         all_cards = p.u;
-        xml = null;
+        //xml = null;
         xml_time = Task.time();
         //for(Fusion f : fusions)all_cards[f.getID()].setMaterials(f.getMaterials());
 }
@@ -78,7 +78,7 @@ public static void simple_update() {
 	Pair<Card[],Card[]> p = xml.loadCards();
 	distinct_cards = p.t;
 	all_cards = p.u;
-	xml = null;
+	//xml = null;
 }
 
 
