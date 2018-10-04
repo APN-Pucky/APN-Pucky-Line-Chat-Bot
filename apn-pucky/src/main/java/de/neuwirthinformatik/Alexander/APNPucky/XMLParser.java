@@ -40,7 +40,7 @@ public class XMLParser {
 			al.add(null);
 			while(!stop) {
 				// File inputFile = new File("data/cards_section_"+i+".xml");
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactoryx.newInstance();
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document card_document;
 				try
