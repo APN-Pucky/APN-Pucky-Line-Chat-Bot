@@ -151,7 +151,7 @@ public class Gen {
 			if (i.getSkills()[j].isAll()
 					&& (!couldBeTrigger(i.getSkills()[j]) || i.getSkills()[j].getId().equals("mimic")))
 				return -2;
-			if (!i.getSkills()[j].getTrigger().equals("activate") && !couldBeTrigger(i.getSkills()[j]))
+			if (!i.getSkills()[j].getTrigger().equals("activate") && (!couldBeTrigger(i.getSkills()[j]) || i.getSkills()[j].getC()>0))
 				return -3;
 
 			if (i.getSkills()[j].getId().equals("wall"))

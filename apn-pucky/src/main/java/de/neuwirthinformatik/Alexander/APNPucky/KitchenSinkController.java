@@ -1301,7 +1301,7 @@ public class KitchenSinkController {
 		String[] lines = general.split("\n");
 		String fin = "";
 		for (String l : lines) {
-			if (l.contains("Roadmap")) {
+			if (l.contains("Roadmap") || l.contains("Showdown at Avalon")) {
 				fin = l;
 				break;
 			}

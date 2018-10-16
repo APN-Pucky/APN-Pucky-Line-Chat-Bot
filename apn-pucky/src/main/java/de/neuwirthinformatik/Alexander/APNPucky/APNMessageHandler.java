@@ -30,10 +30,10 @@ public class APNMessageHandler
 	private static final int HM_USER_NUMBER_SAVE = 6;
 	@Getter @NonNull private final static HashMap<String,String[]> hm_userid = new HashMap<String, String[]>();
 	
-	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" }, {"insult", "destroy", "shut", "dumb", "dump", "kill"},
+	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" }, {"insult", "destroy", "shut",	"kill", "devastate"},
 		{ "today", "current" }, { "change", "release" }, { "next", "upcoming" }, { "update", "-u" }, { "list", "search" },
 		{ "card", "-c", "show", "display" }, {"icard","-ic"}, {"imaterials","-im"},{"next","spoiler","spoilers"}, {"inext","-in"}, { "battlegroundeffect", "bge" },{"generate","gen","design","make","create","mk","rich"},{"coins","amazon","buy"}, { "random", "crazy", "fun","drunk", "lol"},
-		{ "joke", "geek" }, { "nude", "nudes","xxx","porn" },{"donkey","mule","ass"},{"chicken","rooster", "cock"},{"rip", "die", "stop"},{"poop","shit","shite","poopy","pop","dyn"},{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
+		{ "joke", "geek","chuck" }, { "nude", "nudes","xxx","porn" },{"donkey","mule","ass"},{"chicken","rooster", "cock"},{"rip", "die", "stop"},{"poop","shit","shite","poopy","pop","dyn"},{"dad","daddy","dev", "share","forward","bug"}, { "version", "-v" }, { "help", "\\?", "-h" },
 		{ "options", "-o", "opts" }, };
 	protected APNMessageHandler(LineMessagingClient lmc,String msg) {
 		this.lmc = lmc;
