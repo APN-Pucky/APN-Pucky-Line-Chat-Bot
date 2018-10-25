@@ -341,7 +341,7 @@ public class KitchenSinkController {
 			{ 4, 288 }, { 4, 300 }, { 4, 291 }, { 4, 298 }, { 4, 608 }, { 4, 282 } };
 
 	private void handleSticker(String replyToken, StickerMessageContent content) {
-		if (Math.random() > 0.9)
+		if (Math.random() > 0.99)
 			sticker(replyToken);
 	}
 
