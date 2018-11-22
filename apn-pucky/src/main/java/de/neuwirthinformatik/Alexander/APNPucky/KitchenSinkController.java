@@ -541,7 +541,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "info": {
-			this.replyText(apn.getReplyToken(), "Sent");
+			this.replyText(apn.getReplyToken(), "Wanna buy drugs?");
 			this.pushText(apn.getUserId(), "Group id: "  + apn.getSenderId());
 			this.pushText(apn.getUserId(), "User id: "  + apn.getUserId());
 			break;
