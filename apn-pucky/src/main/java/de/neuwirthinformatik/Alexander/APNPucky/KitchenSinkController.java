@@ -933,12 +933,19 @@ public class KitchenSinkController {
 	}
 	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
 	{
+		recursivePushCI(apn ,image,ci,0);
+	}
+	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
+	{
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
-		for(SkillSpec s : ci.getInfo().skills)
-        {
-                if(s.card_id>0) recursivePushCI(apn,image,new CardInstance(s.card_id));
-        }
-		
+		itr++;
+		if(itr < 5)
+		{
+			for(SkillSpec s : ci.getInfo().skills)
+	        {
+	                if(s.card_id>0) recursivePushCI(apn,image,new CardInstance(s.card_id),itr);
+	        }
+		}
 	}
 
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
