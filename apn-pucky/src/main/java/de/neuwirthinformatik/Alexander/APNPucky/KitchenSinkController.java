@@ -495,7 +495,7 @@ public class KitchenSinkController {
 
 			String rep = "";
 			String[] sections = map.split("\\*\\*");
-			for (int i = 1; i < sections.length; i += 2) {
+			for (int i = 3; i < sections.length; i += 2) {
 				String title = sections[i];
 				String msg = sections[i + 1];
 				String date = msg.split("\\*")[1];
@@ -1009,7 +1009,7 @@ public class KitchenSinkController {
 		System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
 		boolean first = true;
 		try {
-		for (int i = 1; i < sections.length; i += 2) {
+		for (int i = 3; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
 			String[] split = msg.split("\\*");
