@@ -46,8 +46,10 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
@@ -93,6 +95,8 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Configuration
+@EnableAsync
 @LineMessageHandler
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class KitchenSinkController {
@@ -939,12 +943,12 @@ public class KitchenSinkController {
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
-	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
+	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
 	{
 		recursivePushCI(apn ,image,ci,0);
 	}
 	@Async
-	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
+	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
 	{
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
 		itr++;
