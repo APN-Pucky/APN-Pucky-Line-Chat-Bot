@@ -866,7 +866,7 @@ public class KitchenSinkController {
 		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(id));
 	    	}
 		}
-		if(skip)this.replyText(apn.getReplyToken(), rep);
+		if(!skip)this.replyText(apn.getReplyToken(), rep);
 	}
 	
 	private void case_generate(APNMessageHandler apn)
