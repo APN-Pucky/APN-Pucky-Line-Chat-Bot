@@ -485,8 +485,8 @@ public class KitchenSinkController {
 			break;
 		}
 		case "roadmap": {
-			String url = getRoadMapUrl();
-			String map = getRoadMap(url);
+			String url = Kong.getRoadMapUrl();
+			String map = Kong.getRoadMap(url);
 
 			if (apn.getArgs().length >= 3 && apn.equals(2, "full")) {
 				this.replyText(replyToken, map + "\n\n" + url);
@@ -498,7 +498,7 @@ public class KitchenSinkController {
 			for (int i = 3; i < sections.length; i += 2) {
 				String title = sections[i];
 				String msg = sections[i + 1];
-				String date = msg.split("\\*")[1];
+				String date = msg.split("\\n")[2];
 				rep += title + "\n";
 				rep += date + "\n\n";
 			}
@@ -795,7 +795,7 @@ public class KitchenSinkController {
 			}
 			this.replyText(apn.getReplyToken(), "Unknown bge: '" + req + "'");
 		} else {
-			String map = getFirstKongPost(url);
+			String map = Kong.getFirstKongPost(url);
 			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
 			String ret = "";
 			String[] lines = map.split("\n");
@@ -999,7 +999,7 @@ public class KitchenSinkController {
 		this.reply(apn.getReplyToken(), case_today_next_change(apn));
 	}
 	private Message case_today_next_change(APNMessageHandler apn){
-		String map = getRoadMap();
+		String map = Kong.getRoadMap();
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
 		Date min_next = null;
@@ -1052,7 +1052,7 @@ public class KitchenSinkController {
 			}
 
 		}
-		}catch(Exception e) {e.printStackTrace();}
+		}catch(Exception e) {e.printStackTrace();rep = "Error during website parse";}
 		if (rep.equals(""))
 			rep = today?"No event today":next?"No next event. Check 'apn today'.":"No known changes";
 		return new TextMessage(rep);
@@ -1302,49 +1302,6 @@ public class KitchenSinkController {
 		if (url.matches("https?://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
 			return url;
 		return null;
-	}
-	private static String getRoadMapUrl() {
-		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
-		String[] lines = general.split("\n");
-		String fin = "";
-		for (String l : lines) {
-			if (l.contains("Roadmap") || l.contains("Showdown at Avalon")) {
-				fin = l;
-				break;
-			}
-		}
-		String[] guesses = new String[] {"Dev","ComDev", "COMDEV","DEV"};
-		String url = "";
-		try {
-			for(String g : guesses) {
-				if(!url.equals(""))break;
-				url = "https://www.kongregate.com"
-						+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">["+g+"]"));
-			}
-		}
-		catch(Exception e) {
-
-			url = "https://www.kongregate.com"
-					+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">[COMDEV]"));
-		}
-		return url;
-	}
-
-	private static String getFirstKongPost(String url) {
-		String road = Wget.wGet(url);
-
-		String map = road.substring(road.indexOf("<div class=\"raw_post\""));
-		map = map.substring(map.indexOf(">") + 1);
-		map = map.substring(0, map.indexOf("</div>"));
-		return map;
-	}
-
-	private static String getRoadMap(String url) {
-		return getFirstKongPost(url);
-	}
-
-	private static String getRoadMap() {
-		return getRoadMap(getRoadMapUrl());
 	}
 
 	private static CardInstance getCardInstance(String idorname) {
