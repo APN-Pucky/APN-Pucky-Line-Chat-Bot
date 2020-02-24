@@ -47,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
@@ -848,7 +849,7 @@ public class KitchenSinkController {
 	    		int id = close.getHighestID();
 		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
 		    	//rep += close.description();
-		    	Task.start(() -> recursivePushCI(apn,image,GlobalData.getCardInstanceById(id)));
+		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(id));
 	    	}
 		}
 		this.replyText(apn.getReplyToken(), rep);
@@ -942,6 +943,7 @@ public class KitchenSinkController {
 	{
 		recursivePushCI(apn ,image,ci,0);
 	}
+	@Async
 	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
 	{
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
