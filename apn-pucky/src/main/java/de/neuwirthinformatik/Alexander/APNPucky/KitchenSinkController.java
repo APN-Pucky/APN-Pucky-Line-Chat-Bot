@@ -453,7 +453,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "list": {
-			case_list(apn);
+			case_list(apn,false);
 			break;
 		}
 		case "imaterials": {
@@ -752,7 +752,7 @@ public class KitchenSinkController {
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn);
+			case_list(apn,image);
 			//this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
@@ -768,7 +768,7 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn);
+			case_list(apn,image);
 			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
@@ -809,7 +809,7 @@ public class KitchenSinkController {
 		}
 	}
 	
-	private void case_list(APNMessageHandler apn) {
+	private void case_list(APNMessageHandler apn, boolean image) {
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
 			return;
@@ -841,7 +841,8 @@ public class KitchenSinkController {
 	    	if(close != null)
 	    	{
 		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
-		    	rep += close.description();
+		    	//rep += close.description();
+		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(close.getHighestID()));
 	    	}
 		}
 		this.replyText(apn.getReplyToken(), rep);
