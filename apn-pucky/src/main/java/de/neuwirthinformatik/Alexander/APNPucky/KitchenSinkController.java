@@ -1008,8 +1008,8 @@ public class KitchenSinkController {
 		boolean today = apn.equals(1, "today");
 		boolean change = apn.equals(1, "change");
 		boolean next = apn.equals(1, "next");
-		System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
-		boolean first = true;
+		//System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
+		boolean first = false;
 		try {
 		for (int i = 3; i < sections.length; i += 2) {
 			String title = sections[i];
