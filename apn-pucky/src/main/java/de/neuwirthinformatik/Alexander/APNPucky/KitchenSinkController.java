@@ -843,6 +843,7 @@ public class KitchenSinkController {
 			this.replyText(apn.getReplyToken(), rep);
 	    	skip=true;
 	    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(cur.getHighestID()));
+	    	return;
 		}
 		if(!changed)
 		{
