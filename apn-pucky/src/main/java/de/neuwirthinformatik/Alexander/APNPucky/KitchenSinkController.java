@@ -95,8 +95,6 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Configuration
-@EnableAsync
 @LineMessageHandler
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class KitchenSinkController {
@@ -947,7 +945,6 @@ public class KitchenSinkController {
 	{
 		recursivePushCI(apn ,image,ci,0);
 	}
-	@Async
 	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
 	{
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
