@@ -814,6 +814,7 @@ public class KitchenSinkController {
 	}
 	
 	private void case_list(APNMessageHandler apn, boolean image) {
+		boolean skip = false;
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
 			return;
@@ -822,6 +823,7 @@ public class KitchenSinkController {
 		String rep = "card search: '" + req + "'\n\n";
 		boolean changed = false;
 		boolean single_ch = true;
+		Card cur = null;
 		for (Card c : GlobalData.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
@@ -833,9 +835,16 @@ public class KitchenSinkController {
 					rep += "..........EOM..........";
 					break;
 				}
+				cur= c;
 			}
 		}
-		if(!changed || single_ch)
+		if(single_ch && changed && cur != null)
+		{
+			this.replyText(apn.getReplyToken(), rep);
+	    	skip=true;
+	    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(cur.getHighestID()));
+		}
+		if(!changed)
 		{
 			Card close = null;
 	    	int min = -1;
@@ -851,10 +860,12 @@ public class KitchenSinkController {
 	    		int id = close.getHighestID();
 		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
 		    	//rep += close.description();
+		    	this.replyText(apn.getReplyToken(), rep);
+		    	skip=true;
 		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(id));
 	    	}
 		}
-		this.replyText(apn.getReplyToken(), rep);
+		if(skip)this.replyText(apn.getReplyToken(), rep);
 	}
 	
 	private void case_generate(APNMessageHandler apn)
