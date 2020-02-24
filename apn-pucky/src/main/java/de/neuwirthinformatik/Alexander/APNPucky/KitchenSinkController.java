@@ -818,17 +818,21 @@ public class KitchenSinkController {
 		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
 		String rep = "card search: '" + req + "'\n\n";
 		boolean changed = false;
+		boolean single_ch = true;
 		for (Card c : GlobalData.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
-				if(!changed)changed = true;
+				if(!changed)
+					changed = true;
+				else
+					if(single_ch)single_ch = false;
 				if (rep.length() > 1000) {
 					rep += "..........EOM..........";
 					break;
 				}
 			}
 		}
-		if(!changed)
+		if(!changed || single_ch)
 		{
 			Card close = null;
 	    	int min = -1;
@@ -841,9 +845,10 @@ public class KitchenSinkController {
 			}
 	    	if(close != null)
 	    	{
+	    		int id = close.getHighestID();
 		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
 		    	//rep += close.description();
-		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(close.getHighestID()));
+		    	Task.start(() -> recursivePushCI(apn,image,GlobalData.getCardInstanceById(id)));
 	    	}
 		}
 		this.replyText(apn.getReplyToken(), rep);
