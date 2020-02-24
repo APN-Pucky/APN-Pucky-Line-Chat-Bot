@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -1013,16 +1014,16 @@ public class KitchenSinkController {
 		for (int i = 3; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
-			String[] split = msg.split("\\*");
-			String date = split[1];
-			String conten = split[2];
-			for (int j = 3; j < split.length; j++)
-				conten += "*" + split[j];
+			String[] split = msg.split("\n");
+			String date = split[2];
+			String conten = split[4];
+			for(int j = 5; j < split.length; j++)
+				conten += "\n" + split[j];
 			conten = conten.trim();
 			// rep += title + "\n";
 			// rep += date + "\n\n";
 
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d",Locale.ENGLISH);
 			String[] dates = date.split("-");
 			String d1 = dates[0];
 			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
