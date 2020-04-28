@@ -264,7 +264,6 @@ public class KitchenSinkController {
 	}
 
 	private void push(@NonNull String id, @NonNull List<Message> messages) {
-		if(true)return;
 		try {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(id, messages)).get();
