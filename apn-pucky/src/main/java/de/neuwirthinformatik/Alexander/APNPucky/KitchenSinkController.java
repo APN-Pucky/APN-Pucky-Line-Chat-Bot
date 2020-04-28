@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -45,7 +46,10 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
@@ -453,7 +457,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "list": {
-			case_list(apn);
+			case_list(apn,false);
 			break;
 		}
 		case "imaterials": {
@@ -485,8 +489,8 @@ public class KitchenSinkController {
 			break;
 		}
 		case "roadmap": {
-			String url = getRoadMapUrl();
-			String map = getRoadMap(url);
+			String url = Kong.getRoadMapUrl();
+			String map = Kong.getRoadMap(url);
 
 			if (apn.getArgs().length >= 3 && apn.equals(2, "full")) {
 				this.replyText(replyToken, map + "\n\n" + url);
@@ -498,7 +502,7 @@ public class KitchenSinkController {
 			for (int i = 3; i < sections.length; i += 2) {
 				String title = sections[i];
 				String msg = sections[i + 1];
-				String date = msg.split("\\*")[1];
+				String date = msg.split("\\n")[2];
 				rep += title + "\n";
 				rep += date + "\n\n";
 			}
@@ -752,7 +756,7 @@ public class KitchenSinkController {
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn);
+			case_list(apn,image);
 			//this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
@@ -768,7 +772,7 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn);
+			case_list(apn,image);
 			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
@@ -795,7 +799,7 @@ public class KitchenSinkController {
 			}
 			this.replyText(apn.getReplyToken(), "Unknown bge: '" + req + "'");
 		} else {
-			String map = getFirstKongPost(url);
+			String map = Kong.getFirstKongPost(url);
 			map = map.substring(StringUtil.indexOfIgnoreCard(map, req));
 			String ret = "";
 			String[] lines = map.split("\n");
@@ -809,7 +813,8 @@ public class KitchenSinkController {
 		}
 	}
 	
-	private void case_list(APNMessageHandler apn) {
+	private void case_list(APNMessageHandler apn, boolean image) {
+		boolean skip = false;
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
 			return;
@@ -817,15 +822,28 @@ public class KitchenSinkController {
 		String req = apn.getFrom(2);// ptext.split("apn list ")[1].trim();
 		String rep = "card search: '" + req + "'\n\n";
 		boolean changed = false;
+		boolean single_ch = true;
+		Card cur = null;
 		for (Card c : GlobalData.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
-				if(!changed)changed = true;
+				if(!changed)
+					changed = true;
+				else
+					if(single_ch)single_ch = false;
 				if (rep.length() > 1000) {
 					rep += "..........EOM..........";
 					break;
 				}
+				cur= c;
 			}
+		}
+		if(single_ch && changed && cur != null)
+		{
+			this.replyText(apn.getReplyToken(), rep);
+	    	skip=true;
+	    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(cur.getHighestID()));
+	    	return;
 		}
 		if(!changed)
 		{
@@ -840,11 +858,15 @@ public class KitchenSinkController {
 			}
 	    	if(close != null)
 	    	{
+	    		int id = close.getHighestID();
 		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
-		    	rep += close.description();
+		    	//rep += close.description();
+		    	this.replyText(apn.getReplyToken(), rep);
+		    	skip=true;
+		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(id));
 	    	}
 		}
-		this.replyText(apn.getReplyToken(), rep);
+		if(!skip)this.replyText(apn.getReplyToken(), rep);
 	}
 	
 	private void case_generate(APNMessageHandler apn)
@@ -931,11 +953,11 @@ public class KitchenSinkController {
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
-	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
+	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
 	{
 		recursivePushCI(apn ,image,ci,0);
 	}
-	private void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
+	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
 	{
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
 		itr++;
@@ -998,7 +1020,7 @@ public class KitchenSinkController {
 		this.reply(apn.getReplyToken(), case_today_next_change(apn));
 	}
 	private Message case_today_next_change(APNMessageHandler apn){
-		String map = getRoadMap();
+		String map = Kong.getRoadMap();
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
 		Date min_next = null;
@@ -1006,22 +1028,22 @@ public class KitchenSinkController {
 		boolean today = apn.equals(1, "today");
 		boolean change = apn.equals(1, "change");
 		boolean next = apn.equals(1, "next");
-		System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
-		boolean first = true;
+		//System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
+		boolean first = false;
 		try {
 		for (int i = 3; i < sections.length; i += 2) {
 			String title = sections[i];
 			String msg = sections[i + 1];
-			String[] split = msg.split("\\*");
-			String date = split[1];
-			String conten = split[2];
-			for (int j = 3; j < split.length; j++)
-				conten += "*" + split[j];
+			String[] split = msg.split("\n");
+			String date = split[2];
+			String conten = split[4];
+			for(int j = 5; j < split.length; j++)
+				conten += "\n" + split[j];
 			conten = conten.trim();
 			// rep += title + "\n";
 			// rep += date + "\n\n";
 
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d");
+			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d",Locale.ENGLISH);
 			String[] dates = date.split("-");
 			String d1 = dates[0];
 			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
@@ -1051,7 +1073,7 @@ public class KitchenSinkController {
 			}
 
 		}
-		}catch(Exception e) {e.printStackTrace();}
+		}catch(Exception e) {e.printStackTrace();rep = "Error during website parse";}
 		if (rep.equals(""))
 			rep = today?"No event today":next?"No next event. Check 'apn today'.":"No known changes";
 		return new TextMessage(rep);
@@ -1301,49 +1323,6 @@ public class KitchenSinkController {
 		if (url.matches("https?://www\\.kongregate\\.com/forums/2468-general/topics/\\d+"))
 			return url;
 		return null;
-	}
-	private static String getRoadMapUrl() {
-		String general = Wget.wGet("https://www.kongregate.com/forums/2468-general");
-		String[] lines = general.split("\n");
-		String fin = "";
-		for (String l : lines) {
-			if (l.contains("Roadmap") || l.contains("Showdown at Avalon")) {
-				fin = l;
-				break;
-			}
-		}
-		String[] guesses = new String[] {"Dev","ComDev", "COMDEV","DEV"};
-		String url = "";
-		try {
-			for(String g : guesses) {
-				if(!url.equals(""))break;
-				url = "https://www.kongregate.com"
-						+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">["+g+"]"));
-			}
-		}
-		catch(Exception e) {
-
-			url = "https://www.kongregate.com"
-					+ fin.substring(fin.indexOf("href=\"/forums/2468-general") + 6, fin.indexOf("\">[COMDEV]"));
-		}
-		return url;
-	}
-
-	private static String getFirstKongPost(String url) {
-		String road = Wget.wGet(url);
-
-		String map = road.substring(road.indexOf("<div class=\"raw_post\""));
-		map = map.substring(map.indexOf(">") + 1);
-		map = map.substring(0, map.indexOf("</div>"));
-		return map;
-	}
-
-	private static String getRoadMap(String url) {
-		return getFirstKongPost(url);
-	}
-
-	private static String getRoadMap() {
-		return getRoadMap(getRoadMapUrl());
 	}
 
 	private static CardInstance getCardInstance(String idorname) {
