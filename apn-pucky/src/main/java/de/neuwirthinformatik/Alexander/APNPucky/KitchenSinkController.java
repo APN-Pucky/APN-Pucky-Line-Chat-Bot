@@ -265,10 +265,15 @@ public class KitchenSinkController {
 
 	private void push(@NonNull String id, @NonNull List<Message> messages) {
 		try {
+		try {
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(id, messages)).get();
 			log.info("Sent push messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
+		}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
