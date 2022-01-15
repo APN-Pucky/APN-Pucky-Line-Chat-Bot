@@ -902,7 +902,7 @@ public class KitchenSinkController {
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
-		GlobalData.simple_update();
+		GlobalData.simple_update(false);
 		int skip = 0;
 		int number = 5;
 		int offset = GlobalData.all_cards.length;

@@ -42,7 +42,7 @@ dependencies {
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.08'
     compile group: 'ai.api', name: 'libai', version: '1.6.12'
 
-    compile 'com.github.APN-Pucky:TULib:0.2.4'
+    compile 'com.github.APN-Pucky:TULib:0.2.5'
     compile 'com.github.APN-Pucky:TUR:0.2.11'
 }
 
