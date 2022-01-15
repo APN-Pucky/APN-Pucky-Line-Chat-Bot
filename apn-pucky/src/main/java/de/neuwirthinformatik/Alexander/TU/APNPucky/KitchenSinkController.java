@@ -88,6 +88,7 @@ import ai.api.model.AIResponse;
 import de.neuwirthinformatik.Alexander.TU.Basic.Card;
 import de.neuwirthinformatik.Alexander.TU.Basic.Card.CardInstance;
 import de.neuwirthinformatik.Alexander.TU.Basic.Deck;
+import de.neuwirthinformatik.Alexander.TU.Basic.Gen;
 import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
