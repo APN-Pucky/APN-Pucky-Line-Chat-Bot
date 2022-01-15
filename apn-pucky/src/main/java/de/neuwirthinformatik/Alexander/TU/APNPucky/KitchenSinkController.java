@@ -852,6 +852,7 @@ public class KitchenSinkController {
 	}
 
 	private void case_list(APNMessageHandler apn, boolean image) {
+		image = false; // HARD DISSABLE image search
 		boolean skip = false;
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a name with: 'apn list {name}'");
