@@ -16,6 +16,9 @@
 
 package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
+import static org.junit.Assert.fail;
+
+import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,7 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -46,10 +48,7 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
@@ -82,14 +81,18 @@ import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
-import com.linecorp.bot.model.profile.MembersIdsResponse;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.Basic.Card;
+import de.neuwirthinformatik.Alexander.TU.Basic.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
+import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.KitchenSinkController.DownloadedContent;
+import de.neuwirthinformatik.Alexander.TU.Render.Render;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -143,10 +146,10 @@ public class KitchenSinkController {
 	}
 
 	@PostConstruct
-	public void init() throws ParseException {
+	public void init() throws ParseException, FontFormatException, IOException {
 		KitchenSinkApplication.resourceLoader = rl;
 		r.setSeed(System.currentTimeMillis());
-		GlobalData.init();
+		GlobalData.init(true);
 		cloudinaryCleanup();
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
@@ -969,9 +972,9 @@ public class KitchenSinkController {
 		itr++;
 		if(itr < 5)
 		{
-			for(SkillSpec s : ci.getInfo().skills)
+			for(SkillSpec s : ci.getInfo().getSkills())
 	        {
-	                if(s.card_id>0) recursivePushCI(apn,image,new CardInstance(s.card_id),itr);
+	                if(s.getCard_id()>0) recursivePushCI(apn,image,new CardInstance(s.getCard_id()),itr);
 	        }
 		}
 	}

@@ -4,7 +4,10 @@ package de.neuwirthinformatik.Alexander.TU.APNPucky;
 import java.util.ArrayList;
 import java.util.Random;
 
-import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.Basic.Card;
+import de.neuwirthinformatik.Alexander.TU.Basic.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
+import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
 
 
 public class Gen {
