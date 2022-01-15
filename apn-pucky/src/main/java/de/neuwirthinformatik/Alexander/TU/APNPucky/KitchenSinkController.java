@@ -374,7 +374,7 @@ public class KitchenSinkController {
 		// final String ftext = content.getText().toLowerCase();
 		if (!apn.getArg(0).equals("apn")) {
 			if (apn.getMessage().contains("*")) {
-				String[] ss = apn.getMessage().split("*");
+				String[] ss = apn.getMessage().split("\\*");
 				for(int i = 1; i < ss.length;i+=2) {
 					if(ss[i].contains(",")) {
 						Deck ci = GlobalData.constructDeck(ss[i]);
