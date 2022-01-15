@@ -16,8 +16,6 @@
 
 package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
-import static org.junit.Assert.fail;
-
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -89,9 +87,9 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import de.neuwirthinformatik.Alexander.TU.Basic.Card;
 import de.neuwirthinformatik.Alexander.TU.Basic.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.Basic.Deck;
 import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
-import de.neuwirthinformatik.Alexander.TU.APNPucky.KitchenSinkController.DownloadedContent;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
 import lombok.NonNull;
 import lombok.Value;
@@ -485,6 +483,14 @@ public class KitchenSinkController {
 			case_card(apn, false);
 			break;
 		}
+		case "ideck": {
+			case_deck(apn, true);
+			break;
+		}
+		case "deck": {
+			case_deck(apn, false);
+			break;
+		}
 		case "change": {
 			case_roadmaps(apn);
 			break;
@@ -788,6 +794,22 @@ public class KitchenSinkController {
 		}
 	}
 
+	private void case_deck(APNMessageHandler apn, boolean image) {
+		if (apn.getArgs().length < 3) {
+			this.replyText(apn.getReplyToken(), "Please pass a deck with: 'apn deck {cards}'");
+			return;
+		}
+		String req = apn.getFrom(2);// ptext.split("apn card ")[1].trim();
+		Deck ci = GlobalData.constructDeck(req);
+
+		if (ci == null ) {
+			case_list(apn,image);
+			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+		} else {
+			this.reply(apn.getReplyToken(), genDeckMessage(image, ci));
+		}
+	}
+
 	private void case_bge(APNMessageHandler apn) {
 		if (apn.getArgs().length < 3) {
 			this.replyText(apn.getReplyToken(), "Please pass a card with: 'apn bge {bge}'");
@@ -979,6 +1001,24 @@ public class KitchenSinkController {
 		}
 	}
 
+	private Message genDeckMessage(boolean image, Deck ci) {
+		if (image) {
+			BufferedImage bi = KitchenSinkApplication.render.renderDeck(ci);
+			DownloadedContent d = createTempFile("png");
+			try {
+				ImageIO.write(bi, "png", d.path.toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.path);
+				String perm_uri = (String) uploadResult.get("secure_url");
+				return new ImageMessage(perm_uri, perm_uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new ImageMessage(d.uri, d.uri);
+		} else {
+			return new TextMessage(ci.toString());
+		}
+	}
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
 		if (image) {
 			BufferedImage bi = KitchenSinkApplication.render.render(ci);
