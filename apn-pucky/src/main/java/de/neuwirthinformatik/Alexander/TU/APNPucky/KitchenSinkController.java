@@ -375,14 +375,19 @@ public class KitchenSinkController {
 		if (!apn.getArg(0).equals("apn")) {
 			if (apn.getMessage().contains("*")) {
 				String[] ss = apn.getMessage().split("\\*");
-				for(int i = 1; i < ss.length;i+=2) {
-					if(ss[i].contains(",")) {
+				for (int i = 1; i < ss.length; i += 2) {
+					if (ss[i].contains(",")) {
 						Deck ci = GlobalData.constructDeck(ss[i]);
-						this.push(apn.getSenderId(), genDeckMessage(true, ci));
-					}
-					else {
+						if (i == 1)
+							this.reply(apn.getReplyToken(), genDeckMessage(true, ci));
+						else
+							this.push(apn.getSenderId(), genDeckMessage(true, ci));
+					} else {
 						CardInstance ci = GlobalData.getCardInstance(ss[i]);
-						this.push(apn.getSenderId(), genCardInstanceMessage(true, ci));
+						if (i == 1)
+							this.reply(apn.getReplyToken(), genCardInstanceMessage(true, ci));
+						else
+							this.push(apn.getSenderId(), genCardInstanceMessage(true, ci));
 					}
 				}
 			}
@@ -798,6 +803,8 @@ public class KitchenSinkController {
 			// this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
+			if (image)
+				recursivePushCISummon(apn, image, ci);
 		}
 	}
 
@@ -991,17 +998,27 @@ public class KitchenSinkController {
 		// this.replyText(replyToken,msg);
 	}
 
+	public void recursivePushCISummon(APNMessageHandler apn, boolean image, CardInstance ci) {
+		for (SkillSpec s : ci.getInfo().getSkills()) {
+			if (s.getCard_id() > 0)
+				recursivePushCI(apn, image, new CardInstance(s.getCard_id()), 1);
+		}
+	}
+
 	public void recursivePushCI(APNMessageHandler apn, boolean image, CardInstance ci) {
 		recursivePushCI(apn, image, ci, 0);
 	}
 
 	public void recursivePushCI(APNMessageHandler apn, boolean image, CardInstance ci, int itr) {
-		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
-		itr++;
-		if (itr < 5) {
-			for (SkillSpec s : ci.getInfo().getSkills()) {
-				if (s.getCard_id() > 0)
-					recursivePushCI(apn, image, new CardInstance(s.getCard_id()), itr);
+		if (image) // only push images
+		{
+			push(apn.getSenderId(), genCardInstanceMessage(image, ci));
+			itr++;
+			if (itr < 5) {
+				for (SkillSpec s : ci.getInfo().getSkills()) {
+					if (s.getCard_id() > 0)
+						recursivePushCI(apn, image, new CardInstance(s.getCard_id()), itr);
+				}
 			}
 		}
 	}
@@ -1012,7 +1029,8 @@ public class KitchenSinkController {
 			DownloadedContent d = createTempFile("png");
 			try {
 				ImageIO.write(bi, "png", d.getPath().toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(),
+						ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
@@ -1031,7 +1049,8 @@ public class KitchenSinkController {
 			DownloadedContent d = createTempFile("png");
 			try {
 				ImageIO.write(bi, "png", d.getPath().toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(),
+						ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
@@ -1051,7 +1070,8 @@ public class KitchenSinkController {
 			DownloadedContent d = createTempFile("png");
 			try {
 				ImageIO.write(bi, "png", d.getPath().toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(),
+						ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
@@ -1339,7 +1359,8 @@ public class KitchenSinkController {
 		DownloadedContent img = createTempFile("jpg");
 		Wget.wGet(img.getPath().toString(), url);
 		try {
-			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.getUri(), ObjectUtils.emptyMap());
+			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.getUri(),
+					ObjectUtils.emptyMap());
 			Files.deleteIfExists(img.getPath());
 			return (String) uploadResult.get("secure_url");
 		} catch (Exception e) {
@@ -1385,8 +1406,6 @@ public class KitchenSinkController {
 		return null;
 	}
 
-
-
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
@@ -1404,14 +1423,13 @@ public class KitchenSinkController {
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	public static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
 		tempFile.toFile().deleteOnExit();
-		return new DownloadedContent(tempFile, KitchenSinkController.createUri("/downloaded/" + tempFile.getFileName()));
+		return new DownloadedContent(tempFile,
+				KitchenSinkController.createUri("/downloaded/" + tempFile.getFileName()));
 	}
-
-
 
 }
