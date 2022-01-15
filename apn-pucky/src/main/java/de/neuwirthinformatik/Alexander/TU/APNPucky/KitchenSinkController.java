@@ -374,7 +374,17 @@ public class KitchenSinkController {
 		// final String ftext = content.getText().toLowerCase();
 		if (!apn.getArg(0).equals("apn")) {
 			if (apn.getMessage().contains("*")) {
-
+				String[] ss = apn.getMessage().split("*");
+				for(int i = 1; i < ss.length;i+=2) {
+					if(ss[i].contains(",")) {
+						Deck ci = GlobalData.constructDeck(ss[i]);
+						this.reply(apn.getReplyToken(), genDeckMessage(true, ci));
+					}
+					else {
+						CardInstance ci = GlobalData.getCardInstance(ss[i]);
+						this.reply(apn.getReplyToken(), genCardInstanceMessage(true, ci));
+					}
+				}
 			}
 
 			return;
@@ -766,7 +776,7 @@ public class KitchenSinkController {
 			return;
 		}
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
-		CardInstance ci = getCardInstance(card_name);
+		CardInstance ci = GlobalData.getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
 			case_list(apn, image);
 			// this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
@@ -781,7 +791,7 @@ public class KitchenSinkController {
 			return;
 		}
 		String req = apn.getFrom(2);// ptext.split("apn card ")[1].trim();
-		CardInstance ci = getCardInstance(req);
+		CardInstance ci = GlobalData.getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
 			case_list(apn, image);
@@ -1374,13 +1384,7 @@ public class KitchenSinkController {
 		return null;
 	}
 
-	private static CardInstance getCardInstance(String idorname) {
-		if (idorname.matches("\\d+")) {
-			return new CardInstance(Integer.parseInt(idorname));
-		} else {
-			return GlobalData.getCardInstanceByNameAndLevel(StringUtil.capitalizeOnlyFirstLetters(idorname));
-		}
-	}
+
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
