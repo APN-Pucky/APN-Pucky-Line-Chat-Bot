@@ -1,6 +1,7 @@
 {
     "name": "APN-Pucky - Line Chat Bot for Tyrant Unleashed",
     "description": "Line Chat Bot for Tyrant Unleashed",
+    "stack": "heroku-20",
     "keywords": ["chatbot", "line", "java", "tyrant","unleashed"],
     "env": {
         "LINE_BOT_CHANNEL_TOKEN": {
