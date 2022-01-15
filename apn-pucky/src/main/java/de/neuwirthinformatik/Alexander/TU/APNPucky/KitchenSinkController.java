@@ -378,11 +378,11 @@ public class KitchenSinkController {
 				for(int i = 1; i < ss.length;i+=2) {
 					if(ss[i].contains(",")) {
 						Deck ci = GlobalData.constructDeck(ss[i]);
-						this.reply(apn.getReplyToken(), genDeckMessage(true, ci));
+						this.push(apn.getSenderId(), genDeckMessage(true, ci));
 					}
 					else {
 						CardInstance ci = GlobalData.getCardInstance(ss[i]);
-						this.reply(apn.getReplyToken(), genCardInstanceMessage(true, ci));
+						this.push(apn.getSenderId(), genCardInstanceMessage(true, ci));
 					}
 				}
 			}
