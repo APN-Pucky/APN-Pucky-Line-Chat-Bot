@@ -89,8 +89,8 @@ import de.neuwirthinformatik.Alexander.TU.Basic.Deck;
 import de.neuwirthinformatik.Alexander.TU.Basic.Gen;
 import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
+import de.neuwirthinformatik.Alexander.TU.Render.DownloadedContent;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
-import de.neuwirthinformatik.Alexander.TU.Render.Render.DownloadedContent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -1000,15 +1000,15 @@ public class KitchenSinkController {
 			BufferedImage bi = KitchenSinkApplication.render.renderDeck(ci);
 			DownloadedContent d = createTempFile("png");
 			try {
-				ImageIO.write(bi, "png", d.path.toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.path);
+				ImageIO.write(bi, "png", d.getPath().toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.uri, d.uri);
+			return new ImageMessage(d.getUri(), d.getUri());
 		} else {
 			return new TextMessage(ci.toString());
 		}
@@ -1019,15 +1019,15 @@ public class KitchenSinkController {
 			BufferedImage bi = KitchenSinkApplication.render.render(ci);
 			DownloadedContent d = createTempFile("png");
 			try {
-				ImageIO.write(bi, "png", d.path.toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.path);
+				ImageIO.write(bi, "png", d.getPath().toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.uri, d.uri);
+			return new ImageMessage(d.getUri(), d.getUri());
 		} else {
 			return new TextMessage(ci.description());
 		}
@@ -1039,15 +1039,15 @@ public class KitchenSinkController {
 			BufferedImage bi = Render.scaleBilinear(bim, ((double) 1000) / 1150);
 			DownloadedContent d = createTempFile("png");
 			try {
-				ImageIO.write(bi, "png", d.path.toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.uri, ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.path);
+				ImageIO.write(bi, "png", d.getPath().toFile());
+				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
 				return new ImageMessage(perm_uri, perm_uri);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.uri, d.uri);
+			return new ImageMessage(d.getUri(), d.getUri());
 		} else {
 			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n[" + StringUtil.removeLastCharacter(GlobalData
 					.getInvString(GlobalData.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n", ", "), 2)
@@ -1326,16 +1326,16 @@ public class KitchenSinkController {
 		Random r = new Random();
 		String url = urls.get(r.nextInt(urls.size()));
 		DownloadedContent img = createTempFile("jpg");
-		Wget.wGet(img.path.toString(), url);
+		Wget.wGet(img.getPath().toString(), url);
 		try {
-			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.uri, ObjectUtils.emptyMap());
-			Files.deleteIfExists(img.path);
+			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(img.getUri(), ObjectUtils.emptyMap());
+			Files.deleteIfExists(img.getPath());
 			return (String) uploadResult.get("secure_url");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// return "null";
-		return img.uri;
+		return img.getUri();
 	}
 
 	private String getXKCDUrl() {
