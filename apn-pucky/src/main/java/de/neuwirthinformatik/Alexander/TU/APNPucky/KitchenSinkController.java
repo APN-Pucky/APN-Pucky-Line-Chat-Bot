@@ -153,14 +153,13 @@ public class KitchenSinkController {
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
-			pushText("Uab4d6ff3d59aee3ce4869e894ca4e337",Gen.gen());
-			//APNMessageHandler apn = new APNMessageHandler("apn today");
-			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			//apn = new APNMessageHandler("apn next");
-			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			//apn = new APNMessageHandler("apn change");
-			//push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			
+			pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", Gen.gen());
+			// APNMessageHandler apn = new APNMessageHandler("apn today");
+			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			// apn = new APNMessageHandler("apn next");
+			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
+			// apn = new APNMessageHandler("apn change");
+			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 
 		}
 	}
@@ -173,7 +172,7 @@ public class KitchenSinkController {
 
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-		new APNMessageHandler(lineMessagingClient,event, "");
+		new APNMessageHandler(lineMessagingClient, event, "");
 		handleSticker(event.getReplyToken(), event.getMessage());
 	}
 
@@ -189,7 +188,7 @@ public class KitchenSinkController {
 
 	@EventMapping
 	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
-		new APNMessageHandler(lineMessagingClient,event, "");
+		new APNMessageHandler(lineMessagingClient, event, "");
 		// You need to install ImageMagick
 		/*
 		 * handleHeavyContent(event.getReplyToken(), event.getMessage().getId(),
@@ -266,15 +265,14 @@ public class KitchenSinkController {
 
 	private void push(@NonNull String id, @NonNull List<Message> messages) {
 		try {
-		try {
-			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(id, messages)).get();
-			log.info("Sent push messages: {}", apiResponse);
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-			//throw new RuntimeException(e);
-		}
-		}
-		catch(Exception e) {
+			try {
+				BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(id, messages)).get();
+				log.info("Sent push messages: {}", apiResponse);
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+				// throw new RuntimeException(e);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -360,7 +358,8 @@ public class KitchenSinkController {
 			{ "icard", "display a card with image" }, { "materials", "displays materials for card" },
 			{ "new", "displays latest quads" }, { "bge", "display a bge" }, { "skill", "display a skill" },
 			{ "roadmap", "tu roadmap + link" }, { "current", "current tu event" }, { "next", "next tu event" },
-			{ "release", "next tu release" }, {"generate", "generates a new TU card"}, { "tuo", "tuo version" }, { "options", "apn bot options" }, };
+			{ "release", "next tu release" }, { "generate", "generates a new TU card" }, { "tuo", "tuo version" },
+			{ "options", "apn bot options" }, };
 	private static final String[][] large_help = new String[][] { { "xml", "show the date of xmls" },
 			{ "update", "reload xmls" }, { "alias", "enlist alias" }, { "random", "random" }, { "joke", "geeky joke" },
 			{ "fail", "fail gif" }, { "art", "art image" }, { "pic", "some image" }, { "xkcd", "xkcd image" },
@@ -372,9 +371,13 @@ public class KitchenSinkController {
 			{ "FR", "https://www.amazon.fr/dp/B018EZT2YM" } };
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content) throws Exception {
-		final APNMessageHandler apn = new APNMessageHandler(lineMessagingClient,replyToken, event, content);
+		final APNMessageHandler apn = new APNMessageHandler(lineMessagingClient, replyToken, event, content);
 		// final String ftext = content.getText().toLowerCase();
 		if (!apn.getArg(0).equals("apn")) {
+			if (apn.getMessage().contains("*")) {
+
+			}
+
 			return;
 		}
 		// String userId = event.getSource().getUserId();
@@ -427,7 +430,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "update": {
-			GlobalData.init();
+			GlobalData.init(true);
 			this.replyText(replyToken, "load new dev-xml @" + GlobalData.xml_time);
 			break;
 		}
@@ -464,7 +467,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "list": {
-			case_list(apn,false);
+			case_list(apn, false);
 			break;
 		}
 		case "imaterials": {
@@ -561,48 +564,43 @@ public class KitchenSinkController {
 		}
 		case "info": {
 			this.replyText(apn.getReplyToken(), "Wanna buy drugs?");
-			this.pushText(apn.getUserId(), "Group id: "  + apn.getSenderId());
-			this.pushText(apn.getUserId(), "User id: "  + apn.getUserId());
+			this.pushText(apn.getUserId(), "Group id: " + apn.getSenderId());
+			this.pushText(apn.getUserId(), "User id: " + apn.getUserId());
 			break;
 		}
-		case "sender" : {
+		case "sender": {
 			this.replyText(apn.getReplyToken(), apn.getSenderId());
 			break;
 		}
-		case "user" : {
+		case "user": {
 			this.replyText(apn.getReplyToken(), apn.getUserId());
 			break;
 		}
-		case "push" : {
+		case "push": {
 			if (apn.getArgs().length < 3) {
 				this.replyText(apn.getReplyToken(), "Usage: apn push id msg");
 				break;
 			}
-			this.pushText(apn.getArg(2,true), apn.getFrom(3,true));
+			this.pushText(apn.getArg(2, true), apn.getFrom(3, true));
 			break;
 		}
 		case "roulette": {
 			String msg = "";
-			if(apn.getEvent().getSource() instanceof GroupSource)
-			{
+			if (apn.getEvent().getSource() instanceof GroupSource) {
 				String[] names = apn.getRecentNames();
 				int shot = r.nextInt(names.length);
-				for(int i =0 ; i < names.length;i++ )
-				{
-					if(i==shot)
-					{
-						String t = new String[] {"died", "was not so lucky", "has been shot","shot himself","commited suicide","is dead"}[r.nextInt(6)];
-						msg += names[i] + " "+ t + "\n";
-					}
-					else
-					{
-						String t = new String[] {"lives to tell the tale", "survived", "was lucky today", "is alive"}[r.nextInt(4)];
+				for (int i = 0; i < names.length; i++) {
+					if (i == shot) {
+						String t = new String[] { "died", "was not so lucky", "has been shot", "shot himself",
+								"commited suicide", "is dead" }[r.nextInt(6)];
+						msg += names[i] + " " + t + "\n";
+					} else {
+						String t = new String[] { "lives to tell the tale", "survived", "was lucky today",
+								"is alive" }[r.nextInt(4)];
 						msg += names[i] + " " + t + "\n";
 					}
 				}
-			}
-			else
-			{
+			} else {
 				msg = "Only available in Groups";
 			}
 			replyText(apn.getReplyToken(), msg);
@@ -610,8 +608,8 @@ public class KitchenSinkController {
 		}
 		case "random": {
 			Random r = new Random();
-			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama","chicken","donkey",
-					"sticker" };
+			String[] opt = new String[] { "art", "pic", "joke", "gif", "fail", "meme", "xkcd", "insult", "mama",
+					"chicken", "donkey", "sticker" };
 			switch (opt[r.nextInt(opt.length)]) {
 			case "art":
 				art(apn);
@@ -643,9 +641,9 @@ public class KitchenSinkController {
 			case "xkcd":
 				xkcd(apn);
 				break;
-			/*case "poop":
-				poop(apn);
-				break;*/
+			/*
+			 * case "poop": poop(apn); break;
+			 */
 			case "chicken":
 				chicken(apn);
 				break;
@@ -687,7 +685,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "insult": {
-			
+
 			insult(apn);
 			break;
 		}
@@ -739,28 +737,28 @@ public class KitchenSinkController {
 		default:
 			log.info("Unknown command {}: {}", replyToken, apn.getArg(1));
 			case_default(apn);
-			//this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn help for a list of options.");
+			// this.replyText(replyToken, "Unknown command '" + apn.getArg(1) + "'.\nUse apn
+			// help for a list of options.");
 			break;
 		}
 		// apn = null;
 		System.gc();
 	}
-	
-	private void case_default(APNMessageHandler apn)
-	{
+
+	private void case_default(APNMessageHandler apn) {
 		try {
-	          AIRequest request = new AIRequest(apn.getFrom(1));
+			AIRequest request = new AIRequest(apn.getFrom(1));
 
-	          AIResponse response = KitchenSinkApplication.dataService.request(request);
+			AIResponse response = KitchenSinkApplication.dataService.request(request);
 
-	          if (response.getStatus().getCode() == 200) {
-	        	  this.replyText(apn.getReplyToken(), response.getResult().getFulfillment().getSpeech());
-	          } else {
-	            System.err.println(response.getStatus().getErrorDetails());
-	          }
-	        } catch (Exception ex) {
-	          ex.printStackTrace();
-	        }
+			if (response.getStatus().getCode() == 200) {
+				this.replyText(apn.getReplyToken(), response.getResult().getFulfillment().getSpeech());
+			} else {
+				System.err.println(response.getStatus().getErrorDetails());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void case_materials(APNMessageHandler apn, boolean image) {
@@ -771,8 +769,8 @@ public class KitchenSinkController {
 		String card_name = apn.getFrom(2);// ptext.split("apn materials ")[1];
 		CardInstance ci = getCardInstance(card_name);
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn,image);
-			//this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
+			case_list(apn, image);
+			// this.replyText(apn.getReplyToken(), "Unknown card: '" + card_name + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceTreeMessage(image, ci));
 		}
@@ -787,8 +785,8 @@ public class KitchenSinkController {
 		CardInstance ci = getCardInstance(req);
 
 		if (ci == null || ci == CardInstance.NULL) {
-			case_list(apn,image);
-			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+			case_list(apn, image);
+			// this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genCardInstanceMessage(image, ci));
 		}
@@ -802,9 +800,9 @@ public class KitchenSinkController {
 		String req = apn.getFrom(2);// ptext.split("apn card ")[1].trim();
 		Deck ci = GlobalData.constructDeck(req);
 
-		if (ci == null ) {
-			case_list(apn,image);
-			//this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
+		if (ci == null) {
+			case_list(apn, image);
+			// this.replyText(apn.getReplyToken(), "Unknown card: '" + req + "'");
 		} else {
 			this.reply(apn.getReplyToken(), genDeckMessage(image, ci));
 		}
@@ -843,7 +841,7 @@ public class KitchenSinkController {
 			this.replyText(apn.getReplyToken(), ret);
 		}
 	}
-	
+
 	private void case_list(APNMessageHandler apn, boolean image) {
 		boolean skip = false;
 		if (apn.getArgs().length < 3) {
@@ -858,51 +856,48 @@ public class KitchenSinkController {
 		for (Card c : GlobalData.distinct_cards) {
 			if (StringUtil.containsIgnoreSpecial(c.getName(), req)) {
 				rep += c.getName() + "\n";
-				if(!changed)
+				if (!changed)
 					changed = true;
-				else
-					if(single_ch)single_ch = false;
+				else if (single_ch)
+					single_ch = false;
 				if (rep.length() > 1000) {
 					rep += "..........EOM..........";
 					break;
 				}
-				cur= c;
+				cur = c;
 			}
 		}
-		if(single_ch && changed && cur != null)
-		{
+		if (single_ch && changed && cur != null) {
 			this.replyText(apn.getReplyToken(), rep);
-	    	skip=true;
-	    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(cur.getHighestID()));
-	    	return;
+			skip = true;
+			recursivePushCI(apn, image, GlobalData.getCardInstanceById(cur.getHighestID()));
+			return;
 		}
-		if(!changed)
-		{
+		if (!changed) {
 			Card close = null;
-	    	int min = -1;
-	    	for (Card c : GlobalData.distinct_cards) {
-	    		int sc = StringUtil.calculate(c.getName(), req);
-				if (min ==-1 || sc < min) {
+			int min = -1;
+			for (Card c : GlobalData.distinct_cards) {
+				int sc = StringUtil.calculate(c.getName(), req);
+				if (min == -1 || sc < min) {
 					close = c;
 					min = sc;
 				}
 			}
-	    	if(close != null)
-	    	{
-	    		int id = close.getHighestID();
-		    	rep += "Did you mean: '" + close.getName() + "'?\n\n";
-		    	//rep += close.description();
-		    	this.replyText(apn.getReplyToken(), rep);
-		    	skip=true;
-		    	recursivePushCI(apn,image,GlobalData.getCardInstanceById(id));
-	    	}
+			if (close != null) {
+				int id = close.getHighestID();
+				rep += "Did you mean: '" + close.getName() + "'?\n\n";
+				// rep += close.description();
+				this.replyText(apn.getReplyToken(), rep);
+				skip = true;
+				recursivePushCI(apn, image, GlobalData.getCardInstanceById(id));
+			}
 		}
-		if(!skip)this.replyText(apn.getReplyToken(), rep);
+		if (!skip)
+			this.replyText(apn.getReplyToken(), rep);
 	}
-	
-	private void case_generate(APNMessageHandler apn)
-	{
-		replyText(apn.getReplyToken(),Gen.gen());
+
+	private void case_generate(APNMessageHandler apn) {
+		replyText(apn.getReplyToken(), Gen.gen());
 	}
 
 	private void case_new(APNMessageHandler apn, boolean image) {
@@ -968,13 +963,14 @@ public class KitchenSinkController {
 					skip--;
 				} else {
 					CardInstance ci = GlobalData.getCardInstanceById(c.getHighestID());
-					//push(apn.getSenderId(), genCardInstanceMessage(image, ci));
+					// push(apn.getSenderId(), genCardInstanceMessage(image, ci));
 					// this.pushText(apn.getSenderID(), c.description());
 					// msg += + "\n---------------------------------------"+"\n";
-					/*for(SkillSpec s : ci.getInfo().skills)
-                    {
-                            if(s.card_id>0) push(apn.getSenderId(), genCardInstanceMessage(image,new CardInstance(s.card_id)));
-                    }*/
+					/*
+					 * for(SkillSpec s : ci.getInfo().skills) { if(s.card_id>0)
+					 * push(apn.getSenderId(), genCardInstanceMessage(image,new
+					 * CardInstance(s.card_id))); }
+					 */
 					recursivePushCI(apn, image, ci);
 					number--;
 				}
@@ -984,20 +980,19 @@ public class KitchenSinkController {
 		// msg = StringUtil.removeLastCharacter(msg,42);
 		// this.replyText(replyToken,msg);
 	}
-	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci)
-	{
-		recursivePushCI(apn ,image,ci,0);
+
+	public void recursivePushCI(APNMessageHandler apn, boolean image, CardInstance ci) {
+		recursivePushCI(apn, image, ci, 0);
 	}
-	public void recursivePushCI(APNMessageHandler apn ,boolean image,CardInstance ci, int itr)
-	{
+
+	public void recursivePushCI(APNMessageHandler apn, boolean image, CardInstance ci, int itr) {
 		push(apn.getSenderId(), genCardInstanceMessage(image, ci));
 		itr++;
-		if(itr < 5)
-		{
-			for(SkillSpec s : ci.getInfo().getSkills())
-	        {
-	                if(s.getCard_id()>0) recursivePushCI(apn,image,new CardInstance(s.getCard_id()),itr);
-	        }
+		if (itr < 5) {
+			for (SkillSpec s : ci.getInfo().getSkills()) {
+				if (s.getCard_id() > 0)
+					recursivePushCI(apn, image, new CardInstance(s.getCard_id()), itr);
+			}
 		}
 	}
 
@@ -1019,6 +1014,7 @@ public class KitchenSinkController {
 			return new TextMessage(ci.toString());
 		}
 	}
+
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
 		if (image) {
 			BufferedImage bi = KitchenSinkApplication.render.render(ci);
@@ -1054,9 +1050,8 @@ public class KitchenSinkController {
 			}
 			return new ImageMessage(d.uri, d.uri);
 		} else {
-			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n["
-					+ StringUtil.removeLastCharacter(GlobalData.getInvString(GlobalData.getIDsFromCardInstances(ci.getMaterials()))
-							.replaceAll("\n", ", "), 2)
+			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n[" + StringUtil.removeLastCharacter(GlobalData
+					.getInvString(GlobalData.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n", ", "), 2)
 					+ "]\n\n" + "Required Materials (" + ci.getCostFromLowestMaterials() + " SP): \n["
 					+ StringUtil.removeLastCharacter(GlobalData
 							.getInvString(GlobalData
@@ -1065,10 +1060,12 @@ public class KitchenSinkController {
 					+ "]\n");
 		}
 	}
+
 	private void case_roadmaps(APNMessageHandler apn) {
 		this.reply(apn.getReplyToken(), case_today_next_change(apn));
 	}
-	private Message case_today_next_change(APNMessageHandler apn){
+
+	private Message case_today_next_change(APNMessageHandler apn) {
 		String map = Kong.getRoadMap();
 		String rep = "";
 		String[] sections = map.split("\\*\\*");
@@ -1077,56 +1074,62 @@ public class KitchenSinkController {
 		boolean today = apn.equals(1, "today");
 		boolean change = apn.equals(1, "change");
 		boolean next = apn.equals(1, "next");
-		//System.out.println(apn.getMessage() + "->" +today + " " + change + " " + next);
+		// System.out.println(apn.getMessage() + "->" +today + " " + change + " " +
+		// next);
 		boolean first = false;
 		try {
-		for (int i = 3; i < sections.length; i += 2) {
-			String title = sections[i];
-			String msg = sections[i + 1];
-			String[] split = msg.split("\n");
-			String date = split[2];
-			String conten = split[4];
-			for(int j = 5; j < split.length; j++)
-				conten += "\n" + split[j];
-			conten = conten.trim();
-			// rep += title + "\n";
-			// rep += date + "\n\n";
+			for (int i = 3; i < sections.length; i += 2) {
+				String title = sections[i];
+				String msg = sections[i + 1];
+				String[] split = msg.split("\n");
+				String date = split[2];
+				String conten = split[4];
+				for (int j = 5; j < split.length; j++)
+					conten += "\n" + split[j];
+				conten = conten.trim();
+				// rep += title + "\n";
+				// rep += date + "\n\n";
 
-			SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d",Locale.ENGLISH);
-			String[] dates = date.split("-");
-			String d1 = dates[0];
-			d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
-					"$1");
-
-			Date dd1 = parser.parse(d1);
-			if (change && (min_change == null || dd1.before(min_change)) && dd1.after(Calendar.getInstance().getTime())) {
-				min_change = dd1;
-				rep = title + "\n" + date + "\n\n" + conten;
-			}
-			if (dates.length > 1) {
-				String d2 = dates[1];
-				d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(), "(\\d)(st|nd|rd|th)",
+				SimpleDateFormat parser = new SimpleDateFormat("yyyyMMMMMMMMM d", Locale.ENGLISH);
+				String[] dates = date.split("-");
+				String d1 = dates[0];
+				d1 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d1.trim(), "(\\d)(st|nd|rd|th)",
 						"$1");
-				Date dd2 = parser.parse(d2);
-				Calendar cal = Calendar.getInstance();// jump one day for borders
-				cal.setTime(dd2);
-				cal.add(Calendar.DATE, 1);
-				dd2 = cal.getTime();
-				if (next && (min_next == null || dd1.before(min_next)) && dd1.after(Calendar.getInstance().getTime())) {
-					min_next = dd1;
+
+				Date dd1 = parser.parse(d1);
+				if (change && (min_change == null || dd1.before(min_change))
+						&& dd1.after(Calendar.getInstance().getTime())) {
+					min_change = dd1;
 					rep = title + "\n" + date + "\n\n" + conten;
 				}
-				if (today && Calendar.getInstance().getTime().before(dd2) && Calendar.getInstance().getTime().after(dd1)
-						&& (!first || (first = false)))
-					rep += title + "\n" + date + "\n\n" + conten + "\n\n";
-			}
+				if (dates.length > 1) {
+					String d2 = dates[1];
+					d2 = StringUtil.replaceLast(Calendar.getInstance().get(Calendar.YEAR) + d2.trim(),
+							"(\\d)(st|nd|rd|th)", "$1");
+					Date dd2 = parser.parse(d2);
+					Calendar cal = Calendar.getInstance();// jump one day for borders
+					cal.setTime(dd2);
+					cal.add(Calendar.DATE, 1);
+					dd2 = cal.getTime();
+					if (next && (min_next == null || dd1.before(min_next))
+							&& dd1.after(Calendar.getInstance().getTime())) {
+						min_next = dd1;
+						rep = title + "\n" + date + "\n\n" + conten;
+					}
+					if (today && Calendar.getInstance().getTime().before(dd2)
+							&& Calendar.getInstance().getTime().after(dd1) && (!first || (first = false)))
+						rep += title + "\n" + date + "\n\n" + conten + "\n\n";
+				}
 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rep = "Error during website parse";
 		}
-		}catch(Exception e) {e.printStackTrace();rep = "Error during website parse";}
 		if (rep.equals(""))
-			rep = today?"No event today":next?"No next event. Check 'apn today'.":"No known changes";
+			rep = today ? "No event today" : next ? "No next event. Check 'apn today'." : "No known changes";
 		return new TextMessage(rep);
-		//this.replyText(apn.getReplyToken(), rep);
+		// this.replyText(apn.getReplyToken(), rep);
 	}
 
 	private static int getAmazonCoinPrice(String url) {
@@ -1157,22 +1160,23 @@ public class KitchenSinkController {
 	private void art(APNMessageHandler apn) {
 		reddit(apn, "Art");
 	}
-	
+
 	private void poop(APNMessageHandler apn) {
-		if(!apn.getSenderId().equals("Cdf5335b17a5af6f50a33e6a4ee447b4"))
-			replyText(apn.getReplyToken(),"Limited to Banter, sorry, not sorry.");
-		if(r.nextDouble()<0.01)
-		{
-			reply(apn.getReplyToken(), genCardInstanceMessage(true, GlobalData.getCardInstanceByNameAndLevel("Marshal Kylen")));
+		if (!apn.getSenderId().equals("Cdf5335b17a5af6f50a33e6a4ee447b4"))
+			replyText(apn.getReplyToken(), "Limited to Banter, sorry, not sorry.");
+		if (r.nextDouble() < 0.01) {
+			reply(apn.getReplyToken(),
+					genCardInstanceMessage(true, GlobalData.getCardInstanceByNameAndLevel("Marshal Kylen")));
 		}
 		{
 			reddit(apn, "poop");
 		}
 	}
-	
+
 	private void chicken(APNMessageHandler apn) {
 		reddit(apn, "chickens");
 	}
+
 	private void donkey(APNMessageHandler apn) {
 		reddit(apn, "donkeys");
 	}
@@ -1215,32 +1219,29 @@ public class KitchenSinkController {
 		msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
 		return msg;
 	}
-	
+
 	private static String getInsultShort() {
 		String msg = Wget.wGet("http://www.robietherobot.com/insult-generator.htm");
 		msg = msg.split("Call them a...")[1].split("<h1>")[1].split("</h1>")[0].trim().replaceAll("\\s+", " ");
-		//msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
+		// msg = msg.replaceAll("\"", "").replaceAll("&quot;", "\"");
 		return msg;
 	}
 
-	private void insult(APNMessageHandler apn) 
-	{
+	private void insult(APNMessageHandler apn) {
 		String name = "";
 		if (apn.getArgs().length >= 3) {
 			name = apn.getFrom(2);
 		}
 		// System.out.println(msg);
 		String insult = "";
-		if(r.nextBoolean() == true)
-		{
+		if (r.nextBoolean() == true) {
 			insult = getInsultLong();
-		}
-		else
-		{
+		} else {
 			insult = "You are a " + getInsultShort();
 		}
 		String msg = "";
-		if(name != "")msg = insult.replace("You are", name + " is");
+		if (name != "")
+			msg = insult.replace("You are", name + " is");
 		this.replyText(apn.getReplyToken(), msg);
 	}
 
