@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

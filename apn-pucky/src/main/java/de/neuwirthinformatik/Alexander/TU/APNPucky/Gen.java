@@ -1,10 +1,10 @@
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
 
 
 public class Gen {

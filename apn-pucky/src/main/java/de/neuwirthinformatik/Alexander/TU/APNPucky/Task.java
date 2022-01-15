@@ -1,4 +1,4 @@
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

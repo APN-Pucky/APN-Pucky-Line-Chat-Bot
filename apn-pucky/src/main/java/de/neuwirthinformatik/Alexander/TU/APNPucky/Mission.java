@@ -1,4 +1,4 @@
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 public class Mission 
 {

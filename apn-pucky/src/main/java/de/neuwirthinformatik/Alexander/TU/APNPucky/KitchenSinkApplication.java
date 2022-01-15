@@ -21,7 +21,7 @@
 //http://forum.xentax.com/viewtopic.php?f=10&t=10085
 //https://gameart.eu.org/reverse-engineering-decompiling-unity3d-files/
 
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import static java.util.Arrays.asList;
 

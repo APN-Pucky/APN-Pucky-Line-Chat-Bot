@@ -14,9 +14,20 @@
  * under the License.
  */
 
-
+plugins {
+	  // get git infos into Manifest
+          id 'com.palantir.git-version' version '0.12.3'
+}
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.franzbecker.gradle-lombok'
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
 
 dependencies {
     //compile project(':line-bot-spring-boot')
@@ -30,6 +41,8 @@ dependencies {
     compile group: 'com.cloudinary', name: 'cloudinary-core', version: '1.19.0'
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.08'
     compile group: 'ai.api', name: 'libai', version: '1.6.12'
+
+    implementation 'com.github.APN-Pucky:TUR:0.2.5'
 }
 
 task writeClasspath {

@@ -1,4 +1,4 @@
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,12 +27,13 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.neuwirthinformatik.Alexander.APNPucky.Card;
-import de.neuwirthinformatik.Alexander.APNPucky.Deck;
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardCategory;
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardType;
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance.Info;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Deck;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardCategory;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardType;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance.Info;
+
 import java.util.HashMap;
 
 

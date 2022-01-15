@@ -1,4 +1,4 @@
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
 
 public class XMLParser {
 	private int CARD_SECTIONS_COUNT = 0;

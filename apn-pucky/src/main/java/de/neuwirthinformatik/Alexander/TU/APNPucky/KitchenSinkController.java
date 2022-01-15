@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package de.neuwirthinformatik.Alexander.APNPucky;
+package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -89,7 +89,7 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import de.neuwirthinformatik.Alexander.APNPucky.Card.CardInstance;
+import de.neuwirthinformatik.Alexander.TU.APNPucky.Card.CardInstance;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
