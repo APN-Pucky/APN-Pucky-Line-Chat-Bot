@@ -148,7 +148,7 @@ public class KitchenSinkController {
 	public void init() throws ParseException, FontFormatException, IOException {
 		KitchenSinkApplication.resourceLoader = rl;
 		r.setSeed(System.currentTimeMillis());
-		GlobalData.init(true);
+		GlobalData.init(false);
 		cloudinaryCleanup();
 		KitchenSinkApplication.render = new Render();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
@@ -431,7 +431,7 @@ public class KitchenSinkController {
 			break;
 		}
 		case "update": {
-			GlobalData.init(true);
+			GlobalData.init(false);
 			this.replyText(replyToken, "load new dev-xml @" + GlobalData.xml_time);
 			break;
 		}
