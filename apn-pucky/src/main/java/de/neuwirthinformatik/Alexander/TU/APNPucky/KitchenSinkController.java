@@ -19,7 +19,6 @@ package de.neuwirthinformatik.Alexander.TU.APNPucky;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +50,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cloudinary.Api;
 import com.cloudinary.utils.ObjectUtils;
-import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.PushMessage;
@@ -92,8 +90,8 @@ import de.neuwirthinformatik.Alexander.TU.Basic.Gen;
 import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
+import de.neuwirthinformatik.Alexander.TU.Render.Render.DownloadedContent;
 import lombok.NonNull;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -150,7 +148,7 @@ public class KitchenSinkController {
 		r.setSeed(System.currentTimeMillis());
 		GlobalData.init(false);
 		cloudinaryCleanup();
-		KitchenSinkApplication.render = new Render();
+		KitchenSinkApplication.render = new LineRender();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
 		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
 		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
@@ -1384,7 +1382,7 @@ public class KitchenSinkController {
 		}
 	}
 
-	private static String createUri(String path) {
+	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
@@ -1401,31 +1399,14 @@ public class KitchenSinkController {
 			Thread.currentThread().interrupt();
 		}
 	}
-
-	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
-		log.info("Got content-type: {}", responseBody);
-
-		DownloadedContent tempFile = createTempFile(ext);
-		try (OutputStream outputStream = Files.newOutputStream(tempFile.path)) {
-			ByteStreams.copy(responseBody.getStream(), outputStream);
-			log.info("Saved {}: {}", ext, tempFile);
-			return tempFile;
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
-
+	
 	public static DownloadedContent createTempFile(String ext) {
 		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
 		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
 		tempFile.toFile().deleteOnExit();
-		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
+		return new DownloadedContent(tempFile, KitchenSinkController.createUri("/downloaded/" + tempFile.getFileName()));
 	}
 
-	@Value
-	public static class DownloadedContent {
-		Path path;
-		String uri;
-	}
+
 
 }
