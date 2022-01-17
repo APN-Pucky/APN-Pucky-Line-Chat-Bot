@@ -1,0 +1,154 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.APN-Pucky",
+    "module": "TUR",
+    "version": "0.2.20",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.0",
+      "buildId": "goy2cl3oobc2xapzqbqoa3hlky"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "TUR-0.2.20.jar",
+          "url": "TUR-0.2.20.jar",
+          "size": 45089,
+          "sha512": "9d4cd65b04cda5d637e1e8c63e6ebba99608221b746330965c5af13e67261181521cde50ff84ef5cdca3202290057a742ca810fbc2e6c0d5056fc01c3174c49b",
+          "sha256": "1731768fc1e14a296daee4e1c95a823c1c5220aab3041c20c18035854e921087",
+          "sha1": "fe2f7d9f236d19e6ef66690dde54a0f9a866a8c5",
+          "md5": "9b4f0ce7236cb5745777dae58fca623"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.apache.commons",
+          "module": "commons-math3",
+          "version": {
+            "requires": "3.6.1"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20190722"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "28.0-jre"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-databind",
+          "version": {
+            "requires": "2.11.0.rc1"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-annotations",
+          "version": {
+            "requires": "2.11.0.rc1"
+          }
+        },
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.5"
+          }
+        },
+        {
+          "group": "com.formdev",
+          "module": "flatlaf",
+          "version": {
+            "requires": "0.45"
+          }
+        },
+        {
+          "group": "com.github.weisj",
+          "module": "darklaf-core",
+          "version": {
+            "requires": "2.7.2"
+          }
+        },
+        {
+          "group": "com.github.iconloader",
+          "module": "icon-loader",
+          "version": {
+            "requires": "0.0.3"
+          }
+        },
+        {
+          "group": "org.jdom",
+          "module": "jdom2",
+          "version": {
+            "requires": "2.0.6"
+          }
+        },
+        {
+          "group": "com.esotericsoftware.yamlbeans",
+          "module": "yamlbeans",
+          "version": {
+            "requires": "1.08"
+          }
+        },
+        {
+          "group": "com.github.APN-Pucky",
+          "module": "GitJarUpdate",
+          "version": {
+            "requires": "0.0.7"
+          }
+        },
+        {
+          "group": "com.github.APN-Pucky",
+          "module": "TULib",
+          "version": {
+            "requires": "0.2.14"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "TUR-0.2.20.jar",
+          "url": "TUR-0.2.20.jar",
+          "size": 45089,
+          "sha512": "9d4cd65b04cda5d637e1e8c63e6ebba99608221b746330965c5af13e67261181521cde50ff84ef5cdca3202290057a742ca810fbc2e6c0d5056fc01c3174c49b",
+          "sha256": "1731768fc1e14a296daee4e1c95a823c1c5220aab3041c20c18035854e921087",
+          "sha1": "fe2f7d9f236d19e6ef66690dde54a0f9a866a8c5",
+          "md5": "9b4f0ce7236cb5745777dae58fca623"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.APN-Pucky",
+    "module": "TULib",
+    "version": "0.2.14",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.0",
+      "buildId": "gjijdhvqufb2hjmbka3bgaxzfi"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "TULib-0.2.14.jar",
+          "url": "TULib-0.2.14.jar",
+          "size": 1490988,
+          "sha512": "499ba195497ccba2dc597394811956b94b95ed6ab4a0dfa7272871e74f1ffa3154c75c1ff298967a05088a00c978ff4b2865da07615f2badce9647c501aa79fe",
+          "sha256": "f0e5c1321f94387ae657b3a957c727f179ebfee1cd9f05140ea7d70a90a20848",
+          "sha1": "70b47469effed7603d2418a34cacaf039906f971",
+          "md5": "1cc8993d31f6136e4a23f23e84af5a7d"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.apache.commons",
+          "module": "commons-math3",
+          "version": {
+            "requires": "3.6.1"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20190722"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "28.0-jre"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-databind",
+          "version": {
+            "requires": "2.11.0.rc1"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-annotations",
+          "version": {
+            "requires": "2.11.0.rc1"
+          }
+        },
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.5"
+          }
+        },
+        {
+          "group": "com.formdev",
+          "module": "flatlaf",
+          "version": {
+            "requires": "0.45"
+          }
+        },
+        {
+          "group": "com.github.weisj",
+          "module": "darklaf-core",
+          "version": {
+            "requires": "2.7.2"
+          }
+        },
+        {
+          "group": "com.github.iconloader",
+          "module": "icon-loader",
+          "version": {
+            "requires": "0.0.3"
+          }
+        },
+        {
+          "group": "org.jdom",
+          "module": "jdom2",
+          "version": {
+            "requires": "2.0.6"
+          }
+        },
+        {
+          "group": "com.esotericsoftware.yamlbeans",
+          "module": "yamlbeans",
+          "version": {
+            "requires": "1.08"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "TULib-0.2.14.jar",
+          "url": "TULib-0.2.14.jar",
+          "size": 1490988,
+          "sha512": "499ba195497ccba2dc597394811956b94b95ed6ab4a0dfa7272871e74f1ffa3154c75c1ff298967a05088a00c978ff4b2865da07615f2badce9647c501aa79fe",
+          "sha256": "f0e5c1321f94387ae657b3a957c727f179ebfee1cd9f05140ea7d70a90a20848",
+          "sha1": "70b47469effed7603d2418a34cacaf039906f971",
+          "md5": "1cc8993d31f6136e4a23f23e84af5a7d"
+        }
+      ]
+    }
+  ]
+}
