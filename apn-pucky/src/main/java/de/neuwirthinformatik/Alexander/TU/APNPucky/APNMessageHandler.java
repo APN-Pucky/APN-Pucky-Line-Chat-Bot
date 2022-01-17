@@ -16,6 +16,7 @@ public class APNMessageHandler {
 	 * Pirate: C097503a423eb9ecfc7daed9c3a146b93 DT:
 	 * Cf6da5174ac7070e3b158eb918cdcaa15
 	 */
+	@Getter
 	private final LineMessagingClient lmc;
 	@Getter
 	private final String replyToken;
@@ -47,7 +48,7 @@ public class APNMessageHandler {
 			{ "nude", "nudes", "xxx", "porn" }, { "donkey", "mule", "ass" }, { "chicken", "rooster", "cock" },
 			{ "rip", "die", "stop" }, { "poop", "shit", "shite", "poopy", "pop", "dyn" },
 			{ "dad", "daddy", "dev", "share", "forward", "bug" }, { "version", "-v" }, { "help", "\\?", "-h" },
-			{ "options", "-o", "opts" }, };
+			{ "options", "-o", "opts" },{"who","whoami"}, };
 
 	protected APNMessageHandler(LineMessagingClient lmc, String msg) {
 		this.lmc = lmc;

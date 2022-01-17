@@ -77,6 +77,7 @@ import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.VideoMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.profile.UserProfileResponse;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
@@ -460,6 +461,10 @@ public class KitchenSinkController {
 			case_generate(apn);
 			break;
 		}
+		case "who": {
+			case_who(apn);
+			break;
+		}
 		case "skill": {
 			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");
@@ -774,6 +779,24 @@ public class KitchenSinkController {
 			ex.printStackTrace();
 		}
 	}
+	
+	private void case_who(APNMessageHandler apn) {
+		UserProfileResponse upr = apn.getLmc().getProfile(apn.getUserId()).join();
+		String pic_url = upr.getPictureUrl();
+		String name = upr.getDisplayName();
+		int seed = upr.getStatusMessage().hashCode();
+		DownloadedContent pic = createTempFile("png");
+		Wget.wGet(pic.getPath().toString(), pic_url);
+
+		CardInstance ci = Gen.genCardInstance(name,seed);
+		try {
+			BufferedImage img = new LineRender().render(ci,new String[] {"","",""},"in.png",Gen.genCardType(ci.getInfo()));
+			this.reply(apn.getReplyToken(), cacheImageMessage(img));
+		} catch (FontFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	private void case_materials(APNMessageHandler apn, boolean image) {
 		if (apn.getArgs().length < 3) {
@@ -1042,11 +1065,9 @@ public class KitchenSinkController {
 			return new TextMessage(ci.toString());
 		}
 	}
-
-	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
-		if (image) {
-			BufferedImage bi = KitchenSinkApplication.render.render(ci);
-			DownloadedContent d = createTempFile("png");
+	
+	private ImageMessage cacheImageMessage(BufferedImage bi) {
+		DownloadedContent d = createTempFile("png");
 			try {
 				ImageIO.write(bi, "png", d.getPath().toFile());
 				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(),
@@ -1058,6 +1079,12 @@ public class KitchenSinkController {
 				e.printStackTrace();
 			}
 			return new ImageMessage(d.getUri(), d.getUri());
+	}
+
+	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
+		if (image) {
+			BufferedImage bi = KitchenSinkApplication.render.render(ci);
+			return cacheImageMessage(bi);
 		} else {
 			return new TextMessage(ci.description());
 		}
