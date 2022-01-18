@@ -784,7 +784,7 @@ public class KitchenSinkController {
 		UserProfileResponse upr = apn.getLmc().getProfile(apn.getUserId()).join();
 		String pic_url = upr.getPictureUrl();
 		String name = upr.getDisplayName();
-		int seed = upr.getStatusMessage().hashCode();
+		int seed = (name+upr.getStatusMessage()).hashCode();
 		System.out.println(pic_url);
 		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
