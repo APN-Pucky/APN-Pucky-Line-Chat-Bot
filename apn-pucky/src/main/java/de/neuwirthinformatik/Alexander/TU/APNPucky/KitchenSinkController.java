@@ -785,6 +785,7 @@ public class KitchenSinkController {
 		String pic_url = upr.getPictureUrl();
 		String name = upr.getDisplayName();
 		int seed = upr.getStatusMessage().hashCode();
+		System.out.println(pic_url);
 		DownloadedContent pic = createTempFile("png");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
