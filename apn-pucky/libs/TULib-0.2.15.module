@@ -2,8 +2,8 @@
   "formatVersion": "1.1",
   "component": {
     "group": "com.github.APN-Pucky",
-    "module": "TUR",
-    "version": "0.2.20",
+    "module": "TULib",
+    "version": "0.2.15",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.0",
-      "buildId": "pl54wr7xpzhtjnb3gdb5t7tvdy"
+      "buildId": "krcszzx2knd2tgi5tqfipik6xm"
     }
   },
   "variants": [
@@ -20,19 +20,19 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
-        "org.gradle.jvm.version": 11,
+        "org.gradle.jvm.version": 8,
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-api"
       },
       "files": [
         {
-          "name": "TUR-0.2.20.jar",
-          "url": "TUR-0.2.20.jar",
-          "size": 45089,
-          "sha512": "9261fd911c2050dfb33abc40ff00ac93ee67f044f3167b8cbecf4d21dd8fa1ab91d815c53a11c5cc70a6d537ec20f1eed33979445ac51aa00f69b9e1ae0235ae",
-          "sha256": "b84d9e54f3d0705444bd1e52475597d242824a1bc5c9b76df02bfbced57086ed",
-          "sha1": "ae52858eeb5b83cc8357550b933df2865fcab3fd",
-          "md5": "26da7fe7366b7ad9f955c0594423c236"
+          "name": "TULib-0.2.15.jar",
+          "url": "TULib-0.2.15.jar",
+          "size": 1489119,
+          "sha512": "5e4a0a1243c42df472ce1c4305e4852535248afec35ec06e5c7463f91ffdac39d854743e721d2a60b99de541a37d1694c2b032fd4387e9d42e7a170376108493",
+          "sha256": "f8711a494ed6709440f53c89dad56f004faaa23c7ac370c85c7fa09b66a0592c",
+          "sha1": "95fefc24907164f0eea95f3608803084151171b8",
+          "md5": "c14540293a9e3501c04567fc3a354cb6"
         }
       ]
     },
@@ -41,7 +41,7 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
-        "org.gradle.jvm.version": 11,
+        "org.gradle.jvm.version": 8,
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-runtime"
       },
@@ -122,31 +122,17 @@
           "version": {
             "requires": "1.08"
           }
-        },
-        {
-          "group": "com.github.APN-Pucky",
-          "module": "GitJarUpdate",
-          "version": {
-            "requires": "0.0.7"
-          }
-        },
-        {
-          "group": "com.github.APN-Pucky",
-          "module": "TULib",
-          "version": {
-            "requires": "0.2.14"
-          }
         }
       ],
       "files": [
         {
-          "name": "TUR-0.2.20.jar",
-          "url": "TUR-0.2.20.jar",
-          "size": 45089,
-          "sha512": "9261fd911c2050dfb33abc40ff00ac93ee67f044f3167b8cbecf4d21dd8fa1ab91d815c53a11c5cc70a6d537ec20f1eed33979445ac51aa00f69b9e1ae0235ae",
-          "sha256": "b84d9e54f3d0705444bd1e52475597d242824a1bc5c9b76df02bfbced57086ed",
-          "sha1": "ae52858eeb5b83cc8357550b933df2865fcab3fd",
-          "md5": "26da7fe7366b7ad9f955c0594423c236"
+          "name": "TULib-0.2.15.jar",
+          "url": "TULib-0.2.15.jar",
+          "size": 1489119,
+          "sha512": "5e4a0a1243c42df472ce1c4305e4852535248afec35ec06e5c7463f91ffdac39d854743e721d2a60b99de541a37d1694c2b032fd4387e9d42e7a170376108493",
+          "sha256": "f8711a494ed6709440f53c89dad56f004faaa23c7ac370c85c7fa09b66a0592c",
+          "sha1": "95fefc24907164f0eea95f3608803084151171b8",
+          "md5": "c14540293a9e3501c04567fc3a354cb6"
         }
       ]
     }
