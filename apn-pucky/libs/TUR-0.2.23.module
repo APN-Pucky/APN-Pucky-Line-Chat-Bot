@@ -3,7 +3,7 @@
   "component": {
     "group": "com.github.APN-Pucky",
     "module": "TUR",
-    "version": "0.2.22",
+    "version": "0.2.23",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.0",
-      "buildId": "ixiyul36bzeuloex3froahxleu"
+      "buildId": "ve7wxrbypvcsllcr6dixmp5plq"
     }
   },
   "variants": [
@@ -26,13 +26,13 @@
       },
       "files": [
         {
-          "name": "TUR-0.2.22.jar",
-          "url": "TUR-0.2.22.jar",
+          "name": "TUR-0.2.23.jar",
+          "url": "TUR-0.2.23.jar",
           "size": 45500,
-          "sha512": "1f3bf2c01e1388be9c7aeeada355ebe6a98a0a6672100aa5b9e99ef160f40c38c2cc318ecf0f4d21d4a938be0fec384e2117fb6e22fab8d730c6508928ef908a",
-          "sha256": "421f22996c5569737772d188b77336f9c19779237543774ded4b3996716fcbce",
-          "sha1": "81bf005f584f3781d4f8cca015cd3157d90decf2",
-          "md5": "4834c14d4cb61fb77eab3745c66651d9"
+          "sha512": "6cd490e27aba4056fb7268cb99943ff6a07c4c39c28d53b4acac1ce347439f826e13e2052d13ae85127fe77a775084282e270547d3f2689d63d1836d535d356e",
+          "sha256": "512143a021e6a698678589de4233f3c22e14d1aa907e70e27ffe72470a51c94d",
+          "sha1": "8b7edcd78145575f796594b381fa627ce441341e",
+          "md5": "5e93fb31817a334e8d66f035de871b37"
         }
       ]
     },
@@ -134,19 +134,19 @@
           "group": "com.github.APN-Pucky",
           "module": "TULib",
           "version": {
-            "requires": "0.2.15"
+            "requires": "0.2.16"
           }
         }
       ],
       "files": [
         {
-          "name": "TUR-0.2.22.jar",
-          "url": "TUR-0.2.22.jar",
+          "name": "TUR-0.2.23.jar",
+          "url": "TUR-0.2.23.jar",
           "size": 45500,
-          "sha512": "1f3bf2c01e1388be9c7aeeada355ebe6a98a0a6672100aa5b9e99ef160f40c38c2cc318ecf0f4d21d4a938be0fec384e2117fb6e22fab8d730c6508928ef908a",
-          "sha256": "421f22996c5569737772d188b77336f9c19779237543774ded4b3996716fcbce",
-          "sha1": "81bf005f584f3781d4f8cca015cd3157d90decf2",
-          "md5": "4834c14d4cb61fb77eab3745c66651d9"
+          "sha512": "6cd490e27aba4056fb7268cb99943ff6a07c4c39c28d53b4acac1ce347439f826e13e2052d13ae85127fe77a775084282e270547d3f2689d63d1836d535d356e",
+          "sha256": "512143a021e6a698678589de4233f3c22e14d1aa907e70e27ffe72470a51c94d",
+          "sha1": "8b7edcd78145575f796594b381fa627ce441341e",
+          "md5": "5e93fb31817a334e8d66f035de871b37"
         }
       ]
     }
