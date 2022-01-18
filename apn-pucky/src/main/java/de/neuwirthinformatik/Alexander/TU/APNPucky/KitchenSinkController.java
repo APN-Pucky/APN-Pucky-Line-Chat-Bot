@@ -785,6 +785,7 @@ public class KitchenSinkController {
 		try {
 			upr = apn.getLmc().getProfile(apn.getUserId()).join();
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.replyText(apn.getReplyToken(), "Error, are you my friend?");
 			return;
 		}
