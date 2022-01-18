@@ -786,12 +786,12 @@ public class KitchenSinkController {
 		String name = upr.getDisplayName();
 		int seed = upr.getStatusMessage().hashCode();
 		System.out.println(pic_url);
-		DownloadedContent pic = createTempFile("png");
+		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
 		CardInstance ci = Gen.genCardInstance(name,seed);
 		try {
-			BufferedImage img = new LineRender().render(ci,new String[] {"","",""},"in.png",Gen.genCardType(ci.getInfo()));
+			BufferedImage img = new LineRender().render(ci,new String[] {"","",""},pic.getPath().toFile(),Gen.genCardType(ci.getInfo()));
 			this.reply(apn.getReplyToken(), cacheImageMessage(img));
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
