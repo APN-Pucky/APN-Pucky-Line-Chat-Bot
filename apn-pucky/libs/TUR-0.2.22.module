@@ -3,7 +3,7 @@
   "component": {
     "group": "com.github.APN-Pucky",
     "module": "TUR",
-    "version": "0.2.21",
+    "version": "0.2.22",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.0",
-      "buildId": "cfjtdiirgbblnoiupjy5zabeoe"
+      "buildId": "ixiyul36bzeuloex3froahxleu"
     }
   },
   "variants": [
@@ -26,13 +26,13 @@
       },
       "files": [
         {
-          "name": "TUR-0.2.21.jar",
-          "url": "TUR-0.2.21.jar",
+          "name": "TUR-0.2.22.jar",
+          "url": "TUR-0.2.22.jar",
           "size": 45500,
-          "sha512": "b58eea747ff969be0af34354cd73f83e99b909a91638400a4c26add0e168164b93c201b45131d98a776f38ff57d470777e8d65e4deaccd1f615442f03b39e5da",
-          "sha256": "ad1e095d6f922ac143adb4df999df6da39d0e6078a076cee5c35d633ccbc6b42",
-          "sha1": "ad1e3314a2323cbe3d0c27e416aff0792a93aa5b",
-          "md5": "b9feafb7c1d262d2fc66c1b955cccfc3"
+          "sha512": "1f3bf2c01e1388be9c7aeeada355ebe6a98a0a6672100aa5b9e99ef160f40c38c2cc318ecf0f4d21d4a938be0fec384e2117fb6e22fab8d730c6508928ef908a",
+          "sha256": "421f22996c5569737772d188b77336f9c19779237543774ded4b3996716fcbce",
+          "sha1": "81bf005f584f3781d4f8cca015cd3157d90decf2",
+          "md5": "4834c14d4cb61fb77eab3745c66651d9"
         }
       ]
     },
@@ -140,13 +140,13 @@
       ],
       "files": [
         {
-          "name": "TUR-0.2.21.jar",
-          "url": "TUR-0.2.21.jar",
+          "name": "TUR-0.2.22.jar",
+          "url": "TUR-0.2.22.jar",
           "size": 45500,
-          "sha512": "b58eea747ff969be0af34354cd73f83e99b909a91638400a4c26add0e168164b93c201b45131d98a776f38ff57d470777e8d65e4deaccd1f615442f03b39e5da",
-          "sha256": "ad1e095d6f922ac143adb4df999df6da39d0e6078a076cee5c35d633ccbc6b42",
-          "sha1": "ad1e3314a2323cbe3d0c27e416aff0792a93aa5b",
-          "md5": "b9feafb7c1d262d2fc66c1b955cccfc3"
+          "sha512": "1f3bf2c01e1388be9c7aeeada355ebe6a98a0a6672100aa5b9e99ef160f40c38c2cc318ecf0f4d21d4a938be0fec384e2117fb6e22fab8d730c6508928ef908a",
+          "sha256": "421f22996c5569737772d188b77336f9c19779237543774ded4b3996716fcbce",
+          "sha1": "81bf005f584f3781d4f8cca015cd3157d90decf2",
+          "md5": "4834c14d4cb61fb77eab3745c66651d9"
         }
       ]
     }
