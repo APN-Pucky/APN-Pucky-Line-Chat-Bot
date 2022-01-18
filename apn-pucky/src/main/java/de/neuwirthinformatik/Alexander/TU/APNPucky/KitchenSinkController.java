@@ -779,19 +779,26 @@ public class KitchenSinkController {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void case_who(APNMessageHandler apn) {
-		UserProfileResponse upr = apn.getLmc().getProfile(apn.getUserId()).join();
+		UserProfileResponse upr = null;
+		try {
+			upr = apn.getLmc().getProfile(apn.getUserId()).join();
+		} catch (Exception e) {
+			this.replyText(apn.getReplyToken(), "Error, are you my friend?");
+			return;
+		}
 		String pic_url = upr.getPictureUrl();
 		String name = upr.getDisplayName();
-		int seed = (name+upr.getStatusMessage()).hashCode();
+		int seed = (name + upr.getStatusMessage()).hashCode();
 		System.out.println(pic_url);
 		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
-		CardInstance ci = Gen.genCardInstance(name,seed);
+		CardInstance ci = Gen.genCardInstance(name, seed);
 		try {
-			BufferedImage img = new LineRender().render(ci,new String[] {"","",""},pic.getPath().toFile(),Gen.genCardType(ci.getInfo()));
+			BufferedImage img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+					Gen.genCardType(ci.getInfo()));
 			this.reply(apn.getReplyToken(), cacheImageMessage(img));
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
@@ -1066,20 +1073,19 @@ public class KitchenSinkController {
 			return new TextMessage(ci.toString());
 		}
 	}
-	
+
 	private ImageMessage cacheImageMessage(BufferedImage bi) {
 		DownloadedContent d = createTempFile("png");
-			try {
-				ImageIO.write(bi, "png", d.getPath().toFile());
-				Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(),
-						ObjectUtils.emptyMap());
-				Files.deleteIfExists(d.getPath());
-				String perm_uri = (String) uploadResult.get("secure_url");
-				return new ImageMessage(perm_uri, perm_uri);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return new ImageMessage(d.getUri(), d.getUri());
+		try {
+			ImageIO.write(bi, "png", d.getPath().toFile());
+			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
+			Files.deleteIfExists(d.getPath());
+			String perm_uri = (String) uploadResult.get("secure_url");
+			return new ImageMessage(perm_uri, perm_uri);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ImageMessage(d.getUri(), d.getUri());
 	}
 
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
