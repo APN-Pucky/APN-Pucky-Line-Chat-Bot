@@ -807,6 +807,9 @@ public class KitchenSinkController {
 		else if (apn.getMessage().contains("ass")) {
 			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.ASSAULT);
 		}
+		else if (apn.getMessage().contains("struct")) {
+			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.STRUCTURE);
+		}
 		else {
 			ci = Gen.genCardInstance(name, seed);
 		}
