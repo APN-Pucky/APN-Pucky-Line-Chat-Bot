@@ -796,10 +796,22 @@ public class KitchenSinkController {
 		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
-		CardInstance ci = Gen.genCardInstance(name, seed);
+		CardInstance ci =null;
+		if(apn.getMessage().contains("dom")) {
+			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.DOMINION);
+		}
+		else if(apn.getMessage().contains("com")) {
+			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.COMMANDER);
+		}
+		else if (apn.getMessage().contains("ass")) {
+			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.ASSAULT);
+		}
+		else {
+			ci = Gen.genCardInstance(name, seed);
+		}
 		try {
 			BufferedImage img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
-					Gen.genCardType(ci.getInfo()));
+					ci.getCardType());
 			this.reply(apn.getReplyToken(), cacheImageMessage(img));
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
