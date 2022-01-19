@@ -48,8 +48,8 @@ dependencies {
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.08'
     compile group: 'ai.api', name: 'libai', version: '1.6.12'
 
-    compile 'com.github.APN-Pucky:TULib:0.2.25'
-    compile 'com.github.APN-Pucky:TUR:0.2.25'
+    compile 'com.github.APN-Pucky:TULib:0.2.30'
+    compile 'com.github.APN-Pucky:TUR:0.2.26'
 }
 
 task writeClasspath {

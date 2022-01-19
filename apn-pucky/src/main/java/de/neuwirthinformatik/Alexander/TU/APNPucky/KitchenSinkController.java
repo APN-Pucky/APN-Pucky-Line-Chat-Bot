@@ -797,26 +797,43 @@ public class KitchenSinkController {
 		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
-		CardInstance ci =null;
-		if(apn.getMessage().contains("dom")) {
-			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.DOMINION);
-		}
-		else if(apn.getMessage().contains("com")) {
-			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.COMMANDER);
-		}
-		else if (apn.getMessage().contains("ass")) {
-			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.ASSAULT);
-		}
-		else if (apn.getMessage().contains("struct")) {
-			ci = Gen.genCardInstance(name, seed,(c) -> c.getCardType()==CardType.STRUCTURE);
-		}
-		else {
-			ci = Gen.genCardInstance(name, seed);
-		}
 		try {
-			BufferedImage img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
-					ci.getCardType());
-			this.reply(apn.getReplyToken(), cacheImageMessage(img));
+			CardInstance ci = null;
+			BufferedImage img = null;
+			if (apn.getMessage().contains("dom")) {
+				ci = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.DOMINION);
+				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+						ci.getCardType());
+			} else if (apn.getMessage().contains("com")) {
+				ci = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.COMMANDER);
+				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+						ci.getCardType());
+			} else if (apn.getMessage().contains("ass")) {
+				ci = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.ASSAULT);
+				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+						ci.getCardType());
+			} else if (apn.getMessage().contains("struct")) {
+				ci = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.STRUCTURE);
+				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+						ci.getCardType());
+			} else if (apn.getMessage().contains("deck")) {
+				CardInstance com = Gen.genCardInstance(name, seed, true);
+				CardInstance dom = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.DOMINION);
+				CardInstance ass = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.ASSAULT);
+
+				img = new Render().renderDeck(
+						new CardInstance[] { com, dom, ass, ass, ass, ass, ass, ass, ass, ass, ass, ass },
+						pic.getPath().toFile());
+			} else {
+				ci = Gen.genCardInstance(name, seed);
+				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
+						ci.getCardType());
+			}
+			if (img != null) {
+				this.reply(apn.getReplyToken(), cacheImageMessage(img));
+			} else {
+				this.replyText(apn.getReplyToken(), "Rendererror...");
+			}
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
