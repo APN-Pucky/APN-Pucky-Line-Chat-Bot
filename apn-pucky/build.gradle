@@ -49,7 +49,7 @@ dependencies {
     compile group: 'ai.api', name: 'libai', version: '1.6.12'
 
     compile 'com.github.APN-Pucky:TULib:0.2.33'
-    compile 'com.github.APN-Pucky:TUR:0.2.26'
+    compile 'com.github.APN-Pucky:TUR:0.2.27'
 }
 
 task writeClasspath {

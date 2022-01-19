@@ -821,9 +821,7 @@ public class KitchenSinkController {
 				CardInstance dom = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.DOMINION);
 				CardInstance ass = Gen.genCardInstance(name, seed, (c) -> c.getCardType() == CardType.ASSAULT);
 
-				img = new Render().renderDeck(
-						new CardInstance[] { com, dom, ass, ass, ass, ass, ass, ass, ass, ass, ass, ass },
-						pic.getPath().toFile());
+				img = new Render().renderDeck( com, dom, ass, pic.getPath().toFile());
 			} else {
 				ci = Gen.genCardInstance(name, seed);
 				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
