@@ -817,8 +817,8 @@ public class KitchenSinkController {
 				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
 						ci.getCardType());
 			} else if (apn.getMessage().contains("deck")) {
-				CardInstance com = Gen.genCardInstance(name, seed, true);
-				CardInstance dom = Gen.genCardInstance(name, seed, CardType.DOMINION);
+				CardInstance com = Gen.genCardInstance(name + "_COM", seed, true);
+				CardInstance dom = Gen.genCardInstance(name+ "_DOM", seed, CardType.DOMINION);
 				CardInstance ass = Gen.genCardInstance(name, seed,CardType.ASSAULT);
 
 				img = new Render().renderDeck( com, dom, ass, pic.getPath().toFile());
