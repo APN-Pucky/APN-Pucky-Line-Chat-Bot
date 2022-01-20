@@ -42,7 +42,7 @@ public class APNMessageHandler {
 	public static final String[][] alias = new String[][] { { "materials", "mats", "build", "-m", "-b" },
 			{ "insult", "destroy", "shut", "kill", "devastate" }, { "today", "current" }, { "change", "release" },
 			{ "next", "upcoming" }, { "update", "-u" }, { "list", "search" }, { "card", "-c", "show", "display" },
-			{ "icard", "-ic" },{ "ideck", "-id" }, {"deck", "-d"}, { "imaterials", "-im" }, { "next", "spoiler", "spoilers" }, { "inext", "-in" },
+			{ "icard", "-ic" },{ "ideck", "-id" }, {"deck", "-d"}, { "imaterials", "fuse","-im" }, { "next", "spoiler", "spoilers" }, { "inext", "-in" },
 			{ "battlegroundeffect", "bge" }, { "generate", "gen", "design", "make", "create", "mk", "rich" },
 			{ "coins", "amazon", "buy" }, { "random", "crazy", "fun", "drunk", "lol" }, { "joke", "geek", "chuck" },
 			{ "nude", "nudes", "xxx", "porn" }, { "donkey", "mule", "ass" }, { "chicken", "rooster", "cock" },
