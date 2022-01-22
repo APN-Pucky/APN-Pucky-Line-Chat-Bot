@@ -183,7 +183,7 @@ public class KitchenSinkController {
 	}
 
 	//@EventListener(ApplicationReadyEvent.class)
-	public void downloadXML() {
+	public void downloadXML() throws IOException {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
 		System.out.println("TUO_DIR " + tuo_prefix + " with " );
