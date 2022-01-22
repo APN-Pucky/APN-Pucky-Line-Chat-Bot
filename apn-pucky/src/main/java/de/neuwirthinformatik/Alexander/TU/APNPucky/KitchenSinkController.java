@@ -883,7 +883,19 @@ public class KitchenSinkController {
 			}
 			Result res = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "#10",
 					e_name + "_COM," + e_name + "_DOM," + e_name + "#10");
-			this.replyText(apn.getReplyToken(), "Result: " + res.WINS + "/" + res.STALLS + "/" + res.LOSSES);
+			BufferedImage img = null;
+			try {
+				img = new LineRender().renderScore(res, y_com,y_dom,y_ass,e_com,e_dom,e_ass,y_pic.getPath().toFile(), e_pic.getPath().toFile());
+			} catch (FontFormatException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (img != null) {
+				this.reply(apn.getReplyToken(), cacheImageMessage(img));
+			}
+			else {
+				this.replyText(apn.getReplyToken(), "Result: " + res.WINS + "/" + res.STALLS + "/" + res.LOSSES);
+			}
 		}
 
 	}
@@ -936,7 +948,7 @@ public class KitchenSinkController {
 				CardInstance dom = Gen.genCardInstance(name + "_DOM", seed, CardType.DOMINION);
 				CardInstance ass = Gen.genCardInstance(name, seed, CardType.ASSAULT);
 
-				img = new Render().renderDeck(com, dom, ass, pic.getPath().toFile());
+				img = new LineRender().renderDeck(com, dom, ass, pic.getPath().toFile());
 			} else {
 				ci = Gen.genCardInstance(name, seed);
 				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),

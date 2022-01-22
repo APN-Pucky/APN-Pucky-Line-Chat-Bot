@@ -54,7 +54,7 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
     compile 'com.github.APN-Pucky:TULib:0.3.6'
-    compile 'com.github.APN-Pucky:TUR:0.2.27'
+    compile 'com.github.APN-Pucky:TUR:0.3.0'
     
 }
 
