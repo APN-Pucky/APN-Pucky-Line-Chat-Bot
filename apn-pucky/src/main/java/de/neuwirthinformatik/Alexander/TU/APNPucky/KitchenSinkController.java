@@ -187,15 +187,15 @@ public class KitchenSinkController {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
 		System.out.println("TUO_DIR " + tuo_prefix + " with " );
-		Files.walk(dc.getPath()).filter(Files::isRegularFile).forEach(System.out::println);
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
+		Files.walk(dc.getPath()).filter(Files::isRegularFile).forEach(System.out::println);
 	}
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		TextMessageContent message = event.getMessage();
-		if(tuo_prefix.equals(""))downloadXML();
 		handleTextContent(event.getReplyToken(), event, message);
+		if(tuo_prefix.equals(""))downloadXML();
 	}
 
 	@EventMapping
