@@ -182,19 +182,18 @@ public class KitchenSinkController {
 		}
 	}
 
-	/*
-	@EventListener(ApplicationReadyEvent.class)
+	//@EventListener(ApplicationReadyEvent.class)
 	public void downloadXML() {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
 		System.out.println("TUO_DIR " + tuo_prefix);
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 	}
-	*/
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		TextMessageContent message = event.getMessage();
+		if(tuo_prefix.equals(""))downloadXML();
 		handleTextContent(event.getReplyToken(), event, message);
 	}
 
