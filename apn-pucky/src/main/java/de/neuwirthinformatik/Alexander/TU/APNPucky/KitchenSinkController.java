@@ -16,10 +16,14 @@
 
 package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -55,7 +59,6 @@ import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.BeaconEvent;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.FollowEvent;
@@ -68,6 +71,7 @@ import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent.Mention.Mentionee;
 import com.linecorp.bot.model.event.message.VideoMessageContent;
 import com.linecorp.bot.model.event.source.GroupSource;
 import com.linecorp.bot.model.message.ImageMessage;
@@ -93,6 +97,12 @@ import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
 import de.neuwirthinformatik.Alexander.TU.Render.DownloadedContent;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO.Param.Dom;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO.Param.Mode;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO.Param.OP;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO.Param.Order;
+import de.neuwirthinformatik.Alexander.TU.TUO.TUO.Result;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,6 +114,8 @@ public class KitchenSinkController {
 	private LineMessagingClient lineMessagingClient;
 
 	private Random r = new Random();
+	public String tuo_prefix = "";
+
 	@Autowired
 	public ResourceLoader rl;
 
@@ -149,6 +161,9 @@ public class KitchenSinkController {
 		KitchenSinkApplication.resourceLoader = rl;
 		r.setSeed(System.currentTimeMillis());
 		GlobalData.init(false);
+		DownloadedContent dc = createTempFolder("data");
+		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
+		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 		cloudinaryCleanup();
 		KitchenSinkApplication.render = new LineRender();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
@@ -396,6 +411,7 @@ public class KitchenSinkController {
 
 			return;
 		}
+
 		// String userId = event.getSource().getUserId();
 		if (apn.getUserId() != null)
 			lineMessagingClient.getProfile(apn.getUserId()).whenComplete((profile, throwable) -> {
@@ -574,12 +590,12 @@ public class KitchenSinkController {
 		 */
 		case "nude": {
 			String url = getRedditTagUrl("hardwareporn");
-			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+			this.reply(apn.getReplyToken(), new ImageMessage(URI.create(url), URI.create(url)));
 			break;
 		}
 		case "rip": {
 			String url = getRedditTagUrl("techsupportgore");
-			this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+			this.reply(apn.getReplyToken(), new ImageMessage(URI.create(url), URI.create(url)));
 			break;
 		}
 		case "info": {
@@ -727,13 +743,13 @@ public class KitchenSinkController {
 		}
 		case "dad": {
 			String imageUrl = createUri("/static/buttons/hannibal.jpg");
-			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imageUrl, "DR_F3LL", "TU LINE chat bot",
-					Arrays.asList(new URIAction("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
-							new URIAction("Visit DR_F3LL", "line://ti/p/cGOI7BBPeE"), // TODO replace with dr_F3ll whe
-																						// works
+			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(URI.create(imageUrl), "DR_F3LL", "TU LINE chat bot",
+					Arrays.asList(URIA.create("Visit APN-Pucky", "line://ti/p/%40xdc0493y"),
+							URIA.create("Visit DR_F3LL", "line://ti/p/cGOI7BBPeE"), // TODO replace with dr_F3ll whe
+																					// works
 							new MessageAction("Random", "apn random"),
 							// new MessageAction("Help", "apn help"),
-							new URIAction("Share", "line://nv/recommendOA/@xdc0493y")
+							URIA.create("Share", "line://nv/recommendOA/@xdc0493y")
 
 					));
 			TemplateMessage templateMessage = new TemplateMessage("Button alt text", buttonsTemplate);
@@ -781,6 +797,78 @@ public class KitchenSinkController {
 		}
 	}
 
+	private void case_fight(APNMessageHandler apn) {
+		UserProfileResponse y_upr = null;
+		try {
+			y_upr = apn.getLmc().getProfile(apn.getUserId()).join();
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.replyText(apn.getReplyToken(), "Error, are you my friend?");
+			return;
+		}
+		String y_pic_url = y_upr.getPictureUrl().toString();
+		String y_name = y_upr.getDisplayName();
+		int y_seed = (y_name + y_upr.getStatusMessage()).hashCode();
+		DownloadedContent y_pic = createTempFile("jpg");
+		Wget.wGet(y_pic.getPath().toString(), y_pic_url);
+
+		List<Mentionee> ms = apn.getContent().getMention().getMentionees();
+		if (ms.size() != 1) {
+			this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
+			return;
+		}
+		Mentionee m = ms.get(0);
+		UserProfileResponse e_upr = null;
+		try {
+			e_upr = apn.getLmc().getProfile(m.getUserId()).join();
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.replyText(apn.getReplyToken(), "Error, " + apn.getFrom(2) + " is not my friend.");
+			return;
+		}
+		String e_pic_url = e_upr.getPictureUrl().toString();
+		String e_name = e_upr.getDisplayName();
+		int e_seed = (e_name + e_upr.getStatusMessage()).hashCode();
+		DownloadedContent e_pic = createTempFile("jpg");
+		Wget.wGet(e_pic.getPath().toString(), e_pic_url);
+
+		CardInstance y_com = Gen.genCardInstance(y_name + "_COM", y_seed, true);
+		CardInstance y_dom = Gen.genCardInstance(y_name + "_DOM", y_seed, CardType.DOMINION);
+		CardInstance y_ass = Gen.genCardInstance(y_name, y_seed, CardType.ASSAULT);
+		CardInstance e_com = Gen.genCardInstance(e_name + "_COM", e_seed, true);
+		CardInstance e_dom = Gen.genCardInstance(e_name + "_DOM", e_seed, CardType.DOMINION);
+		CardInstance e_ass = Gen.genCardInstance(e_name, e_seed, CardType.ASSAULT);
+
+		synchronized (tuo_prefix) {
+			try {
+			GlobalData.xml.appendToCardSection(1, y_com.getCard());
+			GlobalData.xml.appendToCardSection(1, y_dom.getCard());
+			GlobalData.xml.appendToCardSection(1, y_ass.getCard());
+			GlobalData.xml.appendToCardSection(1, e_com.getCard());
+			GlobalData.xml.appendToCardSection(1, e_dom.getCard());
+			GlobalData.xml.appendToCardSection(1, e_ass.getCard());
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				this.replyText(apn.getReplyToken(), "XML generation failed :(");
+				return;
+			}
+			Result res  = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "_ASS#10",
+					e_name + "_COM," + e_name + "_DOM," + e_name + "_ASS#10");
+     		this.replyText(apn.getReplyToken(), "Result: " +res.WINS + "/" + res.STALLS + "/" +res.LOSSES);
+		}
+
+	}
+
+	public Result sim(String deck1, String deck2) {
+		TUO.Param p = new TUO.Param(deck1, deck2, OP.sim, Order.random, Mode.pvp_defense, Dom.dom_maxed, "", 100, 0);
+		System.out.println("TUO prefix" + tuo_prefix);
+		p.flags = "prefix " + tuo_prefix;
+		Result r = TUO.sim(p);
+		System.out.println(r.WINS + " " + r.LOSSES);
+		return r;
+	}
+
 	private void case_who(APNMessageHandler apn) {
 		UserProfileResponse upr = null;
 		try {
@@ -790,10 +878,9 @@ public class KitchenSinkController {
 			this.replyText(apn.getReplyToken(), "Error, are you my friend?");
 			return;
 		}
-		String pic_url = upr.getPictureUrl();
+		String pic_url = upr.getPictureUrl().toString();
 		String name = upr.getDisplayName();
 		int seed = (name + upr.getStatusMessage()).hashCode();
-		System.out.println(pic_url);
 		DownloadedContent pic = createTempFile("jpg");
 		Wget.wGet(pic.getPath().toString(), pic_url);
 
@@ -818,10 +905,10 @@ public class KitchenSinkController {
 						ci.getCardType());
 			} else if (apn.getMessage().contains("deck")) {
 				CardInstance com = Gen.genCardInstance(name + "_COM", seed, true);
-				CardInstance dom = Gen.genCardInstance(name+ "_DOM", seed, CardType.DOMINION);
-				CardInstance ass = Gen.genCardInstance(name, seed,CardType.ASSAULT);
+				CardInstance dom = Gen.genCardInstance(name + "_DOM", seed, CardType.DOMINION);
+				CardInstance ass = Gen.genCardInstance(name, seed, CardType.ASSAULT);
 
-				img = new Render().renderDeck( com, dom, ass, pic.getPath().toFile());
+				img = new Render().renderDeck(com, dom, ass, pic.getPath().toFile());
 			} else {
 				ci = Gen.genCardInstance(name, seed);
 				img = new LineRender().render(ci, new String[] { "", "", "" }, pic.getPath().toFile(),
@@ -1096,11 +1183,11 @@ public class KitchenSinkController {
 						ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
-				return new ImageMessage(perm_uri, perm_uri);
+				return new ImageMessage(URI.create(perm_uri), URI.create(perm_uri));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.getUri(), d.getUri());
+			return new ImageMessage(URI.create(d.getUri()), URI.create(d.getUri()));
 		} else {
 			return new TextMessage(ci.toString());
 		}
@@ -1113,11 +1200,11 @@ public class KitchenSinkController {
 			Map uploadResult = KitchenSinkApplication.cloudinary.uploader().upload(d.getUri(), ObjectUtils.emptyMap());
 			Files.deleteIfExists(d.getPath());
 			String perm_uri = (String) uploadResult.get("secure_url");
-			return new ImageMessage(perm_uri, perm_uri);
+			return new ImageMessage(URI.create(perm_uri), URI.create(perm_uri));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ImageMessage(d.getUri(), d.getUri());
+		return new ImageMessage(URI.create(d.getUri()), URI.create(d.getUri()));
 	}
 
 	private Message genCardInstanceMessage(boolean image, CardInstance ci) {
@@ -1140,11 +1227,11 @@ public class KitchenSinkController {
 						ObjectUtils.emptyMap());
 				Files.deleteIfExists(d.getPath());
 				String perm_uri = (String) uploadResult.get("secure_url");
-				return new ImageMessage(perm_uri, perm_uri);
+				return new ImageMessage(URI.create(perm_uri), URI.create(perm_uri));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return new ImageMessage(d.getUri(), d.getUri());
+			return new ImageMessage(URI.create(d.getUri()), URI.create(d.getUri()));
 		} else {
 			return new TextMessage("Card: " + ci + "\n" + "Fused by: \n[" + StringUtil.removeLastCharacter(GlobalData
 					.getInvString(GlobalData.getIDsFromCardInstances(ci.getMaterials())).replaceAll("\n", ", "), 2)
@@ -1246,7 +1333,7 @@ public class KitchenSinkController {
 
 	private void reddit(APNMessageHandler apn, String tag) {
 		String url = getRedditTagUrl(tag);
-		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+		this.reply(apn.getReplyToken(), new ImageMessage(URI.create(url), URI.create(url)));
 	}
 
 	private void reddit(APNMessageHandler apn) {
@@ -1288,7 +1375,7 @@ public class KitchenSinkController {
 
 	private void gif(APNMessageHandler apn, String tag) {
 		Pair<String, String> url = getGIFTagUrl(tag);
-		this.reply(apn.getReplyToken(), new VideoMessage(url.t, url.u));
+		this.reply(apn.getReplyToken(), new VideoMessage(URI.create(url.t), URI.create(url.u)));
 	}
 
 	private void gif(APNMessageHandler apn) {
@@ -1302,7 +1389,7 @@ public class KitchenSinkController {
 		} else {
 			url = getGIFUrl();
 		}
-		this.reply(apn.getReplyToken(), new VideoMessage(url.t, url.u));
+		this.reply(apn.getReplyToken(), new VideoMessage(URI.create(url.t), URI.create(url.u)));
 	}
 
 	private void fail(APNMessageHandler apn) {
@@ -1358,12 +1445,12 @@ public class KitchenSinkController {
 
 	private void meme(APNMessageHandler apn) {
 		String url = getMEMEUrl();
-		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+		this.reply(apn.getReplyToken(), new ImageMessage(URI.create(url), URI.create(url)));
 	}
 
 	private void xkcd(APNMessageHandler apn) {
 		String url = getXKCDUrl();
-		this.reply(apn.getReplyToken(), new ImageMessage(url, url));
+		this.reply(apn.getReplyToken(), new ImageMessage(URI.create(url), URI.create(url)));
 	}
 
 	private static String getRedditTagUrl(String tag) {
@@ -1496,6 +1583,15 @@ public class KitchenSinkController {
 		tempFile.toFile().deleteOnExit();
 		return new DownloadedContent(tempFile,
 				KitchenSinkController.createUri("/downloaded/" + tempFile.getFileName()));
+	}
+
+	public static DownloadedContent createTempFolder(String name) {
+		String fileName = name;
+		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
+		File f = tempFile.toFile();
+		f.mkdirs();
+		f.deleteOnExit();
+		return new DownloadedContent(tempFile, KitchenSinkController.createUri("/downloaded/" + name));
 	}
 
 }

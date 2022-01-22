@@ -18,6 +18,7 @@ package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import static java.util.Arrays.asList;
 
+import java.net.URI;
 import java.util.function.Supplier;
 
 import com.linecorp.bot.model.action.URIAction;
@@ -45,11 +46,11 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     public FlexMessage get() {
         final Image heroBlock =
                 Image.builder()
-                     .url("https://example.com/cafe.jpg")
+                     .url(URI.create("https://example.com/cafe.jpg"))
                      .size(ImageSize.FULL_WIDTH)
                      .aspectRatio(ImageAspectRatio.R20TO13)
                      .aspectMode(ImageAspectMode.Cover)
-                     .action(new URIAction("label", "http://example.com"))
+                     .action(new URIAction("label", URI.create("http://example.com"),null))
                      .build();
 
         final Box bodyBlock = createBodyBlock();
@@ -70,14 +71,14 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new URIAction("CALL", "tel:000000"))
+                .action(new URIAction("CALL", URI.create("tel:000000"),null))
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new URIAction("WEBSITE", "https://example.com"))
+                      .action(new URIAction("WEBSITE", URI.create("https://example.com"),null))
                       .build();
 
         return Box.builder()
@@ -157,9 +158,9 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
 
     private Box createReviewBox() {
         final Icon goldStar =
-                Icon.builder().size(FlexFontSize.SM).url("https://example.com/gold_star.png").build();
+                Icon.builder().size(FlexFontSize.SM).url(URI.create("https://example.com/gold_star.png")).build();
         final Icon grayStar =
-                Icon.builder().size(FlexFontSize.SM).url("https://example.com/gray_star.png").build();
+                Icon.builder().size(FlexFontSize.SM).url(URI.create("https://example.com/gray_star.png")).build();
         final Text point =
                 Text.builder()
                     .text("4.0")
