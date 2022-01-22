@@ -866,6 +866,7 @@ public class KitchenSinkController {
 		CardInstance e_ass = Gen.genCardInstance(e_name, e_seed, CardType.ASSAULT);
 
 		synchronized (tuo_prefix) {
+			TUO.tuo = "tuo";
 			try {
 	 			IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n"
 	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "/data/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
