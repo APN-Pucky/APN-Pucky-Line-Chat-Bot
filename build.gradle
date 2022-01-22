@@ -14,10 +14,17 @@
  * under the License.
  */
 
+//import com.github.spotbugs.snom.SpotBugsTask
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 // ./gradlew clean && ./gradlew uploadArchives -Prelease
 
 buildscript {
-    //ext.kotlin_version = '1.2.51'
+ext {
+        kotlin_version = '1.6.0'
+        spring_boot_version = '2.5.6'
+    }
 
     repositories {
         mavenCentral()
@@ -25,20 +32,25 @@ buildscript {
         maven { url 'https://repo.spring.io/plugins-release' }
     }
     dependencies {
-        //classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
         classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17'
-        classpath 'io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE'
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE'
-        classpath 'io.franzbecker:gradle-lombok:1.14'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+        
+        classpath 'io.franzbecker:gradle-lombok:5.0.0'
         //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        
+        //classpath 'com.puppycrawl.tools:checkstyle:9.1'
+        //classpath 'gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.7.5'
     }
 }
 
 apply plugin: 'idea'
+apply plugin: 'jacoco'
+//apply plugin: 'com.github.ben-manes.versions'
 
 group = 'com.linecorp.bot'
-version = '2.1.0-SNAPSHOT'
+version = '4.7.0-SNAPSHOT'
 
 //set build variables based on build type (release, continuous integration, development)
 def isDevBuild
@@ -55,26 +67,26 @@ if (hasProperty('release')) {
     version += '-SNAPSHOT'
 }
 
-subprojects {
+allprojects {
     repositories {
         mavenCentral();
     }
+}
 
-    //apply plugin: 'com.github.spotbugs'
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
-    apply plugin: 'java'
-    //apply plugin: 'checkstyle'
+subprojects {
+
+    apply plugin: 'java-library'
     apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'io.spring.dependency-management'
+    //apply plugin: 'com.github.spotbugs'
+    //apply plugin: 'checkstyle'
+
     if (new File("${project.rootDir}/.git").exists()) {
         logger.info("There's .git directory. Create git.properties.")
         apply plugin: 'com.gorylenko.gradle-git-properties'
     } else {
         logger.warn("There's no .git directory. Can't create git.properties.");
     }
-    apply plugin: 'io.spring.dependency-management'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -82,35 +94,37 @@ subprojects {
     group = rootProject.group
     version = rootProject.version
 
-    ext['guava.version'] = '25.1-jre'
+    ext['guava.version'] = '30.0-jre'
     ext['okhttp3.version'] = '3.10.0'
 
     dependencyManagement {
         imports {
-            mavenBom 'io.spring.platform:platform-bom:Brussels-SR10'
+        	mavenBom SpringBootPlugin.BOM_COORDINATES
         }
 
         dependencies {
+            
             dependency 'com.github.stefanbirkner:system-rules:1.18.0'
             dependency 'com.squareup.okhttp3:logging-interceptor:' + ext['okhttp3.version']
             dependency 'com.squareup.okhttp3:mockwebserver:' + ext['okhttp3.version']
             dependency 'com.squareup.retrofit2:converter-jackson:2.4.0'
             dependency 'com.squareup.retrofit2:retrofit:2.4.0'
             dependency 'org.assertj:assertj-core:3.10.0'
-            dependency 'org.projectlombok:lombok:1.18.0'
+            //dependency 'org.projectlombok:lombok:1.18.16'
         }
     }
 
     dependencies {
+        
         compileOnly "org.springframework.boot:spring-boot-configuration-processor"
         // http://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
 
-        testCompile 'com.google.guava:guava'
-        testCompile 'com.github.stefanbirkner:system-rules'
-        testCompile 'com.squareup.okhttp3:mockwebserver'
-        testCompile 'org.hibernate:hibernate-validator'
-        testCompile 'org.springframework.boot:spring-boot-starter-test' // MockHttpServletRequest
-        testCompile 'org.springframework.boot:spring-boot-starter-logging'
+        testImplementation 'com.google.guava:guava'
+        testImplementation 'com.github.stefanbirkner:system-rules'
+        testImplementation 'com.squareup.okhttp3:mockwebserver'
+        testImplementation 'org.hibernate:hibernate-validator'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test' // MockHttpServletRequest
+        testImplementation 'org.springframework.boot:spring-boot-starter-logging'
     }
 
     compileJava.dependsOn(processResources)
@@ -124,7 +138,7 @@ subprojects {
     }
 
     lombok {
-        version = '1.18.0'
+        version = '1.18.16'
     }
 
     if (!project.name.startsWith('sample-')) {
@@ -136,8 +150,9 @@ subprojects {
                 args(it, "-d", outputDir)
             }
         }
+    /*	
 
-        /*javadoc {
+        javadoc {
             dependsOn delombok
             source = delombok.outputDir
             options.locale = 'en_US'

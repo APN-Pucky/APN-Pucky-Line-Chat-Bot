@@ -37,15 +37,14 @@ targetCompatibility = 1.8
 
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-gradle-plugin:2.6.2"
+	compile group: 'com.linecorp.bot', name: 'line-bot-spring-boot', version: '4.7.0'
 
-    compile group: 'com.linecorp.bot', name: 'line-bot-spring-boot', version: '4.7.0'
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation 'com.google.guava:guava'
+    compile "org.springframework.boot:spring-boot-starter-web"
+    //implementation 'com.google.guava:guava'
     
     
 
-    compile 'org.projectlombok:lombok:1.18.0'
+    //compile 'org.projectlombok:lombok:1.18.16'
     compile group: 'org.json', name: 'json', version: '20171018'
     compile group: 'org.jdom', name: 'jdom', version: '2.0.0'
     compile group: 'com.cloudinary', name: 'cloudinary', version: '1.0.2'
@@ -55,6 +54,7 @@ dependencies {
 
     compile 'com.github.APN-Pucky:TULib:0.3.3'
     compile 'com.github.APN-Pucky:TUR:0.2.27'
+    
 }
 
 task writeClasspath {

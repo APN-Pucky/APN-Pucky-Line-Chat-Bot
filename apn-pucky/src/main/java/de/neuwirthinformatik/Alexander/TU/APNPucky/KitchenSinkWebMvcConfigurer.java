@@ -18,15 +18,14 @@ package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-
-import com.linecorp.bot.spring.boot.LineBotWebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-public class KitchenSinkWebMvcConfigurer extends LineBotWebMvcConfigurer{
-    //@Override
+public class KitchenSinkWebMvcConfigurer implements WebMvcConfigurer{
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         String downloadedContentUri = KitchenSinkApplication.downloadedContentDir
