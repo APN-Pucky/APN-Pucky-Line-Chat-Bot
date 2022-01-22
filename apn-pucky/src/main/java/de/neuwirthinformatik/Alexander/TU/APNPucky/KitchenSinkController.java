@@ -182,6 +182,7 @@ public class KitchenSinkController {
 		}
 	}
 
+	/*
 	@EventListener(ApplicationReadyEvent.class)
 	public void downloadXML() {
 		DownloadedContent dc = createTempFolder("data");
@@ -189,6 +190,7 @@ public class KitchenSinkController {
 		System.out.println("TUO_DIR " + tuo_prefix);
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 	}
+	*/
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
