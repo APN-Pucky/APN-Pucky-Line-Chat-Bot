@@ -36,12 +36,12 @@ targetCompatibility = 1.8
 
 
 dependencies {
-    //compile project(':line-bot-spring-boot')
-    //compile 'org.json:json:20171018'
-    compile 'org.projectlombok:lombok:1.18.0'
-    //compile group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
-    compile group: 'org.json', name: 'json', version: '20171018'
     compile group: 'com.linecorp.bot', name: 'line-bot-spring-boot', version: '4.5.0'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'com.google.guava:guava'
+
+    compile 'org.projectlombok:lombok:1.18.0'
+    compile group: 'org.json', name: 'json', version: '20171018'
     compile group: 'org.jdom', name: 'jdom', version: '2.0.0'
     compile group: 'com.cloudinary', name: 'cloudinary', version: '1.0.2'
     compile group: 'com.cloudinary', name: 'cloudinary-core', version: '1.19.0'
