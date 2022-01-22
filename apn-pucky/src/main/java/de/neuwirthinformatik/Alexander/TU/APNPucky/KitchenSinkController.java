@@ -849,7 +849,8 @@ public class KitchenSinkController {
 			this.replyText(apn.getReplyToken(), "Error, " + apn.getFrom(2) + " is not my friend.");
 			return;
 		}
-		}{
+		}
+		else{
 			e_upr = y_upr;
 		}
 		String e_pic_url = e_upr.getPictureUrl().toString();
