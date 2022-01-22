@@ -186,7 +186,7 @@ public class KitchenSinkController {
 	//@EventListener(ApplicationReadyEvent.class)
 	public void downloadXML() throws IOException {
 		DownloadedContent dc = createTempFolder("data");
-		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
+		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString() + "/";
 		System.out.println("TUO_DIR " + tuo_prefix + " with " );
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 		Files.walk(dc.getPath()).filter(Files::isRegularFile).forEach(System.out::println);
@@ -869,20 +869,20 @@ public class KitchenSinkController {
 			TUO.tuo = "tuo";
 			try {
 	 			IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n"
-	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "/data/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_com.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_dom.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_ass.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_com.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_dom.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_ass.getCard());
+	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "data/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_ass.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_ass.getCard());
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.replyText(apn.getReplyToken(), "XML generation failed :(");
 				return;
 			}
-			Result res = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "_ASS#10",
-					e_name + "_COM," + e_name + "_DOM," + e_name + "_ASS#10");
+			Result res = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "#10",
+					e_name + "_COM," + e_name + "_DOM," + e_name + "#10");
 			this.replyText(apn.getReplyToken(), "Result: " + res.WINS + "/" + res.STALLS + "/" + res.LOSSES);
 		}
 
