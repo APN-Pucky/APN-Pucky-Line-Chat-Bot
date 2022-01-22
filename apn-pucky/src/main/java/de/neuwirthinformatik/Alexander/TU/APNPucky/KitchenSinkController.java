@@ -16,8 +16,6 @@
 
 package de.neuwirthinformatik.Alexander.TU.APNPucky;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -49,6 +47,8 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -161,9 +161,7 @@ public class KitchenSinkController {
 		KitchenSinkApplication.resourceLoader = rl;
 		r.setSeed(System.currentTimeMillis());
 		GlobalData.init(false);
-		DownloadedContent dc = createTempFolder("data");
-		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
-		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
+
 		cloudinaryCleanup();
 		KitchenSinkApplication.render = new LineRender();
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
@@ -178,6 +176,13 @@ public class KitchenSinkController {
 			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
 
 		}
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void downloadXML() {
+		DownloadedContent dc = createTempFolder("data");
+		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
+		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 	}
 
 	@EventMapping
@@ -841,21 +846,20 @@ public class KitchenSinkController {
 
 		synchronized (tuo_prefix) {
 			try {
-			GlobalData.xml.appendToCardSection(1, y_com.getCard());
-			GlobalData.xml.appendToCardSection(1, y_dom.getCard());
-			GlobalData.xml.appendToCardSection(1, y_ass.getCard());
-			GlobalData.xml.appendToCardSection(1, e_com.getCard());
-			GlobalData.xml.appendToCardSection(1, e_dom.getCard());
-			GlobalData.xml.appendToCardSection(1, e_ass.getCard());
-			}
-			catch(Exception e) {
+				GlobalData.xml.appendToCardSection(1, y_com.getCard());
+				GlobalData.xml.appendToCardSection(1, y_dom.getCard());
+				GlobalData.xml.appendToCardSection(1, y_ass.getCard());
+				GlobalData.xml.appendToCardSection(1, e_com.getCard());
+				GlobalData.xml.appendToCardSection(1, e_dom.getCard());
+				GlobalData.xml.appendToCardSection(1, e_ass.getCard());
+			} catch (Exception e) {
 				e.printStackTrace();
 				this.replyText(apn.getReplyToken(), "XML generation failed :(");
 				return;
 			}
-			Result res  = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "_ASS#10",
+			Result res = sim(y_name + "_COM," + y_name + "_DOM," + y_name + "_ASS#10",
 					e_name + "_COM," + e_name + "_DOM," + e_name + "_ASS#10");
-     		this.replyText(apn.getReplyToken(), "Result: " +res.WINS + "/" + res.STALLS + "/" +res.LOSSES);
+			this.replyText(apn.getReplyToken(), "Result: " + res.WINS + "/" + res.STALLS + "/" + res.LOSSES);
 		}
 
 	}
