@@ -825,9 +825,12 @@ public class KitchenSinkController {
 		int y_seed = (y_name + y_upr.getStatusMessage()).hashCode();
 		DownloadedContent y_pic = createTempFile("jpg");
 		Wget.wGet(y_pic.getPath().toString(), y_pic_url);
+
+		UserProfileResponse e_upr = null;
+		if(!apn.getFrom(2).equals("self")) {
 		Mention me= apn.getContent().getMention();
 		if (me == null) {
-			this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
+			this.replyText(apn.getReplyToken(), "You must @mention your enemy.");
 			return;
 		}
 		List<Mentionee> ms = me.getMentionees();
@@ -836,13 +839,15 @@ public class KitchenSinkController {
 			return;
 		}
 		Mentionee m = ms.get(0);
-		UserProfileResponse e_upr = null;
 		try {
 			e_upr = apn.getLmc().getProfile(m.getUserId()).join();
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.replyText(apn.getReplyToken(), "Error, " + apn.getFrom(2) + " is not my friend.");
 			return;
+		}
+		}{
+			e_upr = y_upr;
 		}
 		String e_pic_url = e_upr.getPictureUrl().toString();
 		String e_name = e_upr.getDisplayName();
