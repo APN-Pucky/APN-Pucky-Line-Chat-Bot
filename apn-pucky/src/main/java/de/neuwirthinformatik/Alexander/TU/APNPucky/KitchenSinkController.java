@@ -494,6 +494,10 @@ public class KitchenSinkController {
 			case_who(apn);
 			break;
 		}
+		case "fight" : {
+			case_fight(apn);
+			break;
+		}
 		case "skill": {
 			if (apn.getArgs().length < 3) {
 				this.replyText(replyToken, "Please pass a name with: 'apn skill {name}'");

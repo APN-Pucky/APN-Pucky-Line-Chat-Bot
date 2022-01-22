@@ -48,7 +48,7 @@ public class APNMessageHandler {
 			{ "nude", "nudes", "xxx", "porn" }, { "donkey", "mule", "ass" }, { "chicken", "rooster", "cock" },
 			{ "rip", "die", "stop" }, { "poop", "shit", "shite", "poopy", "pop", "dyn" },
 			{ "dad", "daddy", "dev", "share", "forward", "bug" }, { "version", "-v" }, { "help", "\\?", "-h" },
-			{ "options", "-o", "opts" },{"who","whoami"}, };
+			{ "options", "-o", "opts" },{"who","whoami"}, {"fight","challenge","destroy"}};
 
 	protected APNMessageHandler(LineMessagingClient lmc, String msg) {
 		this.lmc = lmc;
