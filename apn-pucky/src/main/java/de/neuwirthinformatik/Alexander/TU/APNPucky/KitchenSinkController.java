@@ -868,7 +868,7 @@ public class KitchenSinkController {
 		synchronized (tuo_prefix) {
 			try {
 	 			IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n"
-	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
+	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "/data/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
 				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_com.getCard());
 				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_dom.getCard());
 				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_ass.getCard());
