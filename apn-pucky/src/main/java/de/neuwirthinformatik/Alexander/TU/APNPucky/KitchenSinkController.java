@@ -19,6 +19,7 @@ package de.neuwirthinformatik.Alexander.TU.APNPucky;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
@@ -43,6 +44,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +95,7 @@ import de.neuwirthinformatik.Alexander.TU.Basic.Deck;
 import de.neuwirthinformatik.Alexander.TU.Basic.Gen;
 import de.neuwirthinformatik.Alexander.TU.Basic.GlobalData;
 import de.neuwirthinformatik.Alexander.TU.Basic.SkillSpec;
+import de.neuwirthinformatik.Alexander.TU.Basic.XMLParser;
 import de.neuwirthinformatik.Alexander.TU.Render.DownloadedContent;
 import de.neuwirthinformatik.Alexander.TU.Render.Render;
 import de.neuwirthinformatik.Alexander.TU.TUO.TUO;
@@ -864,12 +867,14 @@ public class KitchenSinkController {
 
 		synchronized (tuo_prefix) {
 			try {
-				GlobalData.xml.appendToCardSection(1, y_com.getCard());
-				GlobalData.xml.appendToCardSection(1, y_dom.getCard());
-				GlobalData.xml.appendToCardSection(1, y_ass.getCard());
-				GlobalData.xml.appendToCardSection(1, e_com.getCard());
-				GlobalData.xml.appendToCardSection(1, e_dom.getCard());
-				GlobalData.xml.appendToCardSection(1, e_ass.getCard());
+	 			IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n"
+	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_ass.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "/" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_ass.getCard());
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.replyText(apn.getReplyToken(), "XML generation failed :(");
