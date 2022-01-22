@@ -183,11 +183,11 @@ public class KitchenSinkController {
 		}
 	}
 
-	//@EventListener(ApplicationReadyEvent.class)
+	// @EventListener(ApplicationReadyEvent.class)
 	public void downloadXML() throws IOException {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString() + "/";
-		System.out.println("TUO_DIR " + tuo_prefix + " with " );
+		System.out.println("TUO_DIR " + tuo_prefix + " with ");
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 		Files.walk(dc.getPath()).filter(Files::isRegularFile).forEach(System.out::println);
 	}
@@ -195,7 +195,8 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		TextMessageContent message = event.getMessage();
-		if(tuo_prefix.equals(""))downloadXML();
+		if (tuo_prefix.equals(""))
+			downloadXML();
 		handleTextContent(event.getReplyToken(), event, message);
 	}
 
@@ -495,7 +496,7 @@ public class KitchenSinkController {
 			case_who(apn);
 			break;
 		}
-		case "fight" : {
+		case "fight": {
 			case_fight(apn);
 			break;
 		}
@@ -830,27 +831,26 @@ public class KitchenSinkController {
 		Wget.wGet(y_pic.getPath().toString(), y_pic_url);
 
 		UserProfileResponse e_upr = null;
-		if(!apn.getFrom(2).equals("self")) {
-		Mention me= apn.getContent().getMention();
-		if (me == null) {
-			this.replyText(apn.getReplyToken(), "You must @mention your enemy.");
-			return;
-		}
-		List<Mentionee> ms = me.getMentionees();
-		if (ms.size() != 1) {
-			this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
-			return;
-		}
-		Mentionee m = ms.get(0);
-		try {
-			e_upr = apn.getLmc().getProfile(m.getUserId()).join();
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.replyText(apn.getReplyToken(), "Error, " + apn.getFrom(2) + " is not my friend.");
-			return;
-		}
-		}
-		else{
+		if (!apn.getFrom(2).equals("self")) {
+			Mention me = apn.getContent().getMention();
+			if (me == null) {
+				this.replyText(apn.getReplyToken(), "You must @mention your enemy.");
+				return;
+			}
+			List<Mentionee> ms = me.getMentionees();
+			if (ms.size() != 1) {
+				this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
+				return;
+			}
+			Mentionee m = ms.get(0);
+			try {
+				e_upr = apn.getLmc().getProfile(m.getUserId()).join();
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.replyText(apn.getReplyToken(), "Error, " + apn.getFrom(2) + " is not my friend.");
+				return;
+			}
+		} else {
 			e_upr = y_upr;
 		}
 		String e_pic_url = e_upr.getPictureUrl().toString();
@@ -869,14 +869,22 @@ public class KitchenSinkController {
 		synchronized (tuo_prefix) {
 			TUO.tuo = "tuo";
 			try {
-	 			IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n"
-	 					+ "<root></root>", new FileOutputStream(new File(tuo_prefix + "data/cards_section_" + (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1) + ".xml" )), "UTF-8");
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_com.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_dom.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, y_ass.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_com.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_dom.getCard());
-				GlobalData.xml.appendToCardSection(tuo_prefix + "" ,XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD+1, e_ass.getCard());
+				IOUtils.write("<?xml version='1.0' encoding='UTF-8'?>\r\n" + "<root></root>",
+						new FileOutputStream(new File(tuo_prefix + "data/cards_section_"
+								+ (XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1) + ".xml")),
+						"UTF-8");
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						y_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						y_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						y_ass.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						e_com.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						e_dom.getCard());
+				GlobalData.xml.appendToCardSection(tuo_prefix + "", XMLParser.CARD_SECTIONS_COUNT_DOWNLOAD + 1,
+						e_ass.getCard());
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.replyText(apn.getReplyToken(), "XML generation failed :(");
@@ -886,15 +894,15 @@ public class KitchenSinkController {
 					e_name + "_COM," + e_name + "_DOM," + e_name + "#10");
 			BufferedImage img = null;
 			try {
-				img = new LineRender().renderScore(res, y_com,y_dom,y_ass,e_com,e_dom,e_ass,y_pic.getPath().toFile(), e_pic.getPath().toFile());
+				img = new LineRender().renderScore(res, y_com, y_dom, y_ass, e_com, e_dom, e_ass,
+						y_pic.getPath().toFile(), e_pic.getPath().toFile());
 			} catch (FontFormatException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (img != null) {
 				this.reply(apn.getReplyToken(), cacheImageMessage(img));
-			}
-			else {
+			} else {
 				this.replyText(apn.getReplyToken(), "Result: " + res.WINS + "/" + res.STALLS + "/" + res.LOSSES);
 			}
 		}
