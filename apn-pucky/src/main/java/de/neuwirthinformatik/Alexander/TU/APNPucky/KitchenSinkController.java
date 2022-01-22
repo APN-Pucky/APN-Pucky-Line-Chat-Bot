@@ -157,24 +157,28 @@ public class KitchenSinkController {
 	}
 
 	@PostConstruct
-	public void init() throws ParseException, FontFormatException, IOException {
+	public void init() {
 		KitchenSinkApplication.resourceLoader = rl;
 		r.setSeed(System.currentTimeMillis());
 		GlobalData.init(false);
 
 		cloudinaryCleanup();
-		KitchenSinkApplication.render = new LineRender();
+		try {
+			KitchenSinkApplication.render = new LineRender();
+		} catch (FontFormatException | IOException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("No Render");
+			e1.printStackTrace();
+		}
 		System.out.println("APN " + System.getenv("HEROKU_RELEASE_VERSION"));
-		pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
-		if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
-			pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", Gen.gen());
-			// APNMessageHandler apn = new APNMessageHandler("apn today");
-			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			// apn = new APNMessageHandler("apn next");
-			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-			// apn = new APNMessageHandler("apn change");
-			// push("Uab4d6ff3d59aee3ce4869e894ca4e337", case_today_next_change(apn));
-
+		try {
+			pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", "Start " + System.getenv("HEROKU_RELEASE_VERSION"));
+			if (System.getenv("HEROKU_RELEASE_VERSION") == null) {// local tests
+				pushText("Uab4d6ff3d59aee3ce4869e894ca4e337", Gen.gen());
+			}
+		} catch (Exception e) {
+			System.out.println("Too many pushes?");
+			e.printStackTrace();
 		}
 	}
 
@@ -182,6 +186,7 @@ public class KitchenSinkController {
 	public void downloadXML() {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
+		System.out.println("TUO_DIR " + tuo_prefix);
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 	}
 
