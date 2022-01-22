@@ -186,7 +186,8 @@ public class KitchenSinkController {
 	public void downloadXML() {
 		DownloadedContent dc = createTempFolder("data");
 		tuo_prefix = dc.getPath().getParent().toAbsolutePath().toString();
-		System.out.println("TUO_DIR " + tuo_prefix);
+		System.out.println("TUO_DIR " + tuo_prefix + " with " );
+		Files.walk(dc.getPath()).filter(Files::isRegularFile).forEach(System.out::println);
 		GlobalData.xml.downloadXML(false, dc.getPath().toAbsolutePath().toString());
 	}
 
