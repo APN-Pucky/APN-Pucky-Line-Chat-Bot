@@ -24,7 +24,6 @@ import java.io.UncheckedIOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,8 +46,6 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -71,6 +68,7 @@ import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent.Mention;
 import com.linecorp.bot.model.event.message.TextMessageContent.Mention.Mentionee;
 import com.linecorp.bot.model.event.message.VideoMessageContent;
 import com.linecorp.bot.model.event.source.GroupSource;
@@ -827,8 +825,12 @@ public class KitchenSinkController {
 		int y_seed = (y_name + y_upr.getStatusMessage()).hashCode();
 		DownloadedContent y_pic = createTempFile("jpg");
 		Wget.wGet(y_pic.getPath().toString(), y_pic_url);
-
-		List<Mentionee> ms = apn.getContent().getMention().getMentionees();
+		Mention me= apn.getContent().getMention();
+		if (me == null) {
+			this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
+			return;
+		}
+		List<Mentionee> ms = me.getMentionees();
 		if (ms.size() != 1) {
 			this.replyText(apn.getReplyToken(), "You can only fight against a single person.");
 			return;
