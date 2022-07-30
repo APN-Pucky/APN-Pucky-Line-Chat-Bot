@@ -109,7 +109,7 @@ subprojects {
             dependency 'com.squareup.okhttp3:mockwebserver:' + ext['okhttp3.version']
             dependency 'com.squareup.retrofit2:converter-jackson:2.9.0'
             dependency 'com.squareup.retrofit2:retrofit:2.4.0'
-            dependency 'org.assertj:assertj-core:3.10.0'
+            dependency 'org.assertj:assertj-core:3.23.1'
             //dependency 'org.projectlombok:lombok:1.18.16'
         }
     }
