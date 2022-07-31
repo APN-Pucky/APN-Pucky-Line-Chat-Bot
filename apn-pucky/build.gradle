@@ -49,7 +49,7 @@ dependencies {
     compile group: 'org.jdom', name: 'jdom', version: '2.0.2'
     compile group: 'com.cloudinary', name: 'cloudinary', version: '1.0.2'
     compile group: 'com.cloudinary', name: 'cloudinary-core', version: '1.19.0'
-    compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.08'
+    compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.15'
     compile group: 'ai.api', name: 'libai', version: '1.6.12'
     compile group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
