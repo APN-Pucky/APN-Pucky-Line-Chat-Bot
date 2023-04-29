@@ -104,7 +104,7 @@ subprojects {
 
         dependencies {
             
-            dependency 'com.github.stefanbirkner:system-rules:1.18.0'
+            dependency 'com.github.stefanbirkner:system-rules:1.19.0'
             dependency 'com.squareup.okhttp3:logging-interceptor:' + ext['okhttp3.version']
             dependency 'com.squareup.okhttp3:mockwebserver:' + ext['okhttp3.version']
             dependency 'com.squareup.retrofit2:converter-jackson:2.9.0'
